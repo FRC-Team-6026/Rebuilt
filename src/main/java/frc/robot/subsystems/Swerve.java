@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.configs.Sparkmax.SwerveModuleInfo;
 import frc.robot.Constants;
 
+// TODO - convert this entire system over to Kraken API
+
 public class Swerve extends SubsystemBase {
   private final AHRS gyro;
 
