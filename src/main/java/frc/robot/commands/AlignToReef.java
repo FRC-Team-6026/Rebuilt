@@ -25,4 +25,16 @@ public class AlignToReef extends Command{
             false
         );
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (!interrupted) {
+            swerve.drive(
+                new Translation2d(0, 0),
+                0,
+                false,
+                false
+            );
+        }
+    }
 }

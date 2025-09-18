@@ -343,6 +343,7 @@ public class RobotContainer {
 
       for (PathPlannerAuto auto : options ) 
         {autoChooser.addOption(auto.getName(), auto);}
+      
       /* Compound Auto Routines */
       /* Example:
       PathPlannerAuto getCoral = new PathPlannerAuto("DriveToCoralStation");
@@ -359,6 +360,18 @@ public class RobotContainer {
         .andThen(testAuto);
       autoChooser.addOption("Test 2 Coral", test2Coral);
       */
+
+      PathPlannerAuto driveForwardAuto = new PathPlannerAuto("Drive Forward");
+      PathPlannerAuto driveBackwardAuto = new PathPlannerAuto("Back Off Reef");
+
+      Command compound = Commands.sequence(
+        driveForwardAuto,
+        Commands.waitSeconds(1),
+        Commands.race(new AlignToReef(swerve, s_Limelight), Commands.waitSeconds(2)),
+        Commands.waitSeconds(1),
+        driveBackwardAuto
+      );
+      autoChooser.addOption("Test Compound", compound);
       
       SmartDashboard.putData("Auto Mode", autoChooser);
       
