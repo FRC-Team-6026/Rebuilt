@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -16,6 +20,11 @@ import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SwerveModuleInfo;
 import frc.lib.math.OnboardModuleState;
 
+
+// TODO - convert this entire system over to Kraken API
+// Do we want to change over to this swerve code, or work with our own? Probably stick with our own
+// https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/mechanisms/swerve/swerve-overview.html
+
 public class SwerveModule {
   public int moduleNumber;
   private Rotation2d lastAngle;
@@ -26,6 +35,9 @@ public class SwerveModule {
 
   private SparkMax angleMotor;
   private SparkMax driveMotor;
+
+  private TalonFX angleMotor_talon; // rename to angleMotor once we fully recode
+  private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode
 
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
@@ -88,6 +100,8 @@ public class SwerveModule {
           ClosedLoopSlot.kSlot0,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
+
+    driveMotor_talon.setControl(new VelocityVoltage(0.0));  // reference for what controls will look like
   }
 
   // SysId - directly sets voltage value to motor
@@ -103,6 +117,8 @@ public class SwerveModule {
 
     angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
     lastAngle = angle;
+
+    angleMotor_talon.setControl(new PositionVoltage(0.0));  // reference for what controls will look like
   }
 
   private Rotation2d getAngle() {
