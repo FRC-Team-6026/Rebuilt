@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
@@ -38,6 +39,8 @@ public class SwerveModule {
 
   private TalonFX angleMotor_talon; // rename to angleMotor once we fully recode
   private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode
+  private VelocityVoltage velocityControl;
+  private VoltageOut voltageControl;
 
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
@@ -70,6 +73,8 @@ public class SwerveModule {
     driveEncoder = driveMotor.getEncoder();
     driveController = driveMotor.getClosedLoopController();
 
+    velocityControl = new VelocityVoltage(0.0);
+    voltageControl = new VoltageOut(0.0);
     lastAngle = getState().angle;
   }
 
@@ -87,6 +92,8 @@ public class SwerveModule {
   void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
     integratedAngleEncoder.setPosition(absolutePosition);
+
+    angleMotor_talon.setPosition(absolutePosition);
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -101,12 +108,16 @@ public class SwerveModule {
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
 
-    driveMotor_talon.setControl(new VelocityVoltage(0.0));  // reference for what controls will look like
+    driveMotor_talon.setControl(velocityControl
+      .withVelocity(desiredState.speedMetersPerSecond)
+      .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
+    );  // reference for what controls will look like
   }
 
   // SysId - directly sets voltage value to motor
   public void setVoltage(Voltage voltage) {
     driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
+    driveMotor_talon.setControl(velocityControl);
   }
 
   private void setAngle(SwerveModuleState desiredState) {
@@ -123,17 +134,21 @@ public class SwerveModule {
 
   private Rotation2d getAngle() {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
+    // return Rotation2d.fromRotations(angleMotor_talon.getPosition().getValueAsDouble());
   }
 
   public Rotation2d getCanCoder() {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
+    // this wont change, this is coming from the CANcoder
   }
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
+    // return new SwerveModuleState(driveMotor_talon.getVelocity(), getAngle());
   }
 
   public SwerveModulePosition getPostion() {
     return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+    // return new SwerveModulePosition(driveMotor_talon.getPosition(), getAngle());
   }
 }
