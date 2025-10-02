@@ -15,10 +15,16 @@ public class SwerveModuleInfo {
      * @param moduleNumber
      */
 
-    public SwerveModuleInfo(int moduleNumber){
+    public SwerveModuleInfo(int moduleNumber) {
         this.moduleNumber = moduleNumber;
         drive = new SparkController(Constants.Setup.driveMotors[moduleNumber], new SparkControllerInfo().drive());
         angle = new SparkController(Constants.Setup.angleMotors[moduleNumber], new SparkControllerInfo().angle());
+
+        // TODO - create KrakenControllerInfo.java
+        // then switch over to:
+        // drive = new KrakenControllerInfo(Constants.Setup.driveMotors[moduleNumber], etc etc);
+        // angle = new KrakenControllerInfo(Constants.Setup.angleMotors[moduleNumber], etc etc);
+
         cancoder = new CANcoder(Constants.Setup.moduleCancoders[moduleNumber]);
         angleOffset = Constants.Setup.angleOffsets[moduleNumber];
     }

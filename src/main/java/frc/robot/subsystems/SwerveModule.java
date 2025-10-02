@@ -83,10 +83,13 @@ public class SwerveModule {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
 
+    // According to this page, our Kraken's should be able to do this?
+    // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html
+
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
-      setAngle(desiredState);
-      setSpeed(desiredState, isOpenLoop);
+    setAngle(desiredState);
+    setSpeed(desiredState, isOpenLoop);
   }
 
   void resetToAbsolute() {
@@ -117,7 +120,7 @@ public class SwerveModule {
   // SysId - directly sets voltage value to motor
   public void setVoltage(Voltage voltage) {
     driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
-    driveMotor_talon.setControl(velocityControl);
+    driveMotor_talon.setControl(voltageControl.withOutput(voltage));
   }
 
   private void setAngle(SwerveModuleState desiredState) {
