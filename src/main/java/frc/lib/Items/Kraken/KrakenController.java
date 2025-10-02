@@ -1,8 +1,12 @@
 package frc.lib.Items.Kraken;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.configs.Kraken.KrakenInfo;
 // TODO - change this to a krakencontrollerinfo class
@@ -18,6 +22,14 @@ public class KrakenController {
         // Here's some example configuration to get started with.
         talonConfigs.withMotorOutput(new MotorOutputConfigs()
             .withInverted(Info.invert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
+            .withNeutralMode(Info.idleMode)
+        ).withAudio(new AudioConfigs()
+            .withBeepOnBoot(true)   // TODO - change if this gets annoying
+        ).withClosedLoopGeneral(new ClosedLoopGeneralConfigs()
+            .withContinuousWrap(Info.continuousWrap)
+        ).withFeedback(new FeedbackConfigs()
+            .withRotorToSensorRatio()
+            .withSensorToMechanismRatio()
         );
     }
 }

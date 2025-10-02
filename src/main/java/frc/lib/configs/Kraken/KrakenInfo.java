@@ -1,5 +1,6 @@
 package frc.lib.configs.Kraken;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
@@ -15,36 +16,39 @@ public class KrakenInfo {
     public Usage canbusUse;
     public int currentLim;
     public boolean invert;
-    public boolean alternateAbsolute;    // is a throughbore plugged in as an absolute encoder?
-    public IdleMode idleMode;
+    public boolean continuousWrap;
+    // public boolean alternateAbsolute;    // is a throughbore plugged in as an absolute encoder?
+    public NeutralModeValue idleMode;
     public double posConversion;
     public double velConversion;
     public double[] pidList;
     public double voltageComp;
     public double rampRate = 0;
 
-    public SparkControllerInfo drive(){
+    public KrakenInfo drive(){
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
         invert = Setup.driveInvert;
-        idleMode = IdleModes.driveIdle;
+        idleMode = NeutralModeValue.Coast;
         posConversion = ConversionFactors.driveConversionPositionFactor;
         velConversion = ConversionFactors.driveConversionVelocityFactor;
         pidList = PID.drivePID;
         voltageComp = Electrical.voltageComp;
+        continuousWrap = false;
         return this;
     }
 
-    public SparkControllerInfo angle(){
+    public KrakenInfo angle(){
         canbusUse = Usages.angleUsage;
         currentLim = Electrical.angleCurrentLim;
         invert = Setup.angleInvert;
-        alternateAbsolute = false;
-        idleMode = IdleModes.angleIdle;
+        // alternateAbsolute = false;
+        idleMode = NeutralModeValue.Coast;
         posConversion = ConversionFactors.angleConversionPositionFactor;
         velConversion = ConversionFactors.angleConversionVelocityFactor;
         pidList = PID.anglePID;
         voltageComp = Electrical.voltageComp;
+        continuousWrap = true;
         return this;
     }
 }
