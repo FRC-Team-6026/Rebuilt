@@ -42,12 +42,12 @@ public class SwerveModule {
   private VelocityVoltage velocityControl;
   private VoltageOut voltageControl;
 
-  private RelativeEncoder driveEncoder;
-  private RelativeEncoder integratedAngleEncoder;
+  // private RelativeEncoder driveEncoder;
+  // private RelativeEncoder integratedAngleEncoder;
   private CANcoder angleEncoder;
 
-  private final SparkClosedLoopController driveController;
-  private final SparkClosedLoopController angleController;
+  // private final SparkClosedLoopController driveController;
+  // private final SparkClosedLoopController angleController;
 
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
@@ -57,21 +57,23 @@ public class SwerveModule {
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
 
-    this.drive = Info.drive;
-    this.angle = Info.angle;
+    // this.drive = Info.drive;
+    // this.angle = Info.angle;
 
     /* Angle Encoder Config */
     angleEncoder = Info.cancoder;
 
     /* Angle Motor Config */
-    angleMotor = angle.spark;
-    integratedAngleEncoder = angleMotor.getEncoder();
-    angleController = angleMotor.getClosedLoopController();
+    // angleMotor = angle.spark;
+    // integratedAngleEncoder = angleMotor.getEncoder();
+    // angleController = angleMotor.getClosedLoopController();
+    angleMotor_talon.getConfigurator().apply(Info.angle.talonConfigs);
 
     /* Drive Motor Config */
-    driveMotor = drive.spark;
-    driveEncoder = driveMotor.getEncoder();
-    driveController = driveMotor.getClosedLoopController();
+    // driveMotor = drive.spark;
+    // driveEncoder = driveMotor.getEncoder();
+    // driveController = driveMotor.getClosedLoopController();
+    driveMotor_talon.getConfigurator().apply(Info.drive.talonConfigs);
 
     velocityControl = new VelocityVoltage(0.0);
     voltageControl = new VoltageOut(0.0);
@@ -94,7 +96,7 @@ public class SwerveModule {
 
   void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
-    integratedAngleEncoder.setPosition(absolutePosition);
+    // integratedAngleEncoder.setPosition(absolutePosition);
 
     angleMotor_talon.setPosition(absolutePosition);
   }
@@ -119,7 +121,7 @@ public class SwerveModule {
 
   // SysId - directly sets voltage value to motor
   public void setVoltage(Voltage voltage) {
-    driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
+    // driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
     driveMotor_talon.setControl(voltageControl.withOutput(voltage));
   }
 
@@ -136,8 +138,8 @@ public class SwerveModule {
   }
 
   private Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
-    // return Rotation2d.fromRotations(angleMotor_talon.getPosition().getValueAsDouble());
+    // return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
+    return Rotation2d.fromRotations(angleMotor_talon.getPosition().getValueAsDouble());
   }
 
   public Rotation2d getCanCoder() {
@@ -146,12 +148,14 @@ public class SwerveModule {
   }
 
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
-    // return new SwerveModuleState(driveMotor_talon.getVelocity(), getAngle());
+    // return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
+    return new SwerveModuleState(driveMotor_talon.getVelocity().getValueAsDouble(), getAngle());
+    // TODO - check math!
   }
 
   public SwerveModulePosition getPostion() {
-    return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
-    // return new SwerveModulePosition(driveMotor_talon.getPosition(), getAngle());
+    // return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+    return new SwerveModulePosition(driveMotor_talon.getPosition().getValueAsDouble(), getAngle());
+    // TODO - check math!
   }
 }
