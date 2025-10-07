@@ -233,10 +233,10 @@ public final class Constants {
         /* All numbers in 1 output to required input, or one wheel spin to motor spin */
 
         /* Swerve Drive Conversions */
-        public static final double driveConversionPositionFactor = Swerve.wheelCircumference / Swerve.driveGearRatio;
+        public static final double driveConversionPositionFactor = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
         public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0 ; //rpm to rps
         
-        public static final double angleConversionPositionFactor = 360.0 / Swerve.angleGearRatio;
+        public static final double angleConversionPositionFactor = Swerve.angleGearRatio / 360.0;                       // switched around for krakens
         public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0 ; //rpm to rps
         
         /* Other Subsystem Conversions */

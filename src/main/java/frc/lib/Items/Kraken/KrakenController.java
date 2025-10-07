@@ -2,6 +2,7 @@ package frc.lib.Items.Kraken;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -24,12 +25,14 @@ public class KrakenController {
             .withInverted(Info.invert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
             .withNeutralMode(Info.idleMode)
         ).withAudio(new AudioConfigs()
-            .withBeepOnBoot(true)   // TODO - change if this gets annoying
+            .withBeepOnBoot(true)   // TODO - change beeping to false if this gets annoying
         ).withClosedLoopGeneral(new ClosedLoopGeneralConfigs()
             .withContinuousWrap(Info.continuousWrap)
         ).withFeedback(new FeedbackConfigs()
-            .withRotorToSensorRatio()
-            .withSensorToMechanismRatio()
+            .withRotorToSensorRatio(1)  // TODO - find a smooth way to tie angle motors to cancoder, or leave code in place?
+            .withSensorToMechanismRatio(Info.posConversion)
+        ).withCurrentLimits(new CurrentLimitsConfigs()
+            .withSupplyCurrentLimit(Info.currentLim)
         );
     }
 }
