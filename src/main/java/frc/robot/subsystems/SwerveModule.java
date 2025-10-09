@@ -41,6 +41,7 @@ public class SwerveModule {
   private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode
   private VelocityVoltage velocityControl;
   private VoltageOut voltageControl;
+  private PositionVoltage positionControl;
 
   // private RelativeEncoder driveEncoder;
   // private RelativeEncoder integratedAngleEncoder;
@@ -77,6 +78,8 @@ public class SwerveModule {
 
     velocityControl = new VelocityVoltage(0.0);
     voltageControl = new VoltageOut(0.0);
+    positionControl = new PositionVoltage(0);
+
     lastAngle = getState().angle;
   }
 
@@ -103,20 +106,25 @@ public class SwerveModule {
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
-      driveMotor.set(percentOutput);
-    } else {
-      driveController.setReference(
-          desiredState.speedMetersPerSecond,
-          SparkMax.ControlType.kVelocity,
-          ClosedLoopSlot.kSlot0,
-          feedforward.calculate(desiredState.speedMetersPerSecond));
-    }
+      // double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      // driveMotor.set(percentOutput);
 
-    driveMotor_talon.setControl(velocityControl
-      .withVelocity(desiredState.speedMetersPerSecond)
-      .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
-    );  // reference for what controls will look like
+      driveMotor_talon.setControl(velocityControl
+        .withVelocity(desiredState.speedMetersPerSecond)
+        .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
+      );
+    } else {
+      // driveController.setReference(
+      //     desiredState.speedMetersPerSecond,
+      //     SparkMax.ControlType.kVelocity,
+      //     ClosedLoopSlot.kSlot0,
+      //     feedforward.calculate(desiredState.speedMetersPerSecond));
+
+      driveMotor_talon.setControl(velocityControl
+        .withVelocity(desiredState.speedMetersPerSecond)
+        .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
+      );
+    }
   }
 
   // SysId - directly sets voltage value to motor
@@ -131,10 +139,10 @@ public class SwerveModule {
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))? 
         lastAngle : desiredState.angle;
 
-    angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
-    lastAngle = angle;
+    // angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
+    // lastAngle = angle;
 
-    angleMotor_talon.setControl(new PositionVoltage(0.0));  // reference for what controls will look like
+    angleMotor_talon.setControl(positionControl.withPosition(angle.getDegrees()));
   }
 
   private Rotation2d getAngle() {
