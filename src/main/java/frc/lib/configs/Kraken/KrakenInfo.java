@@ -1,9 +1,6 @@
 package frc.lib.configs.Kraken;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants.ConversionFactors;
 import frc.robot.Constants.Electrical;
@@ -29,7 +26,7 @@ public class KrakenInfo {
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
         invert = Setup.driveInvert;
-        idleMode = NeutralModeValue.Coast;
+        idleMode = IdleModes.krakenDriveIdle;
         posConversion = ConversionFactors.driveConversionPositionFactor;
         velConversion = ConversionFactors.driveConversionVelocityFactor;
         pidList = PID.drivePID;
@@ -42,9 +39,7 @@ public class KrakenInfo {
     public KrakenInfo angle(){
         canbusUse = Usages.angleUsage;
         currentLim = Electrical.angleCurrentLim;
-        invert = Setup.angleInvert;
-        // alternateAbsolute = false;
-        idleMode = NeutralModeValue.Coast;
+        idleMode = IdleModes.krakenAngleIdle;
         posConversion = ConversionFactors.angleConversionPositionFactor;
         velConversion = ConversionFactors.angleConversionVelocityFactor;
         pidList = PID.anglePID;

@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class Constants {
     /* Used for Constants Used Once On Initialization of Robot or Subsystems */
@@ -257,6 +258,8 @@ public final class Constants {
         /* Swerve Idles */
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
+        public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Brake;
 
         public static final IdleMode clawIdle = IdleMode.kBrake;
         public static final IdleMode elevatorIdle = IdleMode.kBrake;

@@ -5,15 +5,11 @@ import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.configs.Kraken.KrakenInfo;
-// TODO - change this to a krakencontrollerinfo class
-import frc.lib.configs.Sparkmax.SparkControllerInfo;
 
 public class KrakenController {
     
@@ -39,6 +35,6 @@ public class KrakenController {
             .withInverted(Info.invert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
             .withNeutralMode(Info.idleMode)
         );
-        // If we use krakens beyond the swerve drive, we should add software limit switch configuration.
+        // If we use krakens for things other than the swerve drive, we should add software limit switch configuration.
     }
 }

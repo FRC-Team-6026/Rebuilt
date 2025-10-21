@@ -1,23 +1,22 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
+// import com.revrobotics.spark.SparkMax;
+// import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.spark.ClosedLoopSlot;
+// import com.revrobotics.spark.SparkBase.ControlType;
+// import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
-import frc.lib.Items.SparkMax.SparkController;
+// import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SwerveModuleInfo;
 import frc.lib.math.OnboardModuleState;
 
@@ -31,11 +30,11 @@ public class SwerveModule {
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
 
-  private SparkController drive;
-  private SparkController angle;
+  // private SparkController drive;
+  // private SparkController angle;
 
-  private SparkMax angleMotor;
-  private SparkMax driveMotor;
+  // private SparkMax angleMotor;
+  // private SparkMax driveMotor;
 
   private TalonFX angleMotor_talon; // rename to angleMotor once we fully recode
   private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode
@@ -78,7 +77,7 @@ public class SwerveModule {
 
     velocityControl = new VelocityVoltage(0.0);
     voltageControl = new VoltageOut(0.0);
-    positionControl = new PositionVoltage(0);
+    positionControl = new PositionVoltage(0.0);
 
     lastAngle = getState().angle;
   }
