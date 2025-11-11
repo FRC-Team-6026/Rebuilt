@@ -58,7 +58,6 @@ public class CANSparkMaxUtil {
     
 
     /* 2024 -> 2025 import change. Configuration moved to a whole separate object.
-     * TODO - Not yet converted: soft limits
     if (enableFollowing) {
       motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus0, 10);
     } else {

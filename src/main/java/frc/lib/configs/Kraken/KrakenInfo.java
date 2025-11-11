@@ -9,6 +9,9 @@ import frc.robot.Constants.PID;
 import frc.robot.Constants.Setup;
 import frc.robot.Constants.Usages;
 
+// v5 CAN ID setting instructions: https://v5.docs.ctr-electronics.com/en/stable/ch08_BringUpCAN.html
+// v6 CAN ID setting instructions: https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/device-details-page.html
+
 public class KrakenInfo {
     public Usage canbusUse;
     public int currentLim;

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -21,6 +22,10 @@ public class KrakenController {
         talonConfigs
         .withAudio(new AudioConfigs()
             .withBeepOnBoot(true)   // TODO - change beeping to false if this gets annoying
+        ).withSlot0(new Slot0Configs()
+            .withKP(Info.pidList[0])
+            .withKI(Info.pidList[1])
+            .withKD(Info.pidList[2])
         ).withClosedLoopGeneral(new ClosedLoopGeneralConfigs()
             .withContinuousWrap(Info.continuousWrap)
         ).withClosedLoopRamps(new ClosedLoopRampsConfigs()
