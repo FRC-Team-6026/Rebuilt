@@ -57,6 +57,9 @@ public class SwerveModule {
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
 
+    angleMotor_talon = Info.angle.motor;
+    driveMotor_talon = Info.drive.motor;
+
     // this.drive = Info.drive;
     // this.angle = Info.angle;
 

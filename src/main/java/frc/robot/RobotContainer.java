@@ -76,16 +76,11 @@ public class RobotContainer {
   private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
 
-  private final JoystickButton elevator_quasiF = new JoystickButton(operator, XboxController.Button.kA.value);
-  private final JoystickButton elevator_quasiR = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton elevator_dynF = new JoystickButton(operator, XboxController.Button.kX.value);
-  private final JoystickButton elevator_dynR = new JoystickButton(operator, XboxController.Button.kY.value);
-
   /* Operator Buttons */
   /** Operator - Left Stick Y */
-  private final int wristAxis = XboxController.Axis.kLeftY.value;
+  // private final int wristAxis = XboxController.Axis.kLeftY.value;
   /** Operator - Right Stick Y */
-  private final int elevatorAxis = XboxController.Axis.kRightY.value;
+  // private final int elevatorAxis = XboxController.Axis.kRightY.value;
   
   /** Operator - Left Bumper */
   private final JoystickButton interruptButton =
@@ -121,10 +116,12 @@ public class RobotContainer {
   private final Trigger haveGamePiece = new Trigger(() -> !beambreak.get());
 
   private final Swerve swerve = new Swerve();
+  /*
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
   private final Wrist s_Wrist = new Wrist();
   private final Claw s_Claw = new Claw();
   private final Elevator s_Elevator = new Elevator(s_Wrist);
+  */
 
   /* Robot Variables */
   private final SendableChooser<Command> autoChooser;
@@ -133,6 +130,7 @@ public class RobotContainer {
   BooleanSupplier IsElevatorUp;
 	BooleanSupplier IsWristOut;
 
+  /* TODO - temporary simplification
   private Command elevFloorCoral;
   private Command elevL2Coral;
   private Command elevL3Coral;
@@ -141,11 +139,13 @@ public class RobotContainer {
   private Command elevL2Algae;
   private Command elevL3Algae;
   private Command elevL4Algae;
+  */
 
   public RobotContainer() {
 
     /* Command Composition Definitions */
 
+    /*
     // Check(s)
     IsElevatorUp = () -> (s_Elevator.getHeight() > 2);
     IsWristOut = () -> (s_Wrist.getAngle() > Constants.Elevator.selfDestructAngle);
@@ -232,8 +232,12 @@ public class RobotContainer {
       ,
       () -> (s_Wrist.getAngle() > Constants.Wrist.bargeSetup)
     );
-    
+
+    */
+
     /* PathPlanner named commands */
+
+    /*
 
     // Elevator Commands
     NamedCommands.registerCommand("Elevator - L1", new SetElevatorPos(s_Elevator, Level.L1));
@@ -282,6 +286,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align to Reef", new AlignToReef(swerve, s_Limelight).raceWith(new WaitUntilCommand(() -> (Math.abs(s_Limelight.getTX()) < 0.05 && Math.abs(s_Limelight.getTZ()) <= 0.05)), new WaitCommand(4.0)));
     
     s_Wrist.s_Elevator = s_Elevator;
+
+    */
 
     configureBindings();
 
@@ -371,18 +377,18 @@ public class RobotContainer {
       SmartDashboard.putBoolean("Is Robot Centric", robotCentric);
     }));
 
-    autoDrive.onTrue(new AlignToReef(swerve, s_Limelight).until(autoDrive.negate()));
+    //autoDrive.onTrue(new AlignToReef(swerve, s_Limelight).until(autoDrive.negate()));
 
     resetOdometry.onTrue(new InstantCommand(() -> swerve.resetToAbsolute()));
 
     // alignReefLeftButton.onTrue(new InstantCommand(() -> { driveToReef(Location.ReefLeft).until(alignReefLeftButton.negate()).schedule(); }));
-    limelightUpdateButton.onTrue(new InstantCommand(() -> s_Limelight.configRotation(swerve)));
+    //limelightUpdateButton.onTrue(new InstantCommand(() -> s_Limelight.configRotation(swerve)));
     // limelightUpdateButton.onTrue(Commands.run(() -> {
     //   Pose2d data = s_Limelight.getRobotPoseInTargetSpace();
     //   SmartDashboard.putString("AprilTag Targeting", "("+data.getX()+", "+data.getY() + ", "+data.getRotation());
     // }).until(limelightUpdateButton.negate()));
     /* Operator Buttons */
-    /* Once claw is installed: */
+    /* 
     clawReverse.onTrue(new InstantCommand(() -> s_Claw.setVoltage(Preferences.getDouble("ClawSpeed", 4.0))));
     clawIntake.onTrue(new InstantCommand(() -> s_Claw.setVoltage(-Preferences.getDouble("ClawSpeed", 4.0))));
 
@@ -409,7 +415,11 @@ public class RobotContainer {
     clawReverseButton.onTrue(new InstantCommand(() -> s_Claw.setVoltage(0.5)));
     clawReverseButton.onFalse(new InstantCommand(() -> s_Claw.setDutyCycle(0.0)));
     
+    */
+
     /* Beambreak coral responses */
+
+    /*
     haveGamePiece.onTrue(new InstantCommand(() -> s_Claw.setDutyCycle(0))
             .andThen(new SetWristPos(s_Wrist, Constants.Wrist.L23ScoringAngle)));
     haveGamePiece.onFalse(new WaitCommand(0.3).andThen(new InstantCommand(() -> s_Claw.setDutyCycle(0)))
@@ -420,6 +430,7 @@ public class RobotContainer {
       s_Claw.setDutyCycle(0);
       s_Wrist.setAngle(s_Wrist.getAngle());
     }));
+    */
  }
 
  public Command getAutonomousCommand() {
@@ -441,16 +452,17 @@ public class RobotContainer {
         () -> robotCentric));
         // () -> (autoDrive.getAsBoolean() ? true : robotCentric)));
 
-    /* Once elevator is installed */
+    /* 
     s_Elevator.setDefaultCommand(
       new ElevatorDefault(s_Elevator,
       () -> -operator.getRawAxis(elevatorAxis))
     );
-    /* For testing wrist. I'd like to only control with SetWristCommand during competition */
+    
     s_Wrist.setDefaultCommand(
       new WristDefault(s_Wrist, s_Elevator,
       () -> -operator.getRawAxis(wristAxis))
     );
+    */
   }
 
   /*
@@ -502,8 +514,8 @@ public class RobotContainer {
 
   public void teleopExit() {
     swerve.removeDefaultCommand();
-    s_Elevator.removeDefaultCommand(); // Once elevator is installed
-    s_Wrist.removeDefaultCommand(); // Once wrist is installed
+    //s_Elevator.removeDefaultCommand(); // Once elevator is installed
+    //s_Wrist.removeDefaultCommand(); // Once wrist is installed
   }
 
   public void autoInit() {
@@ -519,16 +531,6 @@ public class RobotContainer {
     swerve_quasiR.onTrue( swerve.SysIDQuasiR().until( swerve_quasiR.negate()));
     swerve_dynF.onTrue(   swerve.SysIDDynF().until(   swerve_dynF.negate()));
     swerve_dynR.onTrue(   swerve.SysIDDynR().until(   swerve_dynR.negate()));
-    
-    // Elevator SysID testing.
-
-    // Raise the elevator to start, so that we can find the breakeven voltage that overcomes gravity.
-    elevator_quasiF.onTrue( new SetElevatorPos(s_Elevator, Level.L2).andThen(
-                            new WaitCommand(0.1).andThen(
-                            s_Elevator.SysIDQuasiF().until( swerve_quasiF.negate()))));
-    elevator_quasiR.onTrue( s_Elevator.SysIDQuasiR().until( swerve_quasiR.negate()));
-    elevator_dynF.onTrue(   s_Elevator.SysIDDynF().until(   swerve_dynF.negate()));
-    elevator_dynR.onTrue(   s_Elevator.SysIDDynR().until(   swerve_dynR.negate()));
   }
 
   public void testExit() {
