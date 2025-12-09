@@ -70,13 +70,15 @@ public class SwerveModule {
     // angleMotor = angle.spark;
     // integratedAngleEncoder = angleMotor.getEncoder();
     // angleController = angleMotor.getClosedLoopController();
-    angleMotor_talon.getConfigurator().apply(Info.angle.talonConfigs);
+
+    // angleMotor_talon.getConfigurator().apply(Info.angle.talonConfigs); // Already applying this config in the KrakenController Constructor
 
     /* Drive Motor Config */
     // driveMotor = drive.spark;
     // driveEncoder = driveMotor.getEncoder();
     // driveController = driveMotor.getClosedLoopController();
-    driveMotor_talon.getConfigurator().apply(Info.drive.talonConfigs);
+
+    // driveMotor_talon.getConfigurator().apply(Info.drive.talonConfigs); // Already applying this config in the KrakenController Constructor
 
     velocityControl = new VelocityVoltage(0.0);
     voltageControl = new VoltageOut(0.0);
@@ -143,7 +145,6 @@ public class SwerveModule {
 
     // angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
     // lastAngle = angle;
-
     angleMotor_talon.setControl(positionControl.withPosition(angle.getDegrees()));
   }
 
