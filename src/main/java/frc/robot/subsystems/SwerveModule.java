@@ -105,7 +105,7 @@ public class SwerveModule {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
     // integratedAngleEncoder.setPosition(absolutePosition);
 
-    angleMotor_talon.setPosition(absolutePosition);
+    angleMotor_talon.setPosition(absolutePosition/360.0);
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -145,7 +145,8 @@ public class SwerveModule {
 
     // angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
     // lastAngle = angle;
-    angleMotor_talon.setControl(positionControl.withPosition(angle.getDegrees()));
+    angleMotor_talon.setControl(positionControl.withPosition(angle.getRotations()));
+    lastAngle = angle;
   }
 
   private Rotation2d getAngle() {

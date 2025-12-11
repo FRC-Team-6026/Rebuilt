@@ -211,7 +211,7 @@ public final class Constants {
 
         /* Swerve PIDs */
         public static final double[] drivePID = new double[] {0.1, 0.0, 0.0, 0.0};   // TODO - After testing, change back to {0.3, 0.0, 0.0, 0.0}
-        public static final double[] anglePID = new double[] {0.002, 0.0, 0.0, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
+        public static final double[] anglePID = new double[] {1.2, 0.0, 0.0, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
         
         /* Subsystems */
         public static final double[] clawPID = new double[] {0.05, 0.0, 0.0, 0.0};
@@ -246,12 +246,12 @@ public final class Constants {
         public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
         
         // This should work but it won't give us degrees
-        // public static final double angleConversionPositionFactor = 1.0;
-        // public static final double angleKrakenRotorToSensorRatio = Swerve.angleGearRatio;
+        public static final double angleKrakenRotorToSensorRatio = 1;
+        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio;
 
         // This should work with our current setup, i think. does NOT work with the built-in continuousWrap
-        public static final double angleKrakenRotorToSensorRatio = 360.0;
-        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio / 360.0;
+        // public static final double angleKrakenRotorToSensorRatio = 360.0;
+        // public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio / 360.0;
         
         /* Other Subsystem Conversions */
         // public static final double elevatorConversionPositionFactor = 1/6.4;   // 10 tooth small : 64 tooth large
@@ -272,7 +272,7 @@ public final class Constants {
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
         public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
-        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Coast;
 
         public static final IdleMode clawIdle = IdleMode.kBrake;
         public static final IdleMode elevatorIdle = IdleMode.kBrake;
