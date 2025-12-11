@@ -19,19 +19,19 @@ public class KrakenInfo {
     public boolean continuousWrap;
     // public boolean alternateAbsolute;    // is a throughbore plugged in as an absolute encoder?
     public NeutralModeValue idleMode;
-    public double posConversion;
-    public double velConversion;
+    public double SensorToMechanismRatio;
+    public double RotorToSensorRatio;
     public double[] pidList;
     public double voltageComp;
     public double rampRate = 0;
 
-    public KrakenInfo drive(){
+    public KrakenInfo drive() {
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
         invert = Setup.driveInvert;
         idleMode = IdleModes.krakenDriveIdle;
-        posConversion = ConversionFactors.driveConversionPositionFactor;
-        velConversion = ConversionFactors.driveConversionVelocityFactor;
+        RotorToSensorRatio = ConversionFactors.driveKrakenRotorToSensorRatio;
+        SensorToMechanismRatio = ConversionFactors.driveKrakenSensorToMechanismRatio;
         pidList = PID.drivePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false;
@@ -39,15 +39,15 @@ public class KrakenInfo {
         return this;
     }
 
-    public KrakenInfo angle(){
+    public KrakenInfo angle() {
         canbusUse = Usages.angleUsage;
         currentLim = Electrical.angleCurrentLim;
         idleMode = IdleModes.krakenAngleIdle;
-        posConversion = ConversionFactors.angleConversionPositionFactor;
-        velConversion = ConversionFactors.angleConversionVelocityFactor;
+        RotorToSensorRatio = ConversionFactors.angleKrakenRotorToSensorRatio;
+        SensorToMechanismRatio = ConversionFactors.angleKrakenSensorToMechanismRatio;
         pidList = PID.anglePID;
         voltageComp = Electrical.voltageComp;
-        continuousWrap = true;
+        continuousWrap = false; // flip back to true if we can figure out cancoder fusing, i think
         rampRate = 1; // seconds to reach max speed. TODO - tune ramp rate
         return this;
     }

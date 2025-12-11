@@ -527,6 +527,7 @@ public class RobotContainer {
     swerve.resetToAbsolute();
     swerve.testInit().schedule();
 
+    // When button is pressed, start a command which ends when the button is released
     swerve_quasiF.onTrue( swerve.SysIDQuasiF().until( swerve_quasiF.negate()));
     swerve_quasiR.onTrue( swerve.SysIDQuasiR().until( swerve_quasiR.negate()));
     swerve_dynF.onTrue(   swerve.SysIDDynF().until(   swerve_dynF.negate()));

@@ -234,11 +234,24 @@ public final class Constants {
         /* All numbers in 1 output to required input, or one wheel spin to motor spin */
 
         /* Swerve Drive Conversions */
-        public static final double driveConversionPositionFactor = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
-        public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0 ; //rpm to rps
+        //Sparkmax constants
+        public static final double driveConversionPositionFactor = Swerve.wheelCircumference / Swerve.driveGearRatio;
+        public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0; //rpm to rps (sparkmax only, not kraken)
         
-        public static final double angleConversionPositionFactor = Swerve.angleGearRatio / 360.0;                       // switched around for krakens
-        public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0 ; //rpm to rps
+        public static final double angleConversionPositionFactor = 360.0 / Swerve.angleGearRatio;
+        public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0; //rpm to rps
+
+        //Kraken constants
+        public static final double driveKrakenRotorToSensorRatio = 1.0;
+        public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
+        
+        // This should work but it won't give us degrees
+        // public static final double angleConversionPositionFactor = 1.0;
+        // public static final double angleKrakenRotorToSensorRatio = Swerve.angleGearRatio;
+
+        // This should work with our current setup, i think. does NOT work with the built-in continuousWrap
+        public static final double angleKrakenRotorToSensorRatio = 360.0;
+        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio / 360.0;
         
         /* Other Subsystem Conversions */
         // public static final double elevatorConversionPositionFactor = 1/6.4;   // 10 tooth small : 64 tooth large
