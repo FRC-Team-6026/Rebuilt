@@ -94,7 +94,6 @@ public class SwerveModule {
 
     // According to this page, our Kraken's should be able to do this?
     // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html
-
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
     setAngle(desiredState);

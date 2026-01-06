@@ -21,6 +21,8 @@ public class KrakenInfo {
     public NeutralModeValue idleMode;
     public double SensorToMechanismRatio;
     public double RotorToSensorRatio;
+    public boolean cancoderFused;
+    public int cancoderID;
     public double[] pidList;
     public double voltageComp;
     public double rampRate = 0;
@@ -32,6 +34,7 @@ public class KrakenInfo {
         idleMode = IdleModes.krakenDriveIdle;
         RotorToSensorRatio = ConversionFactors.driveKrakenRotorToSensorRatio;
         SensorToMechanismRatio = ConversionFactors.driveKrakenSensorToMechanismRatio;
+        cancoderFused = false;
         pidList = PID.drivePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false;
@@ -45,6 +48,22 @@ public class KrakenInfo {
         idleMode = IdleModes.krakenAngleIdle;
         RotorToSensorRatio = ConversionFactors.angleKrakenRotorToSensorRatio;
         SensorToMechanismRatio = ConversionFactors.angleKrakenSensorToMechanismRatio;
+        cancoderFused = false;
+        pidList = PID.anglePID;
+        voltageComp = Electrical.voltageComp;
+        continuousWrap = false; // flip back to true if we can figure out cancoder fusing, i think
+        rampRate = 1; // seconds to reach max speed. TODO - tune ramp rate
+        return this;
+    }
+
+    public KrakenInfo angle(int cancoderID) {
+        canbusUse = Usages.angleUsage;
+        currentLim = Electrical.angleCurrentLim;
+        idleMode = IdleModes.krakenAngleIdle;
+        RotorToSensorRatio = ConversionFactors.angleKrakenRotorToSensorRatio;
+        SensorToMechanismRatio = ConversionFactors.angleKrakenSensorToMechanismRatio;
+        cancoderFused = true;
+        this.cancoderID = cancoderID;
         pidList = PID.anglePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false; // flip back to true if we can figure out cancoder fusing, i think

@@ -206,12 +206,12 @@ public final class Constants {
 
         /* Format {P, I, D, FF} 
         P, I, and D are standard PID
-        FF is the inverse of kV in SVA control. Used ONLY in velocity control.
+        FF is the inverse of kV in SVA control. Used ONLY in velocity control. (Sparkmax only)
         */
 
         /* Swerve PIDs */
         public static final double[] drivePID = new double[] {0.1, 0.0, 0.0, 0.0};   // TODO - After testing, change back to {0.3, 0.0, 0.0, 0.0}
-        public static final double[] anglePID = new double[] {1.2, 0.0, 0.0, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
+        public static final double[] anglePID = new double[] {1.8, 0.0, 0.0, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
         
         /* Subsystems */
         public static final double[] clawPID = new double[] {0.05, 0.0, 0.0, 0.0};
@@ -246,8 +246,8 @@ public final class Constants {
         public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
         
         // This should work but it won't give us degrees
-        public static final double angleKrakenRotorToSensorRatio = 1;
-        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio;
+        public static final double angleKrakenRotorToSensorRatio = Swerve.angleGearRatio;
+        public static final double angleKrakenSensorToMechanismRatio = 1.0;
 
         // This should work with our current setup, i think. does NOT work with the built-in continuousWrap
         // public static final double angleKrakenRotorToSensorRatio = 360.0;

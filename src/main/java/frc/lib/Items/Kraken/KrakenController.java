@@ -1,17 +1,24 @@
 package frc.lib.Items.Kraken;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.ctre.phoenix6.configs.AudioConfigs;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.DifferentialConstantsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import frc.lib.configs.Kraken.KrakenInfo;
+import frc.robot.Constants;
 
 public class KrakenController {
     
@@ -21,6 +28,16 @@ public class KrakenController {
 
     public KrakenController(int canbusNumber, KrakenInfo Info) {
         motor = new TalonFX(canbusNumber);
+
+        FeedbackConfigs feedbackConf = new FeedbackConfigs();
+        feedbackConf
+            .withRotorToSensorRatio(Info.RotorToSensorRatio)
+            .withSensorToMechanismRatio(Info.SensorToMechanismRatio);
+
+        if (Info.cancoderFused) {
+            CoreCANcoder cancoder = new CoreCANcoder(Info.cancoderID);
+            feedbackConf.withFusedCANcoder(cancoder);
+        }
 
         talonConfigs = new TalonFXConfiguration();
         talonConfigs
@@ -37,9 +54,7 @@ public class KrakenController {
             .withVoltageClosedLoopRampPeriod(Info.rampRate)     // TODO - change for SysID, when we do that
         ).withCurrentLimits(new CurrentLimitsConfigs()
             .withSupplyCurrentLimit(Info.currentLim)
-        ).withFeedback(new FeedbackConfigs()
-            .withRotorToSensorRatio(Info.RotorToSensorRatio)    // TODO - find a smooth way to tie angle motors to cancoder, or leave code in place?
-            .withSensorToMechanismRatio(Info.SensorToMechanismRatio)
+        ).withFeedback(feedbackConf
         ).withMotorOutput(new MotorOutputConfigs()
             .withInverted(Info.invert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
             .withNeutralMode(Info.idleMode)
