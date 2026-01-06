@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.Orchestra;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -37,6 +38,7 @@ import frc.robot.commands.DefaultCommands.ElevatorDefault;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
 import frc.robot.commands.DefaultCommands.WristDefault;
 import frc.robot.Constants.Level;
+import frc.robot.subsystems.SwerveModule;
 
 public class RobotContainer {
 
@@ -116,6 +118,8 @@ public class RobotContainer {
   private final Trigger haveGamePiece = new Trigger(() -> !beambreak.get());
 
   private final Swerve swerve = new Swerve();
+
+  private final Orchestra m_orchestra = new Orchestra();
   /*
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
   private final Wrist s_Wrist = new Wrist();
@@ -142,6 +146,11 @@ public class RobotContainer {
   */
 
   public RobotContainer() {
+
+    for (SwerveModule mod : swerve.getSwerveModules()) {
+      m_orchestra.addInstrument(mod.angleMotor_talon);
+      m_orchestra.addInstrument(mod.driveMotor_talon);
+    }
 
     /* Command Composition Definitions */
 
@@ -516,6 +525,9 @@ public class RobotContainer {
     swerve.removeDefaultCommand();
     //s_Elevator.removeDefaultCommand(); // Once elevator is installed
     //s_Wrist.removeDefaultCommand(); // Once wrist is installed
+
+    m_orchestra.loadMusic("output.chrp");
+    m_orchestra.play();
   }
 
   public void autoInit() {

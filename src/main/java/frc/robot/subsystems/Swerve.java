@@ -110,6 +110,10 @@ public class Swerve extends SubsystemBase {
   }
 
 
+  public SwerveModule[] getSwerveModules() {
+    return mSwerveMods;
+  }
+
   @Override
   public void periodic() {
     swerveOdometry.update(getAngle(), getPositions());

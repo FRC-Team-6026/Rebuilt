@@ -43,6 +43,7 @@ public class KrakenController {
         talonConfigs
         .withAudio(new AudioConfigs()
             .withBeepOnBoot(true)   // TODO - change beeping to false if this gets annoying
+            .withAllowMusicDurDisable(true)
         ).withSlot0(new Slot0Configs()
             .withKP(Info.pidList[0])
             .withKI(Info.pidList[1])
