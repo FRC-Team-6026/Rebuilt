@@ -123,7 +123,6 @@ public class Swerve extends SubsystemBase {
       ")");
   }
 
-  // TODO - potentially remove the isOpenLoop boolean, stick with velocity control 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =

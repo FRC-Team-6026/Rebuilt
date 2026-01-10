@@ -1,53 +1,38 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-// import com.revrobotics.spark.SparkMax;
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.spark.ClosedLoopSlot;
-// import com.revrobotics.spark.SparkBase.ControlType;
-// import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
-// import frc.lib.Items.SparkMax.SparkController;
+import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SwerveModuleInfo;
 import frc.lib.math.OnboardModuleState;
-
-
-// TODO - convert this entire system over to Kraken API
-// Do we want to change over to this swerve code, or work with our own? Probably stick with our own
-// https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/mechanisms/swerve/swerve-overview.html
 
 public class SwerveModule {
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
 
-  // private SparkController drive;
-  // private SparkController angle;
+  private SparkController drive;
+  private SparkController angle;
 
-  // private SparkMax angleMotor;
-  // private SparkMax driveMotor;
+  private SparkMax angleMotor;
+  private SparkMax driveMotor;
 
-  private TalonFX angleMotor_talon; // rename to angleMotor once we fully recode
-  private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode
-  private VelocityVoltage velocityControl;
-  private VoltageOut voltageControl;
-  private PositionVoltage positionControl;
-
-  // private RelativeEncoder driveEncoder;
-  // private RelativeEncoder integratedAngleEncoder;
+  private RelativeEncoder driveEncoder;
+  private RelativeEncoder integratedAngleEncoder;
   private CANcoder angleEncoder;
 
-  // private final SparkClosedLoopController driveController;
-  // private final SparkClosedLoopController angleController;
+  private final SparkClosedLoopController driveController;
+  private final SparkClosedLoopController angleController;
 
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
@@ -57,32 +42,21 @@ public class SwerveModule {
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
 
-    angleMotor_talon = Info.angle.motor;
-    driveMotor_talon = Info.drive.motor;
-
-    // this.drive = Info.drive;
-    // this.angle = Info.angle;
+    this.drive = Info.drive;
+    this.angle = Info.angle;
 
     /* Angle Encoder Config */
     angleEncoder = Info.cancoder;
 
     /* Angle Motor Config */
-    // angleMotor = angle.spark;
-    // integratedAngleEncoder = angleMotor.getEncoder();
-    // angleController = angleMotor.getClosedLoopController();
-
-    // angleMotor_talon.getConfigurator().apply(Info.angle.talonConfigs); // Already applying this config in the KrakenController Constructor
+    angleMotor = angle.spark;
+    integratedAngleEncoder = angleMotor.getEncoder();
+    angleController = angleMotor.getClosedLoopController();
 
     /* Drive Motor Config */
-    // driveMotor = drive.spark;
-    // driveEncoder = driveMotor.getEncoder();
-    // driveController = driveMotor.getClosedLoopController();
-
-    // driveMotor_talon.getConfigurator().apply(Info.drive.talonConfigs); // Already applying this config in the KrakenController Constructor
-
-    velocityControl = new VelocityVoltage(0.0);
-    voltageControl = new VoltageOut(0.0);
-    positionControl = new PositionVoltage(0.0);
+    driveMotor = drive.spark;
+    driveEncoder = driveMotor.getEncoder();
+    driveController = driveMotor.getClosedLoopController();
 
     lastAngle = getState().angle;
   }
@@ -92,49 +66,33 @@ public class SwerveModule {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
 
-    // According to this page, our Kraken's should be able to do this?
-    // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html
-
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
-    setAngle(desiredState);
-    setSpeed(desiredState, isOpenLoop);
+      setAngle(desiredState);
+      setSpeed(desiredState, isOpenLoop);
   }
 
   void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
-    // integratedAngleEncoder.setPosition(absolutePosition);
-
-    angleMotor_talon.setPosition(absolutePosition/360.0);
+    integratedAngleEncoder.setPosition(absolutePosition);
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      // double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
-      // driveMotor.set(percentOutput);
-
-      driveMotor_talon.setControl(velocityControl
-        .withVelocity(desiredState.speedMetersPerSecond)
-        .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
-      );
+      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      driveMotor.set(percentOutput);
     } else {
-      // driveController.setReference(
-      //     desiredState.speedMetersPerSecond,
-      //     SparkMax.ControlType.kVelocity,
-      //     ClosedLoopSlot.kSlot0,
-      //     feedforward.calculate(desiredState.speedMetersPerSecond));
-
-      driveMotor_talon.setControl(velocityControl
-        .withVelocity(desiredState.speedMetersPerSecond)
-        .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond))
-      );
+      driveController.setReference(
+          desiredState.speedMetersPerSecond,
+          SparkMax.ControlType.kVelocity,
+          ClosedLoopSlot.kSlot0,
+          feedforward.calculate(desiredState.speedMetersPerSecond));
     }
   }
 
   // SysId - directly sets voltage value to motor
   public void setVoltage(Voltage voltage) {
-    // driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
-    driveMotor_talon.setControl(voltageControl.withOutput(voltage));
+    driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
   }
 
   private void setAngle(SwerveModuleState desiredState) {
@@ -143,31 +101,23 @@ public class SwerveModule {
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))? 
         lastAngle : desiredState.angle;
 
-    // angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
-    // lastAngle = angle;
-    angleMotor_talon.setControl(positionControl.withPosition(angle.getRotations()));
+    angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
     lastAngle = angle;
   }
 
   private Rotation2d getAngle() {
-    // return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
-    return Rotation2d.fromRotations(angleMotor_talon.getPosition().getValueAsDouble());
+    return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
 
   public Rotation2d getCanCoder() {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
-    // this wont change, this is coming from the CANcoder
   }
 
   public SwerveModuleState getState() {
-    // return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
-    return new SwerveModuleState(driveMotor_talon.getVelocity().getValueAsDouble(), getAngle());
-    // TODO - check math!
+    return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
 
   public SwerveModulePosition getPostion() {
-    // return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
-    return new SwerveModulePosition(driveMotor_talon.getPosition().getValueAsDouble(), getAngle());
-    // TODO - check math!
+    return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
   }
 }
