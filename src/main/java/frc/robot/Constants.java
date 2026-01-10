@@ -18,7 +18,7 @@ public final class Constants {
         public static final int[] driveMotors = new int[] {1, 3, 5, 7};
         public static final int[] angleMotors = new int[] {2, 4, 6, 8};
         public static final int[] moduleCancoders = new int[] {9, 10, 11, 12};
-        public static final double[] angleOffsets = new double[] {-132.5, 143.0, 55.5, -137.5};
+        public static final double[] angleOffsets = new double[] {121.0, 3.0, 23.0, -152.0};
         public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, set this to fix it. Actually, I'm not sure this fixes that...
 
         /* Intake IDs */
@@ -80,8 +80,8 @@ public final class Constants {
         public static final boolean canCoderInvert = false;
 
         /* Speed Settings */
-        public static final double maxSpeed = 5.00; // meters per second
-        public static final double maxAngularVelocity = 7; // radians per second (was 4.25, changed because turn speed suddenly dropped)
+        public static final double maxSpeed = 2.00; // meters per second
+        public static final double maxAngularVelocity = 4.25; // radians per second (was 4.25, changed because turn speed suddenly dropped)
 
         /* Mk4i Module Gear Ratios */
         public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
@@ -210,8 +210,8 @@ public final class Constants {
         */
 
         /* Swerve PIDs */
-        public static final double[] drivePID = new double[] {0.1, 0.0, 0.0, 0.0};   // TODO - After testing, change back to {0.3, 0.0, 0.0, 0.0}
-        public static final double[] anglePID = new double[] {1.2, 0.0, 0.0, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
+        public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};   // TODO - After testing, change back to {0.3, 0.0, 0.0, 0.0}
+        public static final double[] anglePID = new double[] {10.0, 0.03, 0.1, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
         
         /* Subsystems */
         public static final double[] clawPID = new double[] {0.05, 0.0, 0.0, 0.0};

@@ -35,7 +35,7 @@ public class KrakenInfo {
         pidList = PID.drivePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false;
-        rampRate = 2; // seconds to reach max speed. TODO - tune ramp rate
+        rampRate = 1.0; // seconds to reach max speed. TODO - tune ramp rate
         return this;
     }
 
@@ -48,7 +48,7 @@ public class KrakenInfo {
         pidList = PID.anglePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false; // flip back to true if we can figure out cancoder fusing, i think
-        rampRate = 1; // seconds to reach max speed. TODO - tune ramp rate
+        rampRate = 0.25; // seconds to reach max speed. TODO - tune ramp rate
         return this;
     }
 }
