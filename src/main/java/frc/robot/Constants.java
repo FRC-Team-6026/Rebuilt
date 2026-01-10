@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class Constants {
     /* Used for Constants Used Once On Initialization of Robot or Subsystems */
@@ -17,7 +18,7 @@ public final class Constants {
         public static final int[] driveMotors = new int[] {1, 3, 5, 7};
         public static final int[] angleMotors = new int[] {2, 4, 6, 8};
         public static final int[] moduleCancoders = new int[] {9, 10, 11, 12};
-        public static final double[] angleOffsets = new double[] {-132.5, 143.0, 55.5, -137.5};
+        public static final double[] angleOffsets = new double[] {121.0, 3.0, 23.0, -152.0};
         public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, set this to fix it. Actually, I'm not sure this fixes that...
 
         /* Intake IDs */
@@ -79,8 +80,8 @@ public final class Constants {
         public static final boolean canCoderInvert = false;
 
         /* Speed Settings */
-        public static final double maxSpeed = 5.00; // meters per second
-        public static final double maxAngularVelocity = 7; // radians per second (was 4.25, changed because turn speed suddenly dropped)
+        public static final double maxSpeed = 2.00; // meters per second
+        public static final double maxAngularVelocity = 4.25; // radians per second (was 4.25, changed because turn speed suddenly dropped)
 
         /* Mk4i Module Gear Ratios */
         public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
@@ -209,8 +210,8 @@ public final class Constants {
         */
 
         /* Swerve PIDs */
-        public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};
-        public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
+        public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};   // TODO - After testing, change back to {0.3, 0.0, 0.0, 0.0}
+        public static final double[] anglePID = new double[] {10.0, 0.03, 0.1, 0.0};  // TODO - After testing, change back to {0.01, 0.0, 0.0, 0.0}
         
         /* Subsystems */
         public static final double[] clawPID = new double[] {0.05, 0.0, 0.0, 0.0};
@@ -233,11 +234,24 @@ public final class Constants {
         /* All numbers in 1 output to required input, or one wheel spin to motor spin */
 
         /* Swerve Drive Conversions */
+        //Sparkmax constants
         public static final double driveConversionPositionFactor = Swerve.wheelCircumference / Swerve.driveGearRatio;
-        public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0 ; //rpm to rps
+        public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0; //rpm to rps (sparkmax only, not kraken)
         
         public static final double angleConversionPositionFactor = 360.0 / Swerve.angleGearRatio;
-        public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0 ; //rpm to rps
+        public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0; //rpm to rps
+
+        //Kraken constants
+        public static final double driveKrakenRotorToSensorRatio = 1.0;
+        public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
+        
+        // This should work but it won't give us degrees
+        public static final double angleKrakenRotorToSensorRatio = 1;
+        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio;
+
+        // This should work with our current setup, i think. does NOT work with the built-in continuousWrap
+        // public static final double angleKrakenRotorToSensorRatio = 360.0;
+        // public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio / 360.0;
         
         /* Other Subsystem Conversions */
         // public static final double elevatorConversionPositionFactor = 1/6.4;   // 10 tooth small : 64 tooth large
@@ -257,6 +271,8 @@ public final class Constants {
         /* Swerve Idles */
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
+        public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Coast;
 
         public static final IdleMode clawIdle = IdleMode.kBrake;
         public static final IdleMode elevatorIdle = IdleMode.kBrake;

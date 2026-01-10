@@ -1,13 +1,15 @@
 package frc.lib.configs.Sparkmax;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import frc.lib.Items.SparkMax.SparkController;
+
+import frc.lib.Items.Kraken.KrakenController;
+import frc.lib.configs.Kraken.KrakenInfo;
 import frc.robot.Constants;
 
 public class SwerveModuleInfo {
     public int moduleNumber;
-    public SparkController drive;
-    public SparkController angle;
+    public KrakenController drive;
+    public KrakenController angle;
     public CANcoder cancoder;
     public double angleOffset;
 
@@ -15,10 +17,11 @@ public class SwerveModuleInfo {
      * @param moduleNumber
      */
 
-    public SwerveModuleInfo(int moduleNumber){
+    public SwerveModuleInfo(int moduleNumber) {
         this.moduleNumber = moduleNumber;
-        drive = new SparkController(Constants.Setup.driveMotors[moduleNumber], new SparkControllerInfo().drive());
-        angle = new SparkController(Constants.Setup.angleMotors[moduleNumber], new SparkControllerInfo().angle());
+        drive = new KrakenController(Constants.Setup.driveMotors[moduleNumber], new KrakenInfo().drive());
+        angle = new KrakenController(Constants.Setup.angleMotors[moduleNumber], new KrakenInfo().angle());
+
         cancoder = new CANcoder(Constants.Setup.moduleCancoders[moduleNumber]);
         angleOffset = Constants.Setup.angleOffsets[moduleNumber];
     }
