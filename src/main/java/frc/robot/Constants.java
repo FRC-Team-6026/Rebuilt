@@ -39,15 +39,6 @@ public final class Constants {
         public static final boolean elevatorInvert = false;
         public static final boolean wristInvert = true;
 
-
-        public enum shooterInverts {
-            left(true),
-            right(false);
-            public final boolean Invert;
-            shooterInverts(boolean Invert){
-                this.Invert = Invert;
-            }
-        }
     }
 
     /* Autonomous config
@@ -68,8 +59,8 @@ public final class Constants {
         public static final double trackLength = Units.inchesToMeters(28.0);
 
         /* Input Current Wheel Diameter, Can Change Due To Amount Of Wear */
-        // TODO - change this back to 4 if we replace wheel tread.
-        public static final double wheelDiameter = Units.inchesToMeters(3.9); // Wheel diameter in inches
+        // Tread replaced 1/31/26
+        public static final double wheelDiameter = Units.inchesToMeters(4); // Wheel diameter in inches
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
         /* Gyro Direction Toggle */
@@ -104,26 +95,11 @@ public final class Constants {
             modulePositions[3]
         );
 
-        // TODO - rotation P was 1.0, testing lower value. if the problem was something else, probably put it back.
-        // Values moved down below with other PID values to keep everything together
         public static final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
             new PIDConstants(2, 0, 0.2), // Translation constants (should be in volts/meter of error)
             new PIDConstants(0.5, 0, 0) // Rotation constants
             // 2024 -> 2025 import change. Constructor simplified, deleted maxspeed, drive base radius, and replanning config
         );
-    }
-
-    public static enum Level {Retracted, Processor, L1, L2, L2A, L3, L3A, L4, Barge}
-    public static enum Location {ReefLeft, ReefRight, ReefCenter, Pickup, Processor}
-    
-    public static final class Claw {
-
-        // gear ratio moved to conversion factors
-
-        /* Min/Max Speeds */
-        public static final double intakeSpeed = 5;
-        public static final double maxVoltage = 5;
-
     }
 
     public static final class Elevator {
@@ -194,7 +170,6 @@ public final class Constants {
         public static final int angleCurrentLim = 20;
         
         /* Subsystems */
-        public static final int clawLim = 20;
         public static final int elevatorLim = 40;
         public static final int wristLim = 20;
 
@@ -213,7 +188,6 @@ public final class Constants {
         public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
         
         /* Subsystems */
-        public static final double[] clawPID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] elevatorPID = new double[] {0.032, 0.0003, 0.006, 0.0};
         public static final double[] wristPID = new double[] {0.023, 0.0, 0.025, 0.0};
     }
@@ -258,17 +232,21 @@ public final class Constants {
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
 
-        public static final IdleMode clawIdle = IdleMode.kBrake;
         public static final IdleMode elevatorIdle = IdleMode.kBrake;
         public static final IdleMode wristIdle = IdleMode.kBrake;
     }
 
     public final static class Usages {
+        /* How the device should utilize the CAN connection
+         * Options: kAll - standard high CAN data publishing setting
+         *          kPositionOnly - publish motor position often, velocity rarely
+         *          kVelocityOnly - publish motor velocity often, position rarely
+         *          kMinimal - useful for motors we need no/little feedback from
+         */
         /* Swerve Usages */
         public static final Usage driveUsage = Usage.kAll;
         public static final Usage angleUsage = Usage.kPositionOnly;
 
-        public static final Usage clawUsage = Usage.kPositionOnly;
         public static final Usage elevatorUsage = Usage.kPositionOnly;
         public static final Usage wristUsage = Usage.kPositionOnly;
     }

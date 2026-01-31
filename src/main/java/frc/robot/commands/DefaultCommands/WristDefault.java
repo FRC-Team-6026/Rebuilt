@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Wrist;
 
+// Left from previous year as example, not intended for 2026
+
 // Useful for testing the wrist. Ideally, we don't even use this
 // command, but only set the wrist via the SetWristCommand.
 

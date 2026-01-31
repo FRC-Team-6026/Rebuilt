@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Wrist;
 
+// Left from previous year as example, not intended for 2026
+
 public class SetWristPos extends Command{
     private Wrist s_Wrist;
     private Double targetAngle;

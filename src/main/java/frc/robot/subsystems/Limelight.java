@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,11 +12,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 /* Coords from the perspective of the camera
  *  / Z (pointing out)
@@ -65,6 +62,20 @@ public class Limelight extends SubsystemBase {
     public double getTX() {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
         SmartDashboard.putNumber("tx", tx);
+        if (tx > 0.5 || tx < -0.5)
+            return Math.signum(tx)*0.02 + tx*Preferences.getDouble("AutoDriveStrength", 1.0)/100.0;
+        return 0.0;
+    }
+
+    // TODO - find a way to smooth movement for these, to account for losing track
+    // of the apriltag for a frame.
+    /** Gets L/R movement for robot to align with an apriltag 
+     * @param targetOffset the point to target, relative to the center of the image
+    */
+    public double getTX(double targetOffset) {
+        double tx = _table.getEntry("tx").getDouble(0) * -1.0;
+        SmartDashboard.putNumber("tx", tx);
+        tx += targetOffset;
         if (tx > 0.5 || tx < -0.5)
             return Math.signum(tx)*0.02 + tx*Preferences.getDouble("AutoDriveStrength", 1.0)/100.0;
         return 0.0;

@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase;
@@ -13,15 +9,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
+
+// Left from previous year as example, not intended for 2026
 
 public class Elevator extends SubsystemBase {
 
@@ -38,8 +33,6 @@ public class Elevator extends SubsystemBase {
 
     public Wrist wrist;
     private final double sdAngle = Constants.Elevator.selfDestructAngle;
-
-    private SysIdRoutine sysIdRoutine;
 
     public Elevator(Wrist wrist) {
         this.elevatorSpark1 = new SparkController(Constants.Setup.elevatorSpark1, new SparkControllerInfo().elevator(),
@@ -60,18 +53,6 @@ public class Elevator extends SubsystemBase {
         this.elevatorController2 = elevatorSpark2.sparkControl;
 
         this.wrist = wrist;
-
-        sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                Volts.per(Second).of(0.25),
-                Volts.of(1.25),
-                Seconds.of(5)), 
-            new SysIdRoutine.Mechanism(
-                (voltage) -> setVoltage(voltage),
-                null,
-                this,
-                "Elevator")
-        );
     }
 
     @Override
@@ -96,13 +77,6 @@ public class Elevator extends SubsystemBase {
         
         voltage = MathUtil.clamp(voltage, -Constants.Elevator.maxVoltage, Constants.Elevator.maxVoltage);
 
-        /* TODO - set back after SysID?
-        if (getHeight() <= Constants.Elevator.softHeightMinimum) {
-            voltage = MathUtil.clamp(voltage, -getHeight(), Constants.Elevator.maxVoltage);
-        }
-        */
-
-        // SmartDashboard.putNumber("Elevator final Voltage", voltage);
         elevatorController1.setReference(voltage, SparkBase.ControlType.kVoltage);
     }
 
@@ -110,10 +84,4 @@ public class Elevator extends SubsystemBase {
         percent = percent/100;
         elevatorController1.setReference(percent, SparkBase.ControlType.kDutyCycle);
     }
-
-    // SysID - 4 commands for the 4 SysID tests. Each one can be bound to a button, and cancelled when the button is released.
-    public Command SysIDQuasiF() { return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward); }
-    public Command SysIDQuasiR() { return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse); }
-    public Command SysIDDynF() { return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward); }
-    public Command SysIDDynR() { return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse); }
 }

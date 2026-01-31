@@ -12,6 +12,8 @@ import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
 
+// Left from previous year as example, not intended for 2026
+
 public class Wrist extends SubsystemBase {
 
     private SparkController wristSpark;

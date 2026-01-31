@@ -42,19 +42,6 @@ public class SparkControllerInfo {
         return this;
     }
 
-    public SparkControllerInfo claw(){
-        canbusUse = Usages.clawUsage;
-        currentLim = Electrical.clawLim;
-        invert = Setup.clawInvert;
-        alternateAbsolute = false;
-        idleMode = IdleModes.clawIdle;
-        posConversion = ConversionFactors.defaultConversionPositionFactor;
-        velConversion = ConversionFactors.defaultConversionVelocityFactor;
-        pidList = PID.clawPID;
-        voltageComp = Electrical.voltageComp;
-        return this;
-    }
-
     public SparkControllerInfo elevator(){
         canbusUse = Usages.elevatorUsage;
         currentLim = Electrical.elevatorLim;
