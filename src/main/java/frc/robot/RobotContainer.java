@@ -62,13 +62,24 @@ public class RobotContainer {
 
   /* Operator Buttons */
   
-  /** Operator - Left Bumper */
-  private final JoystickButton interruptButton =
-  new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  private final int elevatorAxis = XboxController.Axis.kRightY.value;
+
+  /** Operator - Testing D-Pad, should be Left */
+  private final JoystickButton testButton =
+  new JoystickButton(operator, 15);
+  /** Operator - A (B on our controller) */
+  private final JoystickButton undeployButton =
+  new JoystickButton(operator, XboxController.Button.kA.value);
+  /** Operator - B (A on our controller) */
+  private final JoystickButton deployButton =
+  new JoystickButton(operator, XboxController.Button.kB.value);
   
+  /** Operator - Left Trigger */
+  private final int intakeTrigger = XboxController.Axis.kLeftTrigger.value;
+  private final Trigger intakeButton = new Trigger(() -> operator.getRawAxis(intakeTrigger) > 0.1);
   /** Operator - Right Trigger */
-  private final int instakeTrigger = XboxController.Axis.kRightTrigger.value;
-  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(instakeTrigger) > 0.1);
+  private final int shootTrigger = XboxController.Axis.kRightTrigger.value;
+  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.1);
 
   /* Subsystems */
   // private final DigitalInput beambreak = new DigitalInput(Constants.Setup.beambreakID);

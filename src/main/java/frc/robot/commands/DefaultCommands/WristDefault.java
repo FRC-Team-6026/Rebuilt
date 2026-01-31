@@ -6,7 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator_old;
 import frc.robot.subsystems.Wrist;
 
 // Left from previous year as example, not intended for 2026
@@ -17,14 +17,14 @@ import frc.robot.subsystems.Wrist;
 public class WristDefault extends Command{
     private Wrist s_Wrist;
     private DoubleSupplier speedSup;
-    public Elevator s_Elevator;
+    public Elevator_old s_Elevator;
     private boolean voltControl;
 
     private Timer wristTimer;
 
     public WristDefault(
         Wrist s_Wrist,
-        Elevator s_Elevator,
+        Elevator_old s_Elevator,
         DoubleSupplier speedSup
     ) {
         this.s_Wrist = s_Wrist;

@@ -31,22 +31,22 @@ public class Wrist extends SubsystemBase {
 
     public double lastVoltageAttempt;
 
-    public Elevator s_Elevator;
+    public Elevator_old s_Elevator;
 
     public Wrist() {
-        this.wristSpark = new SparkController(Constants.Setup.wristSpark, new SparkControllerInfo().shooterWrist(),
-            Constants.Wrist.minPercent, Constants.Wrist.maxPercent,
-            Constants.Wrist.maximumAngle, Constants.Wrist.minimumAngle);
-            // null, null);
+        // this.wristSpark = new SparkController(Constants.Setup.wristSpark, new SparkControllerInfo().shooterWrist(),
+        //     Constants.Wrist.minPercent, Constants.Wrist.maxPercent,
+        //     Constants.Wrist.maximumAngle, Constants.Wrist.minimumAngle);
+        //     // null, null);
         
-        this.wristController = wristSpark.sparkControl;
+        // this.wristController = wristSpark.sparkControl;
         
-        wristEncoder = wristSpark.sparkEncode;
-        wristAbsolute = wristSpark.sparkAbsoluteEncoder;
+        // wristEncoder = wristSpark.sparkEncode;
+        // wristAbsolute = wristSpark.sparkAbsoluteEncoder;
         
-        lastVelocity = 0;
+        // lastVelocity = 0;
         
-        wristEncoder.setPosition(wristAbsolute.getPosition() * 360.0);
+        // wristEncoder.setPosition(wristAbsolute.getPosition() * 360.0);
     }
 
 

@@ -5,16 +5,16 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator_old;
 
 // Left from previous year as example, not intended for 2026
 
 public class ElevatorDefault extends Command{
-    private Elevator s_Elevator;
+    private Elevator_old s_Elevator;
     private DoubleSupplier speedSup;
 
     public ElevatorDefault(
-        Elevator s_Elevator,
+        Elevator_old s_Elevator,
         DoubleSupplier speedSup
     ) {
         this.s_Elevator = s_Elevator;

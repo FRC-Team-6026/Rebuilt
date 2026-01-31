@@ -20,25 +20,24 @@ public final class Constants {
         public static final double[] angleOffsets = new double[] {-132.5, 143.0, 55.5, -137.5};
         public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, set this to fix it. Actually, I'm not sure this fixes that...
 
-        /* Intake IDs */
-        public static final int wristSpark = 16;
-
-        public static final int clawSpark = 17;
-
-        public static final int elevatorSpark1 = 18;
-        public static final int elevatorSpark2 = 19;
-
-        public static final int beambreakID = 0;
-        // public static final int physicalSwitchID = 2;
+        /* Subsystem IDs */
+        public static final int hopperSpark = 14;
+        public static final int intakeSpark = 15;
+        public static final int floorSpark = 16;
+        public static final int feederSpark = 17;
+        public static final int shooterSpark = 18;
+        public static final int elevatorSpark = 19;
 
         /* Motor Inverts */
         public static final boolean driveInvert = false;
         public static final boolean angleInvert = true;
 
-        public static final boolean clawInvert = false;
+        public static final boolean hopperInvert = false;
+        public static final boolean intakeInvert = false;
+        public static final boolean floorInvert = false;
+        public static final boolean feederInvert = false;
+        public static final boolean shooterInvert = false;
         public static final boolean elevatorInvert = false;
-        public static final boolean wristInvert = true;
-
     }
 
     /* Autonomous config
@@ -100,6 +99,26 @@ public final class Constants {
             new PIDConstants(0.5, 0, 0) // Rotation constants
             // 2024 -> 2025 import change. Constructor simplified, deleted maxspeed, drive base radius, and replanning config
         );
+    }
+
+    public static final class Hopper {
+
+        // TODO - tuning and stuff (this is just copied from the old elevator)
+
+        /* Min/Max Speeds */
+        public static final double maxVoltage = 3.0;
+        public static final double minVoltage = -1.8;
+        public static final double maxPercent = 0.55;    // | Power limits for PID control
+        public static final double minPercent = -0.40;   // |
+
+        /* Min/Max Heights */
+        public static final double minHeight = 0.0;       // Now in inches!
+        public static final double maxHeight = 59.0;
+        
+        /* setElevator height seeking tolerance */
+        public static final double tolerance = 0.4; // Rename this pls
+
+        public static final double softHeightMinimum = 1;
     }
 
     public static final class Elevator {
@@ -170,8 +189,13 @@ public final class Constants {
         public static final int angleCurrentLim = 20;
         
         /* Subsystems */
-        public static final int elevatorLim = 40;
-        public static final int wristLim = 20;
+        // TODO - find actual values
+        public static final int hopperLim = 20;
+        public static final int intakeLim = 20;
+        public static final int floorLim = 20;
+        public static final int feederLim = 20;
+        public static final int shooterLim = 20;
+        public static final int elevatorLim = 20;
 
         public static final double neoMinVoltage = 0.05; // guessed value
     }
@@ -188,8 +212,12 @@ public final class Constants {
         public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
         
         /* Subsystems */
-        public static final double[] elevatorPID = new double[] {0.032, 0.0003, 0.006, 0.0};
-        public static final double[] wristPID = new double[] {0.023, 0.0, 0.025, 0.0};
+        public static final double[] hopperPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] shooterPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 
     public final static class SVA {
@@ -232,8 +260,12 @@ public final class Constants {
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
 
+        public static final IdleMode hopperIdle = IdleMode.kBrake;
+        public static final IdleMode intakeIdle = IdleMode.kBrake;
+        public static final IdleMode floorIdle = IdleMode.kCoast;
+        public static final IdleMode feederIdle = IdleMode.kCoast;
+        public static final IdleMode shooterIdle = IdleMode.kCoast;
         public static final IdleMode elevatorIdle = IdleMode.kBrake;
-        public static final IdleMode wristIdle = IdleMode.kBrake;
     }
 
     public final static class Usages {
@@ -247,7 +279,11 @@ public final class Constants {
         public static final Usage driveUsage = Usage.kAll;
         public static final Usage angleUsage = Usage.kPositionOnly;
 
+        public static final Usage hopperUsage = Usage.kPositionOnly;
+        public static final Usage intakeUsage = Usage.kVelocityOnly;
+        public static final Usage floorUsage = Usage.kMinimal;
+        public static final Usage feederUsage = Usage.kMinimal;
+        public static final Usage shooterUsage = Usage.kVelocityOnly;
         public static final Usage elevatorUsage = Usage.kPositionOnly;
-        public static final Usage wristUsage = Usage.kPositionOnly;
     }
 }

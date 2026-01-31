@@ -42,31 +42,87 @@ public class SparkControllerInfo {
         return this;
     }
 
+    // TODO - double check all susbsystem values, please
+
+    public SparkControllerInfo hopper(){
+        canbusUse = Usages.hopperUsage;
+        currentLim = Electrical.hopperLim;
+        invert = Setup.hopperInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.hopperIdle;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        pidList = PID.hopperPID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
+
+    public SparkControllerInfo intake(){
+        canbusUse = Usages.intakeUsage;
+        currentLim = Electrical.intakeLim;
+        invert = Setup.intakeInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.intakeIdle;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        pidList = PID.intakePID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
+
+    public SparkControllerInfo floor(){
+        canbusUse = Usages.floorUsage;
+        currentLim = Electrical.floorLim;
+        invert = Setup.floorInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.floorIdle;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        pidList = PID.floorPID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
+
+    public SparkControllerInfo feeder(){
+        canbusUse = Usages.feederUsage;
+        currentLim = Electrical.feederLim;
+        invert = Setup.feederInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.feederIdle;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        pidList = PID.feederPID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
+
+    public SparkControllerInfo shooter(){
+        canbusUse = Usages.shooterUsage;
+        currentLim = Electrical.shooterLim;
+        invert = Setup.shooterInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.shooterIdle;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        pidList = PID.shooterPID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
+
     public SparkControllerInfo elevator(){
         canbusUse = Usages.elevatorUsage;
         currentLim = Electrical.elevatorLim;
         invert = Setup.elevatorInvert;
         alternateAbsolute = false;
         idleMode = IdleModes.elevatorIdle;
-        posConversion = ConversionFactors.elevatorConversionPositionFactor;
-        velConversion = ConversionFactors.elevatorConversionVelocityFactor;
+        posConversion = ConversionFactors.defaultConversionPositionFactor;
+        velConversion = ConversionFactors.defaultConversionVelocityFactor;
         pidList = PID.elevatorPID;
-        voltageComp = Electrical.voltageComp;
-        // maxmotionVel = 10.0;
-        // maxmotionAcc = 20.0;
-        rampRate = 0.35;
-        return this;
-    }
-
-    public SparkControllerInfo shooterWrist(){
-        canbusUse = Usages.wristUsage;
-        currentLim = Electrical.wristLim;
-        invert = Setup.wristInvert;
-        alternateAbsolute = true;
-        idleMode = IdleModes.wristIdle;
-        posConversion = ConversionFactors.wristConversionPositionFactor;
-        velConversion = ConversionFactors.wristConversionVelocityFactor;
-        pidList = PID.wristPID;
         voltageComp = Electrical.voltageComp;
         rampRate = 0.35;
         return this;
