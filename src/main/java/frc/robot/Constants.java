@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -18,7 +19,7 @@ public final class Constants {
         public static final int[] angleMotors = new int[] {2, 4, 6, 8};
         public static final int[] moduleCancoders = new int[] {9, 10, 11, 12};
         public static final double[] angleOffsets = new double[] {-132.5, 143.0, 55.5, -137.5};
-        public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, set this to fix it. Actually, I'm not sure this fixes that...
+        public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, this should tell the robot which way is forward
 
         /* Subsystem IDs */
         public static final int hopperSpark = 14;
@@ -54,7 +55,7 @@ public final class Constants {
 
         /* Drivetrain Calculation Constants */
         /* Input these units from center of swerve modules */
-        public static final double trackWidth = Units.inchesToMeters(26.0);
+        public static final double trackWidth = Units.inchesToMeters(26.0); // TODO - get new measurements
         public static final double trackLength = Units.inchesToMeters(28.0);
 
         /* Input Current Wheel Diameter, Can Change Due To Amount Of Wear */
@@ -208,8 +209,10 @@ public final class Constants {
         */
 
         /* Swerve PIDs */
-        public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};
-        public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
+        // public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};   Sparkmax Swerve PIDs
+        // public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
+        public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};
+        public static final double[] anglePID = new double[] {10.0, 0.05, 0.05, 0.0}; 
         
         /* Subsystems */
         public static final double[] hopperPID = new double[] {0.03, 0.0, 0.0, 0.0};
@@ -225,7 +228,7 @@ public final class Constants {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
         // public static final double[] driveMotorsSVA = new double[] {0.3, 2.55, 0.27};    // 2023's SVA values. 
-        public static final double[] driveMotorsSVA = new double[] {0.24, 2.60, 0.46};
+        public static final double[] driveMotorsSVA = new double[] {0.24, 2.00, 0.2};   // TODO - SysID tuning.
 
         // public static final double[] ElevSVA = new double[] {0.0, 0.2, 0.00};
         // public static final double[] WristSVA = new double[] {0.05, 0.03, 0.001};
@@ -240,6 +243,14 @@ public final class Constants {
         
         public static final double angleConversionPositionFactor = 360.0 / Swerve.angleGearRatio;
         public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0 ; //rpm to rps
+
+        //Kraken constants
+        public static final double driveKrakenRotorToSensorRatio = 1.0;
+        public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
+        
+        // This should work but it won't give us degrees
+        public static final double angleKrakenRotorToSensorRatio = 1;
+        public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio;
         
         /* Other Subsystem Conversions */
         // public static final double elevatorConversionPositionFactor = 1/6.4;   // 10 tooth small : 64 tooth large
@@ -259,6 +270,8 @@ public final class Constants {
         /* Swerve Idles */
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
+        public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Coast;
 
         public static final IdleMode hopperIdle = IdleMode.kBrake;
         public static final IdleMode intakeIdle = IdleMode.kBrake;

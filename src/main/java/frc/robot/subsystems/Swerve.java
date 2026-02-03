@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.lib.configs.Sparkmax.SwerveModuleInfo;
+import frc.lib.configs.Kraken.SwerveModuleInfo;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
