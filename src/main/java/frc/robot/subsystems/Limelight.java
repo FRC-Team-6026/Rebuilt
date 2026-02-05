@@ -56,8 +56,7 @@ public class Limelight extends SubsystemBase {
         return _table.getEntry("tv").getInteger(0) > 0.5;
     }
 
-    // TODO - find a way to smooth movement for these, to account for losing track
-    // of the apriltag for a frame.
+    // TODO - find a way to smooth movement for these, to account for losing track of the apriltag for a frame.
     /** Gets L/R movement for robot to align with an apriltag */
     public double getTX() {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
@@ -67,8 +66,7 @@ public class Limelight extends SubsystemBase {
         return 0.0;
     }
 
-    // TODO - find a way to smooth movement for these, to account for losing track
-    // of the apriltag for a frame.
+    // TODO - find a way to smooth movement for these, to account for losing track of the apriltag for a frame.
     /** Gets L/R movement for robot to align with an apriltag 
      * @param targetOffset the point to target, relative to the center of the image
     */

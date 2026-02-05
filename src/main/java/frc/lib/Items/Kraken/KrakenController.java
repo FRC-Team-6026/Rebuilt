@@ -41,7 +41,7 @@ public class KrakenController {
             .withSupplyCurrentLimit(Info.currentLim)
             .withSupplyCurrentLimitEnable(true)
         ).withFeedback(new FeedbackConfigs()
-            .withRotorToSensorRatio(Info.RotorToSensorRatio)    // TODO - find a smooth way to tie angle motors to cancoder, or leave code in place?
+            .withRotorToSensorRatio(Info.RotorToSensorRatio)
             .withSensorToMechanismRatio(Info.SensorToMechanismRatio)
         ).withMotorOutput(new MotorOutputConfigs()
             .withInverted(Info.invert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)

@@ -21,7 +21,6 @@ import frc.lib.configs.Kraken.SwerveModuleInfo;
 import frc.lib.math.OnboardModuleState;
 
 
-// TODO - convert this entire system over to Kraken API
 // Do we want to change over to this swerve code, or work with our own? Probably stick with our own
 // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/mechanisms/swerve/swerve-overview.html
 
