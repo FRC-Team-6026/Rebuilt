@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
     // SysId - Enabling logging. This method is specific to our Rev motors.
     // (Thank you to team 6328 for this logger!)

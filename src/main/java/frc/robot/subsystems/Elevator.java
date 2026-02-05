@@ -3,11 +3,12 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
 
-public class Elevator {
+public class Elevator extends SubsystemBase {
     private SparkController elevatorSpark;
     private RelativeEncoder elevatorEncoder;
     private SparkClosedLoopController elevatorController;

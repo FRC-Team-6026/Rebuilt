@@ -186,7 +186,9 @@ public class RobotContainer {
     }));
 
     resetOdometry.onTrue(new InstantCommand(() -> swerve.resetToAbsolute()));
-
+    
+    /* Operator Buttons */
+    // TODO - configure operator buttons
  }
 
  public Command getAutonomousCommand() {
@@ -197,6 +199,8 @@ public class RobotContainer {
     swerve.resetToAbsolute();
 
     // TODO - remake command to better pass non-controller inputs?
+    // I think I want the limelight calc done inside the function.
+    // We should probably just set a reference to the limelight during setup.
     swerve.setDefaultCommand(
       new TeleopSwerve(
         swerve,

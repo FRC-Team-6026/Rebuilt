@@ -42,6 +42,10 @@ public class TeleopSwerve extends Command {
 
   @Override
   public void execute() {
+
+    // TODO - limelight autoaim/autodrive code inside this function, instead of using ternary operators
+
+
     /* Get Values, Deadband*/
     double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband);
     double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband);
@@ -51,6 +55,8 @@ public class TeleopSwerve extends Command {
     translationVal = translationVal * translationVal * translationVal;
     strafeVal = strafeVal * strafeVal * strafeVal;
     rotationVal = rotationVal * rotationVal * rotationVal;
+
+    // joystick inputs need deadband/cube/slewrate calc, but limelight inputs should only need slewrate
 
     //limit change per input to avoid slamming the motors
     translationVal = translationLimiter.calculate(translationVal);

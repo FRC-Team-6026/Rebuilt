@@ -18,7 +18,7 @@ public final class Constants {
         public static final int[] driveMotors = new int[] {1, 3, 5, 7};
         public static final int[] angleMotors = new int[] {2, 4, 6, 8};
         public static final int[] moduleCancoders = new int[] {9, 10, 11, 12};
-        public static final double[] angleOffsets = new double[] {-132.5, 143.0, 55.5, -137.5};
+        public static final double[] angleOffsets = new double[] {-152.0, 23.0, 2.0, 121.5};
         public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, this should tell the robot which way is forward
 
         /* Subsystem IDs */
@@ -30,7 +30,7 @@ public final class Constants {
         public static final int elevatorSpark = 19;
 
         /* Motor Inverts */
-        public static final boolean driveInvert = false;
+        public static final boolean driveInvert = true;
         public static final boolean angleInvert = true;
 
         public static final boolean hopperInvert = false;
@@ -43,8 +43,8 @@ public final class Constants {
 
     /* Autonomous config
      * This is here to keep track of which autos we want pasted straight in from PathPlanner. If an auto
-     * is on the list, it is IGNORED and not added to the autolist. These should be autos that are used
-     * in compound autonomous routines.
+     * is on the supportAutoList, it is IGNORED and not added to the autolist. These should be autos that
+     * are only used in compound autonomous routines.
      */
     public record Auto ( String defaultAutoName, String[] supportAutoList){}
     public static Auto AutoConfig = new Auto("", new String[]{"Example Supp Auto", "Back Off Reef"});
@@ -271,7 +271,7 @@ public final class Constants {
         public static final IdleMode driveIdle = IdleMode.kBrake;
         public static final IdleMode angleIdle = IdleMode.kBrake;
         public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
-        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Coast;
+        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Brake;
 
         public static final IdleMode hopperIdle = IdleMode.kBrake;
         public static final IdleMode intakeIdle = IdleMode.kBrake;

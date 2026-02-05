@@ -104,9 +104,11 @@ public class SwerveModule {
 
   void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
-    // integratedAngleEncoder.setPosition(absolutePosition);
 
+    // integratedAngleEncoder.setPosition(absolutePosition);
     angleMotor_talon.setPosition(absolutePosition/360.0);
+
+    lastAngle = Rotation2d.fromDegrees(absolutePosition);;
   }
 
   /** Sets the speed of the main drive motor only. Usually called from the setDesiredState method
