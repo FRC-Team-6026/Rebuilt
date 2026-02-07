@@ -152,8 +152,8 @@ public class SwerveModule {
         lastAngle : desiredState.angle;
 
     // angleController.setReference(angle.getDegrees(), SparkMax.ControlType.kPosition);
-    // lastAngle = angle;
     angleMotor_talon.setControl(positionControl.withPosition(angle.getRotations()));
+
     lastAngle = angle;
   }
 
@@ -164,7 +164,6 @@ public class SwerveModule {
 
   public Rotation2d getCanCoder() {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
-    // this wont change, this is coming from the CANcoder
   }
 
   public SwerveModuleState getState() {

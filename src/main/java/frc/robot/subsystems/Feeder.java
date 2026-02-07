@@ -14,7 +14,6 @@ public class Feeder extends SubsystemBase {
     private SparkClosedLoopController feederController;
 
     // TODO - possibly combine into shooter subsystem, to make windup programming easier?
-    // we should discuss this more
     public Feeder() {
         this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
 

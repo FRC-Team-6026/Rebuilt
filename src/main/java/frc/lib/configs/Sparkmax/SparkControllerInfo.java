@@ -68,7 +68,7 @@ public class SparkControllerInfo {
         velConversion = ConversionFactors.defaultConversionVelocityFactor;
         pidList = PID.intakePID;
         voltageComp = Electrical.voltageComp;
-        rampRate = 0.35;
+        rampRate = 0.2;
         return this;
     }
 

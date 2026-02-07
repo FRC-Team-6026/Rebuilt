@@ -52,7 +52,7 @@ public class Limelight extends SubsystemBase {
         }
     }
 
-    public boolean isTargets(){
+    public boolean isTargets() {
         return _table.getEntry("tv").getInteger(0) > 0.5;
     }
 
@@ -110,7 +110,7 @@ public class Limelight extends SubsystemBase {
         
         if (limelightMeasurement.tagCount == 0)
             doRejectUpdate = true;
-        if (limelightMeasurement.tagCount == 1){
+        if (limelightMeasurement.tagCount == 1) {
             if (limelightMeasurement.rawFiducials[0].ambiguity > .7)
                 doRejectUpdate = true;
             if (limelightMeasurement.rawFiducials[0].distToCamera > 3)

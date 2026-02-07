@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
@@ -40,6 +40,11 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
+
+  // private final JoystickButton testButton =
+  // new JoystickButton(driver, XboxController.Button.kDPadLeft.value);
+  private final Trigger testButton =
+  new Trigger(() -> (driver.getPOV() == 90));
   /** Driver - Back (Minus) */
   private final JoystickButton zeroGyro =
   new JoystickButton(driver, XboxController.Button.kBack.value);
@@ -55,6 +60,7 @@ public class RobotContainer {
 
   private boolean robotCentric = false;
 
+  // SysID buttons
   // private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
   // private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
   // private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
@@ -64,9 +70,6 @@ public class RobotContainer {
   
   private final int elevatorAxis = XboxController.Axis.kRightY.value;
 
-  /** Operator - Testing D-Pad, should be Left */
-  private final JoystickButton testButton =
-  new JoystickButton(operator, 15);
   /** Operator - A (B on our controller) */
   private final JoystickButton undeployButton =
   new JoystickButton(operator, XboxController.Button.kA.value);
@@ -74,19 +77,20 @@ public class RobotContainer {
   private final JoystickButton deployButton =
   new JoystickButton(operator, XboxController.Button.kB.value);
   
-  /** Operator - Left Trigger */
   private final int intakeTrigger = XboxController.Axis.kLeftTrigger.value;
-  private final Trigger intakeButton = new Trigger(() -> operator.getRawAxis(intakeTrigger) > 0.1);
-  /** Operator - Right Trigger */
+  /** Operator - Left Trigger */
+  private final Trigger intakeButton = new Trigger(() -> operator.getRawAxis(intakeTrigger) > 0.2);
   private final int shootTrigger = XboxController.Axis.kRightTrigger.value;
-  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.1);
+  /** Operator - Right Trigger, 20% */
+  private final Trigger windupButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.2);
+  /** Operator - Right Trigger, 80% */
+  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.8);
 
   /* Subsystems */
   // private final DigitalInput beambreak = new DigitalInput(Constants.Setup.beambreakID);
-  // /** This returns TRUE if we DO have coral. We are now negating the beambreak to get this. */
-  // private final Trigger haveGamePiece = new Trigger(() -> !beambreak.get());
 
   private final Swerve swerve = new Swerve();
+  //private final Intake s_intake = new Intake();
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
 
   /* Robot Variables */
@@ -97,9 +101,6 @@ public class RobotContainer {
     /* Command Composition Definitions */
     
     /* PathPlanner named commands */
-
-    // swerve.zeroGyro();
-
     NamedCommands.registerCommand("Limelight - Init Rotation", new InstantCommand(() -> {s_Limelight.configRotation(swerve.getPose().getRotation().getDegrees() - swerve.getGyro().getYaw());}));
     NamedCommands.registerCommand("Limelight - Config Rotation", new InstantCommand(() -> {angleConfigured = s_Limelight.configRotation(swerve);}).repeatedly().until(() -> angleConfigured));
     NamedCommands.registerCommand("Limelight - Update Pose", new InstantCommand(() -> s_Limelight.updatePose(swerve, true)));
@@ -111,13 +112,14 @@ public class RobotContainer {
     if (!Preferences.containsKey("AutoAimStrength")) {
       Preferences.initDouble("AutoAimStrength", 1.0);
     }
+    if (!Preferences.containsKey("Intake Volts")) {
+      Preferences.initDouble("Intake Volts", 0.5);
+    }
 
     /**
      * Create and populate a sendable chooser with all PathPlannerAutos in the project
-     * This section of code is copied from AutoBuilder.buildAutoChooser and modified to allow custom
-     * compound autos.
+     * This section of code is copied from AutoBuilder.buildAutoChooser and modified to allow custom compound autos.
      */
-
     if (!AutoBuilder.isConfigured()) {
       throw new RuntimeException(
           "AutoBuilder was not configured before attempting to build an auto chooser");
@@ -128,7 +130,6 @@ public class RobotContainer {
       
       autoChooser = new SendableChooser<Command>();
 
-      // SendableChooser<Command> chooser = new SendableChooser<Command>();
       List<String> autoNames = AutoBuilder.getAllAutoNames();
       PathPlannerAuto defaultOption = null;
       List<PathPlannerAuto> options = new ArrayList<>();
@@ -189,6 +190,8 @@ public class RobotContainer {
     
     /* Operator Buttons */
     // TODO - configure operator buttons
+
+    testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
  }
 
  public Command getAutonomousCommand() {

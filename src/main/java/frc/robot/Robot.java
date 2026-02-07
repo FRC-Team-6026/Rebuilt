@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import org.littletonrobotics.urcl.URCL;
 
-import edu.wpi.first.cameraserver.CameraServer;
+// import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -89,7 +89,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // SysId - set up SysID tests. Preferably, set up tests on one or more buttons so they can be interrupted easily.
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.testInit();
   }

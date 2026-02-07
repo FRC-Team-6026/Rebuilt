@@ -190,15 +190,13 @@ public final class Constants {
         public static final int angleCurrentLim = 20;
         
         /* Subsystems */
-        // TODO - find actual values
+        // TODO - charcterization. is 20A enough for each subsystem?
         public static final int hopperLim = 20;
         public static final int intakeLim = 20;
         public static final int floorLim = 20;
         public static final int feederLim = 20;
         public static final int shooterLim = 20;
         public static final int elevatorLim = 20;
-
-        public static final double neoMinVoltage = 0.05; // guessed value
     }
     
     public final static class PID {
@@ -212,7 +210,7 @@ public final class Constants {
         // public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};   Sparkmax Swerve PIDs
         // public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
         public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};
-        public static final double[] anglePID = new double[] {10.0, 0.05, 0.05, 0.0}; 
+        public static final double[] anglePID = new double[] {10.0, 0.05, 0.05, 0.0};
         
         /* Subsystems */
         public static final double[] hopperPID = new double[] {0.03, 0.0, 0.0, 0.0};

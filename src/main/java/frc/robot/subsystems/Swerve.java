@@ -240,6 +240,7 @@ public class Swerve extends SubsystemBase {
 
   // SysId - Method that sets wheels to forward.
   public Command testInit() {
+    // Check to make sure our swerve.setAngle() jitter protection doesnt cause problems with this
     return new InstantCommand(
       () -> setModuleStates(new SwerveModuleState[] {
         new SwerveModuleState(0.0, new Rotation2d(Constants.Setup.angleOffsets[0])),
