@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -15,6 +16,7 @@ import edu.wpi.first.networktables.TimestampedDoubleArray;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 /* Coords from the perspective of the camera
  *  / Z (pointing out)
@@ -38,11 +40,13 @@ public class Limelight extends SubsystemBase {
     public double fieldRot; // degree angle to add to the gyro yaw to get our angle on the field.
     public boolean periodicRotationUpdate = false;
     public Swerve swerve;
+    public SlewRateLimiter limiter;
 
     public Limelight(String networkTableName, Swerve swerve) {
         _table = _instance.getTable(networkTableName);
         fieldRot = 0.0;
         this.swerve = swerve;
+        this.limiter = new SlewRateLimiter(Constants.Limelight.maxRate);
     }
 
     @Override
@@ -56,22 +60,23 @@ public class Limelight extends SubsystemBase {
         return _table.getEntry("tv").getInteger(0) > 0.5;
     }
 
-    // TODO - find a way to smooth movement for these, to account for losing track of the apriltag for a frame.
+    // TODO - Reprogram Autoaim
     /** Gets L/R movement for robot to align with an apriltag */
     public double getTX() {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
+        tx = limiter.calculate(tx);
         SmartDashboard.putNumber("tx", tx);
         if (tx > 0.5 || tx < -0.5)
             return Math.signum(tx)*0.02 + tx*Preferences.getDouble("AutoDriveStrength", 1.0)/100.0;
         return 0.0;
     }
 
-    // TODO - find a way to smooth movement for these, to account for losing track of the apriltag for a frame.
     /** Gets L/R movement for robot to align with an apriltag 
      * @param targetOffset the point to target, relative to the center of the image
     */
     public double getTX(double targetOffset) {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
+        tx = limiter.calculate(tx);
         SmartDashboard.putNumber("tx", tx);
         tx += targetOffset;
         if (tx > 0.5 || tx < -0.5)

@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
@@ -20,8 +22,15 @@ public class Floor extends SubsystemBase {
         this.floorController = floorSpark.sparkControl;
     }
 
-    // TODO - code start and stop functions
-    public void start() { }
+    public void start() {
+        setVoltage(0.5);
+    }
 
-    public void stop() { }
+    public void stop() { 
+        setVoltage(0.0);
+    }
+
+    public void setVoltage(double voltage) {
+        floorController.setReference(voltage, SparkBase.ControlType.kVoltage);
+    }
 }

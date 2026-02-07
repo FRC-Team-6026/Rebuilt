@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
@@ -21,8 +24,15 @@ public class Intake extends SubsystemBase {
         this.intakeController = intakeSpark.sparkControl;
     }
 
-    // TODO - code start and stop functions
-    public void start() { }
+    public void start() {
+        setVoltage(Preferences.getDouble("Intake Volts", 0.5));
+    }
 
-    public void stop() { }
+    public void stop() { 
+        setVoltage(0.0);
+    }
+
+    public void setVoltage(double voltage) {
+        intakeController.setReference(voltage, SparkBase.ControlType.kVoltage);
+    }
 }

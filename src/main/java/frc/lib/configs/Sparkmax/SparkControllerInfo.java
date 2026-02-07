@@ -15,6 +15,7 @@ public class SparkControllerInfo {
     public double[] pidList;
     public double voltageComp;
     public double rampRate = 0;
+    public double velConversionFactor = 1.0/60.0;
     // public double maxmotionVel = 0, maxmotionAcc = 0;
 
     public SparkControllerInfo drive(){

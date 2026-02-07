@@ -210,7 +210,7 @@ public final class Constants {
         // public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};   Sparkmax Swerve PIDs
         // public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
         public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};
-        public static final double[] anglePID = new double[] {10.0, 0.05, 0.05, 0.0};
+        public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
         /* Subsystems */
         public static final double[] hopperPID = new double[] {0.03, 0.0, 0.0, 0.0};
@@ -296,5 +296,9 @@ public final class Constants {
         public static final Usage feederUsage = Usage.kMinimal;
         public static final Usage shooterUsage = Usage.kVelocityOnly;
         public static final Usage elevatorUsage = Usage.kPositionOnly;
+    }
+
+    public final static class Limelight {
+        public static final double maxRate = 20.0;
     }
 }

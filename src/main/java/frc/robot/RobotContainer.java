@@ -90,7 +90,7 @@ public class RobotContainer {
   // private final DigitalInput beambreak = new DigitalInput(Constants.Setup.beambreakID);
 
   private final Swerve swerve = new Swerve();
-  //private final Intake s_intake = new Intake();
+  private final Intake s_intake = new Intake();
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
 
   /* Robot Variables */
@@ -192,6 +192,8 @@ public class RobotContainer {
     // TODO - configure operator buttons
 
     testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
+    intakeButton.onTrue(new InstantCommand(() -> s_intake.start()));
+    intakeButton.onFalse(new InstantCommand(() -> s_intake.stop()));
  }
 
  public Command getAutonomousCommand() {
@@ -207,12 +209,14 @@ public class RobotContainer {
     swerve.setDefaultCommand(
       new TeleopSwerve(
         swerve,
+        s_Limelight,
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
+        () -> -driver.getRawAxis(rotationAxis),
         // () -> (autoDrive.getAsBoolean() ? s_Limelight.getTZ() : -driver.getRawAxis(translationAxis)),
         // () -> (autoDrive.getAsBoolean() ? s_Limelight.getTX() : -driver.getRawAxis(strafeAxis)),
         // () -> -driver.getRawAxis(rotationAxis), // To enable the autoaim button again, comment this line and uncomment the line below
-        () -> (autoAimButton.getAsBoolean() ? -s_Limelight.getTX(Math.atan(-driver.getRawAxis(strafeAxis)/s_Limelight.getTZ()))*Preferences.getDouble("AutoAimStrength", 1.0)/100.0 : -driver.getRawAxis(rotationAxis)), // TODO - expound on this math
+        () -> autoAimButton.getAsBoolean(),
         () -> robotCentric));
         // () -> (autoDrive.getAsBoolean() ? true : robotCentric)));
 

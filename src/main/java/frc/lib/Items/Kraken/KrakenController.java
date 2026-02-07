@@ -27,7 +27,7 @@ public class KrakenController {
         talonConfigs = new TalonFXConfiguration();
         talonConfigs
         .withAudio(new AudioConfigs()
-            .withBeepOnBoot(true)   // TODO - change beeping to false if this gets annoying
+            .withBeepOnBoot(true)
         ).withSlot0(new Slot0Configs()
             .withKP(Info.pidList[0])
             .withKI(Info.pidList[1])
