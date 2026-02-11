@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
+import frc.robot.commands.DefaultCommands.HopperDefault;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
 
 public class RobotContainer {
@@ -69,6 +71,7 @@ public class RobotContainer {
   /* Operator Buttons */
   
   private final int elevatorAxis = XboxController.Axis.kRightY.value;
+  private final int hopperAxis = XboxController.Axis.kLeftY.value;
 
   /** Operator - A (B on our controller) */
   private final JoystickButton undeployButton =
@@ -91,6 +94,7 @@ public class RobotContainer {
 
   private final Swerve swerve = new Swerve();
   private final Intake s_intake = new Intake();
+  private final Hopper s_hopper = new Hopper();
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
 
   /* Robot Variables */
@@ -114,6 +118,9 @@ public class RobotContainer {
     }
     if (!Preferences.containsKey("Intake Volts")) {
       Preferences.initDouble("Intake Volts", 0.5);
+    }
+    if (!Preferences.containsKey("Hopper Speed")) {
+      Preferences.initDouble("Hopper Speed", 1);
     }
 
     /**
@@ -220,6 +227,9 @@ public class RobotContainer {
         () -> robotCentric));
         // () -> (autoDrive.getAsBoolean() ? true : robotCentric)));
 
+    s_hopper.setDefaultCommand(
+      new HopperDefault(s_hopper, () -> operator.getRawAxis(hopperAxis))
+    );
   }
 
   public void teleopExit() {

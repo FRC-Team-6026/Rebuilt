@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,5 +34,10 @@ public class Hopper extends SubsystemBase {
 
     public Command retract() {
         return Commands.none();
+    }
+
+    public void setVoltage(double volts) {
+        volts = MathUtil.clamp(volts, -5.0, 5.0);
+        hopperController.setReference(volts, ControlType.kVoltage);
     }
 }

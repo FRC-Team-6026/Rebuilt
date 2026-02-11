@@ -42,8 +42,11 @@ public class Shooter extends SubsystemBase {
         // TODO - check units, refigure if robot params change
         double dist = distance.getAsDouble();
 
-        // double desiredSpeed = (dist-18.5)+((74-dist)/74)+31.4;
-        double desiredSpeed = dist*0.1;
+        // this approx formula is in meters/s, and is for specific robot settings
+        // may need to adjust for wheel radius, speed imparted to ball, etc
+        // double desiredSpeed = (dist-6)(21-dist)/22.2 + 9.3;
+        // 4in diameter shooter wheels planned
+        double desiredSpeed = 5;
 
         shooterController.setReference(desiredSpeed, ControlType.kVelocity);
         // Is 80% of value enough to start feeding stuff through?

@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void start() {
-        setVoltage(Preferences.getDouble("Intake Volts", 0.5));
+        setVoltage(Preferences.getDouble("Intake Volts", 1));
     }
 
     public void stop() { 

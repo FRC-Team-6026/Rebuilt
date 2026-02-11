@@ -34,7 +34,7 @@ public final class Constants {
         public static final boolean angleInvert = true;
 
         public static final boolean hopperInvert = false;
-        public static final boolean intakeInvert = false;
+        public static final boolean intakeInvert = true;
         public static final boolean floorInvert = false;
         public static final boolean feederInvert = false;
         public static final boolean shooterInvert = false;
@@ -299,6 +299,6 @@ public final class Constants {
     }
 
     public final static class Limelight {
-        public static final double maxRate = 20.0;
+        public static final double maxRate = 20.0;  // slew rate, in degrees/s
     }
 }
