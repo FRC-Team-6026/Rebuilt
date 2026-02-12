@@ -7,10 +7,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Hopper;
 
-// Left from previous year as example, not intended for 2026
-
-// Useful for testing the wrist. Ideally, we don't even use this
-// command, but only set the wrist via the SetWristCommand.
+// Useful for testing the hopper. Ideally, we don't even use this
+// command, but only set the hopper via the commands in the class.
 
 public class HopperDefault extends Command{
     private Hopper s_Hopper;

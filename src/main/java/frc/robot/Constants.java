@@ -35,7 +35,7 @@ public final class Constants {
 
         public static final boolean hopperInvert = false;
         public static final boolean intakeInvert = true;
-        public static final boolean floorInvert = false;
+        public static final boolean floorInvert = true; // guessed, double check
         public static final boolean feederInvert = false;
         public static final boolean shooterInvert = false;
         public static final boolean elevatorInvert = false;
@@ -113,13 +113,11 @@ public final class Constants {
         public static final double minPercent = -0.40;   // |
 
         /* Min/Max Heights */
-        public static final double minHeight = 0.0;       // Now in inches!
-        public static final double maxHeight = 59.0;
+        public static final double minHeight = 0.0;       // Should be in degrees. Starting point will be 0
+        public static final double maxHeight = 90.0;      // Approx 90deg? Is deployed the positive direction?
         
         /* setElevator height seeking tolerance */
-        public static final double tolerance = 0.4; // Rename this pls
-
-        public static final double softHeightMinimum = 1;
+        public static final double tolerance = 1.0;
     }
 
     public static final class Elevator {
@@ -255,8 +253,11 @@ public final class Constants {
         public static final double elevatorConversionPositionFactor = 1.406;   // 10 tooth small : 64 tooth large, 1 rot : 3.25 in of chain (18 tooth sprocket), 1 inch of 1st stage : 2 inch of 2nd stage
         public static final double elevatorConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
         
-        public static final double wristConversionPositionFactor = 1.0/96.0 * 360;   // 96:1 total gear reduction, 1:360 degree conversion
+        public static final double wristConversionPositionFactor = 1.0/96.0 * 360.0;   // 96:1 total gear reduction, 1:360 degree conversion
         public static final double wristConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
+
+        public static final double hopperConversionPositionFactor = 1.0/100.0 * 360.0;    // ~1:100? gear reduction, 1:360 degree conversion (not yet added to hopper setup)
+        public static final double hopperConversionVelocityFactor = hopperConversionPositionFactor / 60.0; //rpm to rps
         
         /* These just get the raw encoder readings */
         public static final double defaultConversionPositionFactor = 1.0;

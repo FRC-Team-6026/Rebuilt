@@ -44,8 +44,9 @@ public class Shooter extends SubsystemBase {
 
         // this approx formula is in meters/s, and is for specific robot settings
         // may need to adjust for wheel radius, speed imparted to ball, etc
-        // double desiredSpeed = (dist-6)(21-dist)/22.2 + 9.3;
-        // 4in diameter shooter wheels planned
+        // double desiredBallSpeed = (dist-6)(21-dist)/22.2 + 9.3;
+        // 4in diameter shooter wheels planned, so 4*pi circumference; 1 rev/s = 0.101*pi m/s (this can be done in conversion factors instead)
+        // double desiredSpeed = desiredBallSpeed/(0.101*pi);
         double desiredSpeed = 5;
 
         shooterController.setReference(desiredSpeed, ControlType.kVelocity);
