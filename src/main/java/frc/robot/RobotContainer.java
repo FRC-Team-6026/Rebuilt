@@ -181,6 +181,7 @@ public class RobotContainer {
       */
 
       SmartDashboard.putData("Auto Mode", autoChooser);
+      SmartDashboard.putBoolean("Is Robot Centric", robotCentric);
       
       // s_Limelight.configRotation(swerve);
     }

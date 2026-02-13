@@ -8,10 +8,15 @@ import java.util.HashMap;
 
 import org.littletonrobotics.urcl.URCL;
 
-// import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -22,8 +27,6 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-
-    // CameraServer.startAutomaticCapture();
 
     // SysId - Enabling logging. This method is specific to our Rev motors.
     // (Thank you to team 6328 for this logger!)
@@ -45,6 +48,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+    Alert alert = new Alert("Test", AlertType.kWarning);
   }
 
   @Override
