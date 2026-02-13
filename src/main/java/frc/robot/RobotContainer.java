@@ -113,6 +113,7 @@ public class RobotContainer {
     configureBindings();
 
     /* Preferences initialization */
+    // Preferences.removeAll();     // The nuclear option, for when it's useful
     if (!Preferences.containsKey("AutoAimStrength")) {
       Preferences.initDouble("AutoAimStrength", 1.0);
     }

@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,7 +27,7 @@ public class Hopper extends SubsystemBase {
         this.hopperController = hopperSpark.sparkControl;
     }
 
-    // TODO - code deploy and retract functions
+    // TODO - code deploy and retract functions. We may want to account for weight as it changes orientation.
 
     public Command deploy() {
         return Commands.none();
@@ -39,5 +40,10 @@ public class Hopper extends SubsystemBase {
     public void setVoltage(double volts) {
         volts = MathUtil.clamp(volts, -5.0, 5.0);
         hopperController.setReference(volts, ControlType.kVoltage);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Hopper Position", hopperEncoder.getPosition());
     }
 }
