@@ -38,9 +38,9 @@ public class Shooter extends SubsystemBase {
         feederController.setReference(0.0, ControlType.kVoltage);
     }, this);}
 
-    public Command shoot(DoubleSupplier distance) { return Commands.run(() -> {
+    public Command shoot() { return Commands.run(() -> {
         // TODO - check units, refigure if robot params change
-        double dist = distance.getAsDouble();
+        // double dist = distance.getAsDouble();
 
         // this approx formula is in meters/s, and is for specific robot settings
         // may need to adjust for wheel radius, speed imparted to ball, etc

@@ -25,6 +25,7 @@ import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.DefaultCommands.HopperDefault;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
@@ -100,6 +101,7 @@ public class RobotContainer {
   private final Intake s_intake = new Intake();
   private final Hopper s_hopper = new Hopper();
   private final Floor s_floor = new Floor();
+  private final Shooter s_shooter = new Shooter();
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
 
   /* Robot Variables */
@@ -216,13 +218,16 @@ public class RobotContainer {
     // TODO - configure operator buttons
 
     testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
+
     intakeButton.onTrue(new InstantCommand(() -> {s_intake.start(); s_floor.start();}));
     intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop(); s_floor.stop();}));
-    shootButton.onTrue(new InstantCommand(() -> s_floor.start()));
-    shootButton.onFalse(new InstantCommand(() -> s_floor.stop()));
+
+    windupButton.onTrue(new InstantCommand(() -> {s_shooter.windup();}));
+    shootButton.onTrue(new InstantCommand(() -> {s_shooter.shoot(); s_floor.start();}));
+    shootButton.onFalse(new InstantCommand(() -> {s_shooter.stop(); s_floor.stop();}));
+
     deployButton.onTrue(s_hopper.deploy());
     retractButton.onTrue(s_hopper.retract());
-    interruptButton.onTrue(new InstantCommand(() -> s_hopper.setVoltage(0.0)));
  }
 
  public Command getAutonomousCommand() {
