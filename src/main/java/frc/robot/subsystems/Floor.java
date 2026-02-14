@@ -11,6 +11,7 @@ import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
 
 public class Floor extends SubsystemBase {
+    private int FloorCalls;
     private SparkController floorSpark;
     private RelativeEncoder floorEncoder;
     private SparkClosedLoopController floorController;
@@ -23,11 +24,15 @@ public class Floor extends SubsystemBase {
     }
 
     public void start() {
-        setVoltage(0.5);
+        FloorCalls++;
+        setVoltage(Preferences.getDouble("Floor Volts", 0.5));
     }
 
     public void stop() { 
-        setVoltage(0.0);
+        FloorCalls--;
+        if (FloorCalls == 0) {
+            setVoltage(0.0);
+        }
     }
 
     public void setVoltage(double voltage) {

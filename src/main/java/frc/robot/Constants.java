@@ -211,7 +211,7 @@ public final class Constants {
         public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
         /* Subsystems */
-        public static final double[] hopperPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] hopperPID = new double[] {0.025, 0.0, 0.0, 0.0};
         public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
@@ -256,7 +256,7 @@ public final class Constants {
         public static final double wristConversionPositionFactor = 1.0/96.0 * 360.0;   // 96:1 total gear reduction, 1:360 degree conversion
         public static final double wristConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
 
-        public static final double hopperConversionPositionFactor = 1.0/100.0 * 360.0;    // ~1:100? gear reduction, 1:360 degree conversion (not yet added to hopper setup)
+        public static final double hopperConversionPositionFactor = 1.0/115.0 * 360.0;    // ~1:100? gear reduction, 1:360 degree conversion (not yet added to hopper setup)
         public static final double hopperConversionVelocityFactor = hopperConversionPositionFactor / 60.0; //rpm to rps
         
         /* These just get the raw encoder readings */

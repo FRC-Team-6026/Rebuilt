@@ -29,9 +29,9 @@ public class TeleopSwerve extends Command {
   public TeleopSwerve(
       Swerve s_Swerve,
       Limelight s_Limelight,
-      DoubleSupplier rotationSup,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
+      DoubleSupplier rotationSup,
       BooleanSupplier autoaim,
       BooleanSupplier robotCentricSup) {
     this.s_Swerve = s_Swerve;

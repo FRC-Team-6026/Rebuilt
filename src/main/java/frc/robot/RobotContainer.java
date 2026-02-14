@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
@@ -74,11 +75,14 @@ public class RobotContainer {
   private final int hopperAxis = XboxController.Axis.kLeftY.value;
 
   /** Operator - A (B on our controller) */
-  private final JoystickButton undeployButton =
+  private final JoystickButton retractButton =
   new JoystickButton(operator, XboxController.Button.kA.value);
   /** Operator - B (A on our controller) */
   private final JoystickButton deployButton =
   new JoystickButton(operator, XboxController.Button.kB.value);
+  /** Operator - Left Button */
+  private final JoystickButton interruptButton =
+  new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
   
   private final int intakeTrigger = XboxController.Axis.kLeftTrigger.value;
   /** Operator - Left Trigger */
@@ -95,6 +99,7 @@ public class RobotContainer {
   private final Swerve swerve = new Swerve();
   private final Intake s_intake = new Intake();
   private final Hopper s_hopper = new Hopper();
+  private final Floor s_floor = new Floor();
   private final Limelight s_Limelight = new Limelight("limelight", swerve);
 
   /* Robot Variables */
@@ -113,15 +118,25 @@ public class RobotContainer {
     configureBindings();
 
     /* Preferences initialization */
-    // Preferences.removeAll();     // The nuclear option, for when it's useful
+    // Preferences.removeAll();
+
     if (!Preferences.containsKey("AutoAimStrength")) {
       Preferences.initDouble("AutoAimStrength", 1.0);
     }
     if (!Preferences.containsKey("Intake Volts")) {
       Preferences.initDouble("Intake Volts", 0.5);
     }
-    if (!Preferences.containsKey("Hopper Speed")) {
-      Preferences.initDouble("Hopper Speed", 1);
+    if (!Preferences.containsKey("Hopper Volts")) {
+      Preferences.initDouble("Hopper Volts", 1);
+    }
+    if (!Preferences.containsKey("Floor Volts")) {
+      Preferences.initDouble("Floor Volts", 0.5);
+    }
+    if (!Preferences.containsKey("FF Mult")) {
+      Preferences.initDouble("FF Mult", 0.5);
+    }
+    if (!Preferences.containsKey("Hopper Deploy Target")) {
+      Preferences.initDouble("Hopper Deploy Target", 60.0);
     }
 
     /**
@@ -201,8 +216,13 @@ public class RobotContainer {
     // TODO - configure operator buttons
 
     testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
-    intakeButton.onTrue(new InstantCommand(() -> s_intake.start()));
-    intakeButton.onFalse(new InstantCommand(() -> s_intake.stop()));
+    intakeButton.onTrue(new InstantCommand(() -> {s_intake.start(); s_floor.start();}));
+    intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop(); s_floor.stop();}));
+    shootButton.onTrue(new InstantCommand(() -> s_floor.start()));
+    shootButton.onFalse(new InstantCommand(() -> s_floor.stop()));
+    deployButton.onTrue(s_hopper.deploy());
+    retractButton.onTrue(s_hopper.retract());
+    interruptButton.onTrue(new InstantCommand(() -> s_hopper.setVoltage(0.0)));
  }
 
  public Command getAutonomousCommand() {
@@ -236,6 +256,7 @@ public class RobotContainer {
 
   public void teleopExit() {
     swerve.removeDefaultCommand();
+    s_hopper.removeDefaultCommand();
   }
 
   public void autoInit() {

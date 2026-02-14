@@ -54,6 +54,8 @@ public class Limelight extends SubsystemBase {
         if (periodicRotationUpdate) {
             SetRobotOrientation("limelight", swerve.getGyro().getYaw() + fieldRot, 0, 0, 0, 0, 0);
         }
+        getTX();
+        getTZ();
     }
 
     public boolean isTargets() {

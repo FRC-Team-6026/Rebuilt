@@ -47,13 +47,14 @@ public class Shooter extends SubsystemBase {
         // double desiredBallSpeed = (dist-6)(21-dist)/22.2 + 9.3;
         // 4in diameter shooter wheels planned, so 4*pi circumference; 1 rev/s = 0.101*pi m/s (this can be done in conversion factors instead)
         // double desiredSpeed = desiredBallSpeed/(0.101*pi);
-        double desiredSpeed = 5;
+        double desiredSpeed = 1;
 
         shooterController.setReference(desiredSpeed, ControlType.kVelocity);
         // Is 80% of value enough to start feeding stuff through?
-        if (shooterEncoder.getVelocity() > 0.8*desiredSpeed)
+        if (shooterEncoder.getVelocity() > 0.8*desiredSpeed) {
             // This will enable, but not disable. Should be fine? Change if this is a problem
             feederController.setReference(1.0, ControlType.kVoltage);
+        }
     }, this);}
 
     public Command stop() { return new InstantCommand(() -> {

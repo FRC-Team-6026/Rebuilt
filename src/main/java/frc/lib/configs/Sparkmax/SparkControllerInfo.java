@@ -51,8 +51,8 @@ public class SparkControllerInfo {
         invert = Setup.hopperInvert;
         alternateAbsolute = false;
         idleMode = IdleModes.hopperIdle;
-        posConversion = ConversionFactors.defaultConversionPositionFactor;
-        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        posConversion = ConversionFactors.hopperConversionPositionFactor;
+        velConversion = ConversionFactors.hopperConversionVelocityFactor;
         pidList = PID.hopperPID;
         voltageComp = Electrical.voltageComp;
         rampRate = 0.35;

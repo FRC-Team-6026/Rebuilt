@@ -26,12 +26,12 @@ public class HopperDefault extends Command{
 
     @Override
     public void execute() {
-        double speedPref = Preferences.getDouble("Hopper Speed", 1);
+        double speedPref = Preferences.getDouble("Hopper Volts", 1);
 
         // Applying deadband so thumbsticks that are slightly off dont trigger command
         double speed = MathUtil.applyDeadband(speedSup.getAsDouble(), 0.1);
         
-        s_Hopper.setVoltage(speed * speedPref);
+        s_Hopper.setVoltage(speed * speedPref, true);
     }
 
     @Override

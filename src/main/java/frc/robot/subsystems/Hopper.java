@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
@@ -30,17 +34,29 @@ public class Hopper extends SubsystemBase {
     // TODO - code deploy and retract functions. We may want to account for weight as it changes orientation.
 
     public Command deploy() {
-        return Commands.none();
+        // double target = Preferences.getDouble("Hopper Deploy Target", 50.0);
+        return new RunCommand(() -> hopperController.setReference(Preferences.getDouble("Hopper Deploy Target", 50.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
+        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 50.0)) < Constants.Hopper.tolerance);
     }
 
     public Command retract() {
-        return Commands.none();
+        return new RunCommand(() -> hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
+        .until(() -> Math.abs(hopperEncoder.getPosition()) < Constants.Hopper.tolerance);
     }
 
     public void setVoltage(double volts) {
-        volts = MathUtil.clamp(volts, -5.0, 5.0);
-        hopperController.setReference(volts, ControlType.kVoltage);
+        setVoltage(volts, false);
     }
+
+    public void setVoltage(double volts, boolean FFenable) {
+        volts = MathUtil.clamp(volts, -5.0, 5.0);
+        if (FFenable)
+            hopperController.setReference(volts, ControlType.kVoltage, ClosedLoopSlot.kSlot0, getFF());
+        else
+            hopperController.setReference(volts, ControlType.kVoltage);
+    }
+
+    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*Preferences.getDouble("FF Mult", 0.2); }
 
     @Override
     public void periodic() {
