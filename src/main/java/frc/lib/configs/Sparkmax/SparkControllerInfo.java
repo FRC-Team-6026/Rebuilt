@@ -107,8 +107,8 @@ public class SparkControllerInfo {
         invert = Setup.shooterInvert;
         alternateAbsolute = false;
         idleMode = IdleModes.shooterIdle;
-        posConversion = ConversionFactors.defaultConversionPositionFactor;
-        velConversion = ConversionFactors.defaultConversionVelocityFactor;
+        posConversion = ConversionFactors.shooterConversionPositionFactor;
+        velConversion = ConversionFactors.shooterConversionVelocityFactor;
         pidList = PID.shooterPID;
         voltageComp = Electrical.voltageComp;
         rampRate = 0.35;

@@ -140,6 +140,9 @@ public class RobotContainer {
     if (!Preferences.containsKey("Hopper Deploy Target")) {
       Preferences.initDouble("Hopper Deploy Target", 60.0);
     }
+    if (!Preferences.containsKey("Shooter Voltage")) {
+      Preferences.initDouble("Shooter Voltage", 0.5);
+    }
 
     /**
      * Create and populate a sendable chooser with all PathPlannerAutos in the project
@@ -222,9 +225,10 @@ public class RobotContainer {
     intakeButton.onTrue(new InstantCommand(() -> {s_intake.start(); s_floor.start();}));
     intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop(); s_floor.stop();}));
 
-    windupButton.onTrue(new InstantCommand(() -> {s_shooter.windup();}));
-    shootButton.onTrue(new InstantCommand(() -> {s_shooter.shoot(); s_floor.start();}));
-    shootButton.onFalse(new InstantCommand(() -> {s_shooter.stop(); s_floor.stop();}));
+    shootButton.onTrue(new InstantCommand(() -> s_floor.start()).andThen(s_shooter.shootCommand()));
+    shootButton.onFalse(new InstantCommand(() -> {s_shooter.windup(); s_floor.stop();}, s_shooter));
+    windupButton.onTrue(new InstantCommand(() -> s_shooter.windup(), s_shooter));
+    windupButton.onFalse(new InstantCommand(() -> s_shooter.stop(), s_shooter));
 
     deployButton.onTrue(s_hopper.deploy());
     retractButton.onTrue(s_hopper.retract());

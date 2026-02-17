@@ -26,8 +26,10 @@ public final class Constants {
         public static final int intakeSpark = 15;
         public static final int floorSpark = 16;
         public static final int feederSpark = 17;
-        public static final int shooterSpark = 18;
-        public static final int elevatorSpark = 19;
+        public static final int shooterSpark1 = 18;
+        public static final int shooterSpark2 = 19;
+        public static final int shooterSpark3 = 20;
+        public static final int elevatorSpark = 21;
 
         /* Motor Inverts */
         public static final boolean driveInvert = true;
@@ -256,9 +258,12 @@ public final class Constants {
         public static final double wristConversionPositionFactor = 1.0/96.0 * 360.0;   // 96:1 total gear reduction, 1:360 degree conversion
         public static final double wristConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
 
-        public static final double hopperConversionPositionFactor = 1.0/115.0 * 360.0;    // ~1:100? gear reduction, 1:360 degree conversion (not yet added to hopper setup)
+        public static final double hopperConversionPositionFactor = 1.0/115.0 * 360.0;    // 1:115 gear reduction, 1:360 degree conversion
         public static final double hopperConversionVelocityFactor = hopperConversionPositionFactor / 60.0; //rpm to rps
         
+        public static final double shooterConversionPositionFactor = 1.0/2.0 * 0.101;    // ??? gear reduction, 4in diameter * pi conversion to circumference
+        public static final double shooterConversionVelocityFactor = shooterConversionPositionFactor / 60.0; //rpm to rps
+
         /* These just get the raw encoder readings */
         public static final double defaultConversionPositionFactor = 1.0;
         public static final double defaultConversionVelocityFactor = defaultConversionPositionFactor / 60.0; //rpm to rps
