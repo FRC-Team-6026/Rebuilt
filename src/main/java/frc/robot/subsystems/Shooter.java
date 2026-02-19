@@ -33,31 +33,20 @@ public class Shooter extends SubsystemBase {
     private ShooterMod[] s_mods;
     
     private SparkController feederSpark;
-    private RelativeEncoder feederEncoder;
     private SparkClosedLoopController feederController;
 
-    public Shooter() {
-        // this.shooterSpark1 = new SparkController(Constants.Setup.shooterSpark1, new SparkControllerInfo().shooter());
-        // // this.shooterSpark2 = new SparkController(Constants.Setup.shooterSpark2, new SparkControllerInfo().shooter());
-        // // this.shooterSpark3 = new SparkController(Constants.Setup.shooterSpark3, new SparkControllerInfo().shooter());
-        // this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
+    private Limelight limelight;
 
-        // this.shooterEncoder1 = shooterSpark1.sparkEncode;
-        // this.shooterController1 = shooterSpark1.sparkControl;
-
+    public Shooter(Limelight limelight) {
         for(int i = 0; i <= 2; i++){
             s_mods[i] = new ShooterMod(i);
         }
 
-        this.feederEncoder = feederSpark.sparkEncode;
         this.feederController = feederSpark.sparkControl;
+        this.limelight = limelight;
     }
 
     public void stop() {
-        // shooterController1.setReference(0.0, ControlType.kVoltage);
-        // // shooterController2.setReference(0.0, ControlType.kVoltage);
-        // // shooterController3.setReference(0.0, ControlType.kVoltage);
-
         for(ShooterMod mod : s_mods) {
             mod.controller.setReference(0.0, ControlType.kVoltage);
         }
@@ -66,10 +55,6 @@ public class Shooter extends SubsystemBase {
 
     public void windup() {
         // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
-        // shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
-        // // shooterController2.setReference(1.0, ControlType.kVoltage);
-        // // shooterController3.setReference(1.0, ControlType.kVoltage);
-
         for(ShooterMod mod : s_mods) {
             mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
         }
@@ -78,31 +63,19 @@ public class Shooter extends SubsystemBase {
 
     public Command shootCommand() { return Commands.run(() -> {
         // TODO - check units, refigure if robot params change
-        // double dist = distance.getAsDouble();
-
-        // this approx formula is in meters/s, and is for specific robot settings
-        // may need to adjust for wheel radius, speed imparted to ball, etc
-        // double desiredBallSpeed = (dist-6)(21-dist)/22.2 + 9.3;
         // 4in diameter shooter wheels planned, so 4*pi circumference; 1 rev/s = 0.101*pi m/s (this is happening in conversion factors instead)
-        // double desiredSpeed = desiredBallSpeed;
-        // double desiredSpeed = 1; // expect values closer to 6, starting much lower for sanity checking first
+        double distance = limelight.getTZ();
+        double targetSpeed = (distance-6.0)*(21.0-distance)/22.2 + 9.3;
 
-        // shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
-        // shooterController2.setReference(desiredSpeed, ControlType.kVelocity);
-        // shooterController3.setReference(desiredSpeed, ControlType.kVelocity);
-        // Is 80% of value enough to start feeding stuff through?
-        // if (shooterEncoder1.getVelocity() > 0.8*desiredSpeed) {
-            // This will enable, but not disable. Should be fine? Change if this is a problem
-            // feederController.setReference(1.0, ControlType.kVoltage);
-        // }
-
-
-
-        //
-
-
+        boolean atSpeed = true;
         for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
+            mod.controller.setReference(targetSpeed, ControlType.kVelocity);
+            if(mod.encoder.getVelocity() < 0.8 * targetSpeed) {
+                atSpeed = false;
+            }
+        }
+        if(atSpeed) {
+            feederController.setReference(1.0, ControlType.kVoltage);
         }
     }, this);}
 }

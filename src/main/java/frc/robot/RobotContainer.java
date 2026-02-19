@@ -96,13 +96,13 @@ public class RobotContainer {
 
   /* Subsystems */
   // private final DigitalInput beambreak = new DigitalInput(Constants.Setup.beambreakID);
-
   private final Swerve swerve = new Swerve();
+  private final Limelight s_Limelight = new Limelight("limelight", swerve);
+
   private final Intake s_intake = new Intake();
   private final Hopper s_hopper = new Hopper();
   private final Floor s_floor = new Floor();
-  private final Shooter s_shooter = new Shooter();
-  private final Limelight s_Limelight = new Limelight("limelight", swerve);
+  private final Shooter s_shooter = new Shooter(s_Limelight);
 
   /* Robot Variables */
   private final SendableChooser<Command> autoChooser;
