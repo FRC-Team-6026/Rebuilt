@@ -16,40 +16,63 @@ import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-    private SparkController shooterSpark1;
-    private SparkController shooterSpark2;
-    private SparkController shooterSpark3;
-    private RelativeEncoder shooterEncoder1;
-    private SparkClosedLoopController shooterController1;
+    
+    // Switched shooters to use instancing. It should make our code much cleaner/shorter.
+    private class ShooterMod {
+        public SparkController spark;
+        public RelativeEncoder encoder;
+        public SparkClosedLoopController controller;
+
+        public ShooterMod(int id) {
+            this.spark = new SparkController(Constants.Setup.shooterSpark[id], new SparkControllerInfo().shooter());
+            this.encoder = spark.sparkEncode;
+            this.controller = spark.sparkControl;
+        }
+    }
+
+    private ShooterMod[] s_mods;
     
     private SparkController feederSpark;
     private RelativeEncoder feederEncoder;
     private SparkClosedLoopController feederController;
 
     public Shooter() {
-        this.shooterSpark1 = new SparkController(Constants.Setup.shooterSpark1, new SparkControllerInfo().shooter());
-        // this.shooterSpark2 = new SparkController(Constants.Setup.shooterSpark2, new SparkControllerInfo().shooter());
-        // this.shooterSpark3 = new SparkController(Constants.Setup.shooterSpark3, new SparkControllerInfo().shooter());
-        this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
+        // this.shooterSpark1 = new SparkController(Constants.Setup.shooterSpark1, new SparkControllerInfo().shooter());
+        // // this.shooterSpark2 = new SparkController(Constants.Setup.shooterSpark2, new SparkControllerInfo().shooter());
+        // // this.shooterSpark3 = new SparkController(Constants.Setup.shooterSpark3, new SparkControllerInfo().shooter());
+        // this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
 
-        this.shooterEncoder1 = shooterSpark1.sparkEncode;
-        this.shooterController1 = shooterSpark1.sparkControl;
+        // this.shooterEncoder1 = shooterSpark1.sparkEncode;
+        // this.shooterController1 = shooterSpark1.sparkControl;
+
+        for(int i = 0; i <= 2; i++){
+            s_mods[i] = new ShooterMod(i);
+        }
+
         this.feederEncoder = feederSpark.sparkEncode;
         this.feederController = feederSpark.sparkControl;
     }
 
     public void stop() {
-        shooterController1.setReference(0.0, ControlType.kVoltage);
-        // shooterController2.setReference(0.0, ControlType.kVoltage);
-        // shooterController3.setReference(0.0, ControlType.kVoltage);
+        // shooterController1.setReference(0.0, ControlType.kVoltage);
+        // // shooterController2.setReference(0.0, ControlType.kVoltage);
+        // // shooterController3.setReference(0.0, ControlType.kVoltage);
+
+        for(ShooterMod mod : s_mods) {
+            mod.controller.setReference(0.0, ControlType.kVoltage);
+        }
         feederController.setReference(0.0, ControlType.kVoltage);
     }
 
     public void windup() {
         // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
-        shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
-        // shooterController2.setReference(1.0, ControlType.kVoltage);
-        // shooterController3.setReference(1.0, ControlType.kVoltage);
+        // shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
+        // // shooterController2.setReference(1.0, ControlType.kVoltage);
+        // // shooterController3.setReference(1.0, ControlType.kVoltage);
+
+        for(ShooterMod mod : s_mods) {
+            mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
+        }
         feederController.setReference(0.0, ControlType.kVoltage);
     }
 
@@ -64,8 +87,7 @@ public class Shooter extends SubsystemBase {
         // double desiredSpeed = desiredBallSpeed;
         // double desiredSpeed = 1; // expect values closer to 6, starting much lower for sanity checking first
 
-        // shooterController1.setReference(desiredSpeed, ControlType.kVelocity);
-        shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
+        // shooterController1.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
         // shooterController2.setReference(desiredSpeed, ControlType.kVelocity);
         // shooterController3.setReference(desiredSpeed, ControlType.kVelocity);
         // Is 80% of value enough to start feeding stuff through?
@@ -73,5 +95,14 @@ public class Shooter extends SubsystemBase {
             // This will enable, but not disable. Should be fine? Change if this is a problem
             // feederController.setReference(1.0, ControlType.kVoltage);
         // }
+
+
+
+        //
+
+
+        for(ShooterMod mod : s_mods) {
+            mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
+        }
     }, this);}
 }

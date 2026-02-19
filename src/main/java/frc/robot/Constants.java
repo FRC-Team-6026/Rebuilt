@@ -26,9 +26,13 @@ public final class Constants {
         public static final int intakeSpark = 15;
         public static final int floorSpark = 16;
         public static final int feederSpark = 17;
+
         public static final int shooterSpark1 = 18;
         public static final int shooterSpark2 = 19;
         public static final int shooterSpark3 = 20;
+
+        public static final int[] shooterSpark = new int[] {18, 19, 20};
+
         public static final int elevatorSpark = 21;
 
         /* Motor Inverts */
