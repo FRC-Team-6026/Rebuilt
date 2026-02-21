@@ -7,6 +7,8 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -27,6 +29,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveModule;
 import frc.robot.commands.DefaultCommands.HopperDefault;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
 
@@ -104,10 +107,19 @@ public class RobotContainer {
   private final Floor s_floor = new Floor();
   private final Shooter s_shooter = new Shooter(s_Limelight);
 
+  private final Orchestra s_orchestra = new Orchestra();
+
   /* Robot Variables */
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
+
+    /* Assigning Instruments */
+    for (SwerveModule mod : swerve.mSwerveMods) {
+      s_orchestra.addInstrument(mod.driveMotor_talon);
+      s_orchestra.addInstrument(mod.angleMotor_talon);
+    }
+    s_orchestra.loadMusic("test.chrp");
 
     /* Command Composition Definitions */
     
@@ -256,11 +268,15 @@ public class RobotContainer {
     s_hopper.setDefaultCommand(
       new HopperDefault(s_hopper, () -> operator.getRawAxis(hopperAxis))
     );
+
+    s_orchestra.play();
   }
 
   public void teleopExit() {
     swerve.removeDefaultCommand();
     s_hopper.removeDefaultCommand();
+
+    s_orchestra.stop();
   }
 
   public void autoInit() {

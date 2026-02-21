@@ -35,8 +35,8 @@ public class SwerveModule {
   // private SparkMax angleMotor;
   // private SparkMax driveMotor;
 
-  private TalonFX angleMotor_talon; // rename to angleMotor once we fully recode?
-  private TalonFX driveMotor_talon; // rename to driveMotor once we fully recode?
+  public TalonFX angleMotor_talon; // rename to angleMotor once we fully recode?
+  public TalonFX driveMotor_talon; // rename to driveMotor once we fully recode?
   private VelocityVoltage velocityControl;
   private VoltageOut voltageControl;
   private PositionVoltage positionControl;

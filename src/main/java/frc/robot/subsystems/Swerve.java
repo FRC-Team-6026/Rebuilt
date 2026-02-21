@@ -32,7 +32,7 @@ public class Swerve extends SubsystemBase {
   private final AHRS gyro;
 
   private SwerveDriveOdometry swerveOdometry;
-  private SwerveModule[] mSwerveMods;
+  public SwerveModule[] mSwerveMods;
 
   private static boolean negativePitch = false;
 
