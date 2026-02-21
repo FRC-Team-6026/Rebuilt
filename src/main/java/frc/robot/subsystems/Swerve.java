@@ -137,6 +137,8 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     swerveOdometry.update(getAngle(), getPositions());
     report();
+
+    SmartDashboard.putNumber("Gyro X accel:", getGyro().getWorldLinearAccelX());
     
     pub.set(getStates());
     SmartDashboard.putString("Pose (x, y, rot)", "("+

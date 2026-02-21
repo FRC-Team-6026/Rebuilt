@@ -13,12 +13,15 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Floor;
@@ -61,6 +64,9 @@ public class RobotContainer {
   /** Driver - A (B on our controller) */
   private final JoystickButton autoAimButton = 
   new JoystickButton(driver, XboxController.Button.kA.value);
+  /** Driver - Y (X on our controller) */
+  private final JoystickButton rumbleButton = 
+  new JoystickButton(driver, XboxController.Button.kY.value);
 
   private boolean robotCentric = false;
 
@@ -104,10 +110,18 @@ public class RobotContainer {
   private final Floor s_floor = new Floor();
   private final Shooter s_shooter = new Shooter(s_Limelight);
 
+  // private final Trigger crashDetector = new Trigger(
+  //   () -> Math.abs(swerve.getGyro().getWorldLinearAccelX()) > 2);
+
   /* Robot Variables */
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
+    // crashDetector.onTrue(new WaitCommand(0.5).deadlineFor(
+    //   Commands.startEnd(
+    //   () -> driver.setRumble(RumbleType.kBothRumble, 0.4), 
+    //   () -> driver.setRumble(RumbleType.kBothRumble, 0),
+    //   new Subsystem[0])));
 
     /* Command Composition Definitions */
     
@@ -118,6 +132,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Limelight - Update Pose MT1", new InstantCommand(() -> s_Limelight.updatePose(swerve, false)));
 
     configureBindings();
+
+    driver.setRumble(RumbleType.kBothRumble, 0.2);
 
     /* Preferences initialization */
     // Preferences.removeAll();
@@ -206,6 +222,7 @@ public class RobotContainer {
       
       // s_Limelight.configRotation(swerve);
     }
+    driver.setRumble(RumbleType.kBothRumble, 0.0);
   }
   private void configureBindings() {
     /* Driver Buttons */
@@ -230,6 +247,9 @@ public class RobotContainer {
 
     deployButton.onTrue(s_hopper.deploy());
     retractButton.onTrue(s_hopper.retract());
+
+    rumbleButton.onTrue(new InstantCommand(() -> driver.setRumble(RumbleType.kBothRumble, 0.25)));
+    rumbleButton.onFalse(new InstantCommand(() -> driver.setRumble(RumbleType.kBothRumble, 0.0)));
  }
 
  public Command getAutonomousCommand() {
