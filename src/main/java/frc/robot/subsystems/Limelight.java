@@ -62,7 +62,6 @@ public class Limelight extends SubsystemBase {
         return _table.getEntry("tv").getInteger(0) > 0.5;
     }
 
-    // TODO - Reprogram Autoaim
     /** Gets left/right angle to apriltag target
      * @return the angle, in degrees, off of center of the target in the limelight image.
     */

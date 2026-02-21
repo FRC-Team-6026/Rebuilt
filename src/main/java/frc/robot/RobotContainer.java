@@ -136,8 +136,8 @@ public class RobotContainer {
     driver.setRumble(RumbleType.kBothRumble, 0.2);
 
     /* Preferences initialization */
+    
     // Preferences.removeAll();
-
     if (!Preferences.containsKey("AutoAimStrength")) {
       Preferences.initDouble("AutoAimStrength", 1.0);
     }
