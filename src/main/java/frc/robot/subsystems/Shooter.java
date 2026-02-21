@@ -54,7 +54,8 @@ public class Shooter extends SubsystemBase {
             }
         }
 
-        this.limelight = limelight;
+        //this.limelight = limelight;
+        this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
         this.feederController = feederSpark.sparkControl;
         this.limelightWarning = new Alert("Limelight can't determine distance to target", AlertType.kWarning);
     }
@@ -82,6 +83,7 @@ public class Shooter extends SubsystemBase {
         for(ShooterMod mod : s_mods) {
             mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
         }
+        feederController.setReference(1.0, ControlType.kVoltage);
         
         // double distance = limelight.getTZ();
         

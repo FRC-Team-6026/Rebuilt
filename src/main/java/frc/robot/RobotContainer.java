@@ -131,9 +131,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Limelight - Update Pose", new InstantCommand(() -> s_Limelight.updatePose(swerve, true)));
     NamedCommands.registerCommand("Limelight - Update Pose MT1", new InstantCommand(() -> s_Limelight.updatePose(swerve, false)));
 
-    configureBindings();
+    // TODO - add pathplanner named commands
 
-    driver.setRumble(RumbleType.kBothRumble, 0.2);
+    configureBindings();
 
     /* Preferences initialization */
     
@@ -222,7 +222,6 @@ public class RobotContainer {
       
       // s_Limelight.configRotation(swerve);
     }
-    driver.setRumble(RumbleType.kBothRumble, 0.0);
   }
   private void configureBindings() {
     /* Driver Buttons */
@@ -237,8 +236,8 @@ public class RobotContainer {
     /* Operator Buttons */
     testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
 
-    intakeButton.onTrue(new InstantCommand(() -> {s_intake.start(); s_floor.start();}));
-    intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop(); s_floor.stop();}));
+    intakeButton.onTrue(new InstantCommand(() -> {s_intake.start();}));
+    intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop();}));
 
     shootButton.onTrue(new InstantCommand(() -> s_floor.start()).andThen(s_shooter.shootCommand()));
     shootButton.onFalse(new InstantCommand(() -> {s_shooter.windup(); s_floor.stop();}, s_shooter));

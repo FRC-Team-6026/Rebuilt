@@ -111,8 +111,8 @@ public final class Constants {
         public static final double minPercent = -0.40;   // |
 
         /* Min/Max Heights */
-        public static final double minHeight = 0.0;       // Should be in degrees. Starting point will be 0
-        public static final double maxHeight = 90.0;      // Approx 90deg? Is deployed the positive direction?
+        public static final double minAngle = 0.0;       // Should be in degrees. Starting point will be 0
+        public static final double maxAngle = 110.0;      // Approx 90deg? Is deployed the positive direction?
         
         /* setElevator height seeking tolerance */
         public static final double tolerance = 1.0;
@@ -158,7 +158,7 @@ public final class Constants {
         public static final int intakeLim = 20;
         public static final int floorLim = 20;
         public static final int feederLim = 20;
-        public static final int shooterLim = 20;
+        public static final int shooterLim = 40;
         public static final int elevatorLim = 20;
     }
     
@@ -175,7 +175,7 @@ public final class Constants {
         public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
         /* Subsystems */
-        public static final double[] hopperPID = new double[] {0.025, 0.0, 0.0, 0.0};
+        public static final double[] hopperPID = new double[] {0.022, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
         public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
