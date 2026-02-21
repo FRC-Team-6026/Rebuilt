@@ -12,7 +12,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public final class Constants {
     /* Used for Constants Used Once On Initialization of Robot or Subsystems */
     public final static class Setup {
-
         /* Swerve Module Ids and Constants */
         public static final int[] moduleIDs = new int[] {0, 1, 2, 3};
         public static final int[] driveMotors = new int[] {1, 3, 5, 7};
@@ -27,7 +26,8 @@ public final class Constants {
         public static final int floorSpark = 16;
         public static final int feederSpark = 17;
 
-        public static final int[] shooterSpark = new int[] {18, 19, 20};
+        // public static final int[] shooterSpark = new int[] {18, 19, 20};
+        public static final int[] shooterSpark = new int[] {18};
 
         public static final int elevatorSpark = 21;
 
@@ -105,12 +105,8 @@ public final class Constants {
     }
 
     public static final class Hopper {
-
-        // TODO - tuning and stuff (this is just copied from the old elevator)
-
         /* Min/Max Speeds */
-        public static final double maxVoltage = 3.0;
-        public static final double minVoltage = -1.8;
+        public static final double maxVoltage = 5.0;
         public static final double maxPercent = 0.55;    // | Power limits for PID control
         public static final double minPercent = -0.40;   // |
 
@@ -123,9 +119,6 @@ public final class Constants {
     }
 
     public static final class Elevator {
-
-        // gear ratio moved to conversion factors
-
         /* Min/Max Speeds */
         public static final double maxVoltage = 3.0;
         public static final double minVoltage = -1.8;
@@ -147,41 +140,12 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        
         public static final double kPXController = 1;
         public static final double kPYController = 1;
         public static final double kPThetaController = 1;
-    
-    }
-
-    public static final class Wrist{
-
-        public static final double minimumAngle = 41.0;  // Coral Intake Position
-        public static final double maximumAngle = 220.0; // 
-        public static final double alignmentAngle = 64.0;
-
-        public static final double L23ScoringAngle = 67.0;
-        public static final double L4ScoringAngle = 84.0;
-        public static final double algaePickupAngle = 195.0;
-        public static final double processorAngle = 210.0;
-        public static final double bargeSetup = 150.0;
-        public static final double bargeAngle = 100.0;
-
-        // Gear reduction moved to conversion factors
-        
-        public static final double maxVoltage = 3.0;
-        public static final double maxPercent = 0.5;    // | Power limits for PID control
-        public static final double minPercent = -0.5;   // |
-
-        // public static final double maxAccel = 180.0;
-        // public static final double maxSpeed = 90.0;
-
-        public static final double angleTolerance = 1.2;
-        public static final double gearReduction = 0.0;
     }
 
     public final static class Electrical {
-
         /* Base 12 Volt System */
         public static final double voltageComp = 12.0;
 
@@ -190,7 +154,6 @@ public final class Constants {
         public static final int angleCurrentLim = 20;
         
         /* Subsystems */
-        // TODO - charcterization. is 20A enough for each subsystem?
         public static final int hopperLim = 20;
         public static final int intakeLim = 20;
         public static final int floorLim = 20;
@@ -200,7 +163,6 @@ public final class Constants {
     }
     
     public final static class PID {
-
         /* Format {P, I, D, FF} 
         P, I, and D are standard PID
         FF is the inverse of kV in SVA control. Used ONLY in velocity control.
@@ -222,7 +184,6 @@ public final class Constants {
     }
 
     public final static class SVA {
-
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
         // public static final double[] driveMotorsSVA = new double[] {0.3, 2.55, 0.27};    // 2023's SVA values. 
@@ -267,7 +228,6 @@ public final class Constants {
         /* These just get the raw encoder readings */
         public static final double defaultConversionPositionFactor = 1.0;
         public static final double defaultConversionVelocityFactor = defaultConversionPositionFactor / 60.0; //rpm to rps
-
     }
 
     public final static class IdleModes {

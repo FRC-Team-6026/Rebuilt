@@ -31,8 +31,6 @@ public class Hopper extends SubsystemBase {
         this.hopperController = hopperSpark.sparkControl;
     }
 
-    // TODO - code deploy and retract functions. We may want to account for weight as it changes orientation.
-
     public Command deploy() {
         // double target = Preferences.getDouble("Hopper Deploy Target", 50.0);
         return new RunCommand(() -> hopperController.setReference(Preferences.getDouble("Hopper Deploy Target", 50.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
@@ -49,7 +47,7 @@ public class Hopper extends SubsystemBase {
     }
 
     public void setVoltage(double volts, boolean FFenable) {
-        volts = MathUtil.clamp(volts, -5.0, 5.0);
+        volts = MathUtil.clamp(volts, -Constants.Hopper.maxVoltage, Constants.Hopper.maxVoltage);
         if (FFenable)
             hopperController.setReference(volts, ControlType.kVoltage, ClosedLoopSlot.kSlot0, getFF());
         else
