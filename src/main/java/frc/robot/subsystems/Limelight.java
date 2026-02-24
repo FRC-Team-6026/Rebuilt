@@ -56,6 +56,11 @@ public class Limelight extends SubsystemBase {
         }
         getTX();
         getTZ();
+        getYaw();
+
+        double toHub = Math.cos(getYaw() * 0.01745329) * 0.5969;
+        double distance = toHub + getTZ();
+        SmartDashboard.putNumber("Hub Distance", distance);
     }
 
     public boolean isTargets() {
@@ -89,6 +94,15 @@ public class Limelight extends SubsystemBase {
         double tz = _table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[2];
         SmartDashboard.putNumber("tz", tz);
         return tz;
+    }
+
+    /** Gets robot Yaw
+     * @return the yaw component, in degrees, to the center of the target from the camera lens
+     */
+    public double getYaw() {
+        double yaw = _table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[4];
+        SmartDashboard.putNumber("yaw", yaw);
+        return yaw;
     }
 
     /** This function should set the offset between the rotation from

@@ -95,7 +95,7 @@ public class RobotContainer {
   /** Operator - Right Trigger, 20% */
   private final Trigger windupButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.2);
   /** Operator - Right Trigger, 80% */
-  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.8);
+  private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.9);
 
   /* Subsystems */
   // private final DigitalInput beambreak = new DigitalInput(Constants.Setup.beambreakID);

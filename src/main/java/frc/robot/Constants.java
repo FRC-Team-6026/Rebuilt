@@ -179,7 +179,7 @@ public final class Constants {
         public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
-        public static final double[] shooterPID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] shooterPID = new double[] {0.10, 0.0, 0.1, 0.0};
         public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 
@@ -222,7 +222,7 @@ public final class Constants {
         public static final double hopperConversionPositionFactor = 1.0/115.0 * 360.0;    // 1:115 gear reduction, 1:360 degree conversion
         public static final double hopperConversionVelocityFactor = hopperConversionPositionFactor / 60.0; //rpm to rps
         
-        public static final double shooterConversionPositionFactor = 1.0/2.0 * 0.101;    // ??? gear reduction, 4in diameter * pi conversion to circumference
+        public static final double shooterConversionPositionFactor = 1.0/2.0 * 0.318;    // ??? gear reduction, 4in diameter * pi conversion to circumference
         public static final double shooterConversionVelocityFactor = shooterConversionPositionFactor / 60.0; //rpm to rps
 
         /* These just get the raw encoder readings */
