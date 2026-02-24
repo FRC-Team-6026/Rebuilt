@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase {
     public void windup() {
         // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
         for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5)/2.0, ControlType.kVoltage);
+            mod.controller.setReference(Preferences.getDouble("Minimum Velocity (m/s)", 5.0), ControlType.kVelocity);
         }
         feederController.setReference(0.0, ControlType.kVoltage);
     }
@@ -79,33 +79,27 @@ public class Shooter extends SubsystemBase {
         // TODO - check units, refigure if robot params change
         // 4in diameter shooter wheels planned, so 4*pi circumference; 1 rev/s = 0.101*pi m/s (this is happening in conversion factors instead)
         
-        // XXX - Testing if shooter works first. Switch to range finding later.
-        for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(Preferences.getDouble("Shooter Voltage", 0.5), ControlType.kVoltage);
+        double distance = limelight.getTZ();
+        
+        if (distance == 0) {
+            limelightWarning.set(true);
+            return;
+        } else {
+            limelightWarning.set(false);
         }
-        feederController.setReference(1.0, ControlType.kVoltage);
         
-        // double distance = limelight.getTZ();
-        
-        // if (distance == 0) {
-        //     limelightWarning.set(true);
-        //     return;
-        // } else {
-        //     limelightWarning.set(false);
-        // }
-        
-        // double targetSpeed = (distance-6.0)*(21.0-distance)/22.2 + 9.3;
+        double targetSpeed = (distance-6.0)*(21.0-distance)/22.2 + 9.3;
 
-        // boolean atSpeed = true;
-        // for (ShooterMod mod : s_mods) {
-        //     mod.controller.setReference(targetSpeed, ControlType.kVelocity);
+        boolean atSpeed = true;
+        for (ShooterMod mod : s_mods) {
+            mod.controller.setReference(targetSpeed, ControlType.kVelocity);
             
-        //     if (mod.encoder.getVelocity() < 0.8 * targetSpeed) {
-        //         atSpeed = false;
-        //     }
-        // }
-        // if(atSpeed) {
-        //     feederController.setReference(1.0, ControlType.kVoltage);
-        // }
+            if (mod.encoder.getVelocity() < 0.8 * targetSpeed) {
+                atSpeed = false;
+            }
+        }
+        if(atSpeed) {
+            feederController.setReference(Preferences.getDouble("Feeder Voltage", targetSpeed), ControlType.kVoltage);
+        }
     }, this);}
 }

@@ -13,7 +13,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,8 +64,6 @@ public class RobotContainer {
   private final JoystickButton autoAimButton = 
   new JoystickButton(driver, XboxController.Button.kA.value);
   /** Driver - Y (X on our controller) */
-  private final JoystickButton rumbleButton = 
-  new JoystickButton(driver, XboxController.Button.kY.value);
 
   private boolean robotCentric = false;
 
@@ -156,8 +153,11 @@ public class RobotContainer {
     if (!Preferences.containsKey("Hopper Deploy Target")) {
       Preferences.initDouble("Hopper Deploy Target", 60.0);
     }
-    if (!Preferences.containsKey("Shooter Voltage")) {
-      Preferences.initDouble("Shooter Voltage", 0.5);
+    if (!Preferences.containsKey("Minimum Velocity")) {
+      Preferences.initDouble("Minimum Velocity", 5.0);
+    }
+    if (!Preferences.containsKey("Feeder Voltage")) {
+      Preferences.initDouble("Feeder Voltage", 0.5);
     }
 
     /**
@@ -246,9 +246,6 @@ public class RobotContainer {
 
     deployButton.onTrue(s_hopper.deploy());
     retractButton.onTrue(s_hopper.retract());
-
-    rumbleButton.onTrue(new InstantCommand(() -> driver.setRumble(RumbleType.kBothRumble, 0.25)));
-    rumbleButton.onFalse(new InstantCommand(() -> driver.setRumble(RumbleType.kBothRumble, 0.0)));
  }
 
  public Command getAutonomousCommand() {
