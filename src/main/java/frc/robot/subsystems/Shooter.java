@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -55,6 +56,7 @@ public class Shooter extends SubsystemBase {
         }
 
         this.limelight = limelight;
+        this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
         this.feederController = feederSpark.sparkControl;
         this.limelightWarning = new Alert("Limelight can't determine distance to target", AlertType.kWarning);
     }
