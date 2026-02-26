@@ -35,7 +35,7 @@ public class KrakenInfo {
         pidList = PID.drivePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false;
-        rampRate = 0.8; // seconds to reach max speed.
+        rampRate = 0.5; // seconds to reach max speed.
         return this;
     }
 

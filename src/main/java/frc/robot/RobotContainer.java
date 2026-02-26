@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -68,10 +73,11 @@ public class RobotContainer {
   private boolean robotCentric = false;
 
   // SysID buttons
-  // private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
-  // private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
-  // private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
-  // private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+  private Alert alert;
 
   /* Operator Buttons */
   
@@ -288,11 +294,12 @@ public class RobotContainer {
     swerve.resetToAbsolute();
     swerve.testInit().schedule();
 
-    // swerve_quasiF.onTrue( swerve.SysIDQuasiF().until( swerve_quasiF.negate()));
-    // swerve_quasiR.onTrue( swerve.SysIDQuasiR().until( swerve_quasiR.negate()));
-    // swerve_dynF.onTrue(   swerve.SysIDDynF().until(   swerve_dynF.negate()));
-    // swerve_dynR.onTrue(   swerve.SysIDDynR().until(   swerve_dynR.negate()));
-    
+    swerve_quasiF.onTrue( swerve.SysIDQuasiF().until( swerve_quasiF.negate()));
+    swerve_quasiR.onTrue( swerve.SysIDQuasiR().until( swerve_quasiR.negate()));
+    swerve_dynF.onTrue(   swerve.SysIDDynF().until(   swerve_dynF.negate()));
+    swerve_dynR.onTrue(   swerve.SysIDDynR().until(   swerve_dynR.negate()));
+
+    alert = new Alert("Failed to remove SysID Button Binding", AlertType.kError);
   }
 
   public void testExit() {
@@ -300,6 +307,14 @@ public class RobotContainer {
 
     // This command clears all button bindings. I think if we switch straight from test mode to
     // teleop, we won't have any buttons... but we'd still have default commands.
-    CommandScheduler.getInstance().getActiveButtonLoop().clear();
+    // CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
+    try {
+      Field button = swerve_quasiF.getClass().getDeclaredField("m_loop");
+      button.setAccessible(true);
+      ((EventLoop)button.get(swerve_quasiF)).clear();
+    } catch (Exception e) {
+      alert.set(true);
+    }
   }
 }
