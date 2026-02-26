@@ -98,17 +98,18 @@ public class Shooter extends SubsystemBase {
         }
         
         // x2 for shooter wheel:fuel ratio
-        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.3);
+        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
 
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
             mod.controller.setReference(targetSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, targetSpeed*1.6);
             
-            if (mod.encoder.getVelocity() < 0.8 * targetSpeed) {
+            if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
                 atSpeed = false;
             }
         }
         if(atSpeed) {
+            // TODO - up that feeder voltage
             feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
         }
     }, this);}
