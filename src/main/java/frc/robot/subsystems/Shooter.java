@@ -45,13 +45,26 @@ public class Shooter extends SubsystemBase {
     private Alert limelightWarning;
 
     public Shooter(Limelight limelight) {
-        s_mods = new ShooterMod[Constants.Setup.shooterSpark.length];
+        
+        int count = 0;
+        ShooterMod[] mods = new ShooterMod[Constants.Setup.shooterSpark.length];
+        
         for(int i = 0; i < Constants.Setup.shooterSpark.length; i++){
             this.sparkFail = new Alert("Failed to create Shooter Module (CAN ID " + Constants.Setup.shooterSpark[i]+ ")", AlertType.kError);
             try {
-                s_mods[i] = new ShooterMod(Constants.Setup.shooterSpark[i]);
+                mods[i] = new ShooterMod(Constants.Setup.shooterSpark[i]);
+                count++;
             } catch (InterruptedException e) {
                 this.sparkFail.set(true);
+            }
+        }
+
+        int i = 0;
+        s_mods = new ShooterMod[count];
+        for(ShooterMod mod : mods) {
+            if(mod != null) {
+                s_mods[i] = mod;
+                i++;
             }
         }
 
