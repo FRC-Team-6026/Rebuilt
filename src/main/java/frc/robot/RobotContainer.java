@@ -7,6 +7,8 @@ package frc.robot;
 import java.lang.reflect.Field;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -137,31 +139,24 @@ public class RobotContainer {
     configureBindings();
 
     /* Preferences initialization */
-    
-    // Preferences.removeAll();
-    if (!Preferences.containsKey("Aim Rotation Power")) {
-      Preferences.initDouble("Aim Rotation Power", 1.0);
+    Collection<String> oldPrefs = Preferences.getKeys();
+    Collection<String> newPrefs = new HashSet<String>() {{
+      add("Aim Rotation Power");
+      add("Intake Volts");
+      add("Hopper Volts");
+      add("Floor Volts");
+      add("FF Mult");
+      add("Hopper Deploy Target");
+      add("Minimum Velocity");
+      add("Feeder Voltage");
+    }};
+
+    for(String pref : newPrefs) {
+      Preferences.initDouble(pref, 0);
+      oldPrefs.remove(pref);
     }
-    if (!Preferences.containsKey("Intake Volts")) {
-      Preferences.initDouble("Intake Volts", 0.5);
-    }
-    if (!Preferences.containsKey("Hopper Volts")) {
-      Preferences.initDouble("Hopper Volts", 1);
-    }
-    if (!Preferences.containsKey("Floor Volts")) {
-      Preferences.initDouble("Floor Volts", 0.5);
-    }
-    if (!Preferences.containsKey("FF Mult")) {
-      Preferences.initDouble("FF Mult", 0.5);
-    }
-    if (!Preferences.containsKey("Hopper Deploy Target")) {
-      Preferences.initDouble("Hopper Deploy Target", 60.0);
-    }
-    if (!Preferences.containsKey("Minimum Velocity")) {
-      Preferences.initDouble("Minimum Velocity", 5.0);
-    }
-    if (!Preferences.containsKey("Feeder Voltage")) {
-      Preferences.initDouble("Feeder Voltage", 0.5);
+    for(String pref : oldPrefs) {
+      Preferences.remove(pref);
     }
 
     /**
