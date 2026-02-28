@@ -38,7 +38,7 @@ public final class Constants {
         public static final boolean intakeInvert = true;
         public static final boolean floorInvert = true; // guessed, double check
         public static final boolean feederInvert = false;
-        public static final boolean shooterInvert = false;
+        public static final boolean shooterInvert = true;
         public static final boolean elevatorInvert = false;
     }
 
@@ -47,8 +47,8 @@ public final class Constants {
      * is on the supportAutoList, it is IGNORED and not added to the autolist. These should be autos that
      * are only used in compound autonomous routines.
      */
-    public record Auto ( String defaultAutoName, String[] supportAutoList){}
-    public static Auto AutoConfig = new Auto("", new String[]{"Example Supp Auto", "Back Off Reef"});
+    public record Auto (String[] supportAutoList){}
+    public static Auto AutoConfig = new Auto(new String[]{"Example Supp Auto", "Back Off Reef"});
 
     public final static class Swerve {
         public static final double stickDeadband = 0.1;
@@ -178,7 +178,7 @@ public final class Constants {
         public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
-        public static final double[] shooterPID = new double[] {0.10, 0.0, 0.1, 0.0};
+        public static final double[] shooterPID = new double[] {0.12, 0.0, 0.0, 0.0};
         public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 

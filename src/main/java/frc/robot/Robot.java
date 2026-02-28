@@ -17,82 +17,88 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+    private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+    private RobotContainer m_robotContainer;
 
-  public Robot() {
-    m_robotContainer = new RobotContainer();
+    public Robot() {
+        m_robotContainer = new RobotContainer();
 
-    // SysId - Enabling logging. This method is specific to our Rev motors.
-    // (Thank you to team 6328 for this logger!)
-    DataLogManager.start();
-    HashMap<Integer,String> aliases = new HashMap<Integer,String>();
-    // Map of CanID's to convenient names
-    aliases.put(1, "FL Wheel");
-    aliases.put(3, "FR wheel");
-    aliases.put(5, "RL wheel");
-    aliases.put(7, "RR wheel");
-    URCL.start(aliases);
+        // SysID - Enabling logging. This method is specific to our Rev motors.
+        // (Thank you to team 6328 for this logger!)
+        DataLogManager.start();
+        HashMap<Integer, String> aliases = new HashMap<Integer, String>();
+        // Map of CanID's to convenient names
+        aliases.put(1, "FL Wheel");
+        aliases.put(3, "FR wheel");
+        aliases.put(5, "RL wheel");
+        aliases.put(7, "RR wheel");
+        URCL.start(aliases);
 
-    // Limelight port.
-    for (int port = 5800; port <= 5809; port++) {
-      PortForwarder.add(port, "limelight.local", port);
+        // Limelight port.
+        for (int port = 5800; port <= 5809; port++) {
+            PortForwarder.add(port, "limelight.local", port);
+        }
     }
-  }
 
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-  }
-
-  @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    m_robotContainer.autoInit();
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     }
-  }
 
-  @Override
-  public void autonomousPeriodic() {}
+    @Override
+    public void disabledInit() {}
 
-  @Override
-  public void autonomousExit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
+    @Override
+    public void disabledPeriodic() {}
 
-  @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    @Override
+    public void disabledExit() {}
+
+    @Override
+    public void autonomousInit() {
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_robotContainer.autoInit();
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
     }
-    m_robotContainer.teleopInit();
-  }
 
-  @Override
-  public void teleopPeriodic() {}
+    @Override
+    public void autonomousPeriodic() {}
 
-  @Override
-  public void teleopExit() { m_robotContainer.teleopExit(); }
+    @Override
+    public void autonomousExit() {
+        CommandScheduler.getInstance().cancelAll();
+    }
 
-  @Override
-  public void testInit() { m_robotContainer.testInit(); }
+    @Override
+    public void teleopInit() {
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
+        }
+        m_robotContainer.teleopInit();
+    }
 
-  @Override
-  public void testPeriodic() {}
+    @Override
+    public void teleopPeriodic() {}
 
-  @Override
-  public void testExit() { m_robotContainer.testExit(); }
+    @Override
+    public void teleopExit() {
+        m_robotContainer.teleopExit();
+    }
+
+    @Override
+    public void testInit() {
+        m_robotContainer.testInit();
+    }
+
+    @Override
+    public void testPeriodic() {}
+
+    @Override
+    public void testExit() {
+        m_robotContainer.testExit();
+    }
 }

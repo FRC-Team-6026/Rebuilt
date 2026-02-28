@@ -114,7 +114,7 @@ public class SparkControllerInfo {
         rampRate = 0.35;
         return this;
     }
-    // TODO - also explode this
+    // BUG - also explode this
     public SparkControllerInfo shooterAlt(){
         canbusUse = Usages.shooterUsage;
         currentLim = Electrical.shooterLim;

@@ -81,11 +81,15 @@ public class Hopper extends SubsystemBase {
             current = hopperSpark.spark.getOutputCurrent();
             hopperEncoder.setPosition(5);
 
-            c_c.setText("Current: " + current);
-            c_c.set(true);
             c_fc.setText("First Current: " + firstCurrent);
             c_fc.set(true);
-            c_triggered.set((current >= firstCurrent*1.5) && !firstCycle);
+
+            // XXX - Test different current limits
+            if ((current >= firstCurrent*Preferences.getDouble("Hopper Trigger (Amps)", 1.5)) && !firstCycle) {
+                c_triggered.set(true);
+                c_c.setText("Current: " + current);
+                c_c.set(true);
+            }
         }
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-6); }
         public boolean isFinished() { return (lastPos >= 5) && !firstCycle; }
@@ -97,5 +101,5 @@ public class Hopper extends SubsystemBase {
         return result;
     }
 
-    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*Preferences.getDouble("FF Mult", 0.2); }
+    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*0.2; }
 }

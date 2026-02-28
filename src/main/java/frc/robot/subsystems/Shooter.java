@@ -23,6 +23,7 @@ public class Shooter extends SubsystemBase {
         public SparkController spark;
         public RelativeEncoder encoder;
         public SparkClosedLoopController controller;
+        public int id;
 
         public ShooterMod(int id) throws InterruptedException {
             if (id == 20)  // TODO - explode this
@@ -31,6 +32,7 @@ public class Shooter extends SubsystemBase {
                 this.spark = new SparkController(id, new SparkControllerInfo().shooter());
             if (this.spark.spark.getFaults().can) throw new InterruptedException();
 
+            this.id = id;
             this.encoder = spark.sparkEncode;
             this.controller = spark.sparkControl;
         }
@@ -77,7 +79,7 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
         for(ShooterMod mod : s_mods) {
-            SmartDashboard.putNumber("Encoder test", mod.encoder.getVelocity());
+            SmartDashboard.putNumber("Encoder test " + mod.id, mod.encoder.getVelocity());
         }
     }
 
@@ -91,7 +93,10 @@ public class Shooter extends SubsystemBase {
     public void windup() {
         // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
         for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(Preferences.getDouble("Minimum Velocity (m/s)", 5.0), ControlType.kVelocity, ClosedLoopSlot.kSlot0, Preferences.getDouble("Minimum Velocity (m/s)", 5.0)*1.6);
+            mod.controller.setReference(
+                Preferences.getDouble("Minimum Velocity (V)", 5.0)/2, 
+                ControlType.kVoltage
+            );
         }
         feederController.setReference(0.0, ControlType.kVoltage);
     }
@@ -115,14 +120,24 @@ public class Shooter extends SubsystemBase {
 
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
-            mod.controller.setReference(targetSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, targetSpeed*1.6);
+            // BUG - TESTING
+            // mod.controller.setReference(
+            //     targetSpeed, 
+            //     ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
+            //     targetSpeed*Preferences.getDouble("FF Mult", 0.25)
+            // );
+
+            mod.controller.setReference(
+                Preferences.getDouble("Minimum Velocity (V)", 5.0), 
+                ControlType.kVoltage
+            );
             
             if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
                 atSpeed = false;
             }
         }
-        if(atSpeed) {
+        // if(atSpeed) {
             feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
-        }
+        // }
     }, this);}
 }
