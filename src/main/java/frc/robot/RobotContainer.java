@@ -139,9 +139,6 @@ public class RobotContainer {
     /* Preferences initialization */
     
     // Preferences.removeAll();
-    if (!Preferences.containsKey("Aim Strafe Power")) {
-      Preferences.initDouble("Aim Strafe Power", 1.0);
-    }
     if (!Preferences.containsKey("Aim Rotation Power")) {
       Preferences.initDouble("Aim Rotation Power", 1.0);
     }

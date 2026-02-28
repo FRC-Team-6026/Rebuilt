@@ -59,26 +59,21 @@ public class TeleopSwerve extends Command {
 
     /* Get Values, Deadband*/
     translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband);
-
+    strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband);
+    
     //cubes input(s) to give finer control at low end
     translationVal = translationVal * translationVal * translationVal;
+    strafeVal = strafeVal * strafeVal * strafeVal;
 
     // joystick inputs need deadband/cube/slewrate calc, but limelight inputs should only need slewrate
 
     if (autoaim.getAsBoolean()) {
-      strafeVal = s_Limelight.getTX(
-        Math.atan(
-          strafeSup.getAsDouble()/s_Limelight.getTZ()
-        )
-      )*Preferences.getDouble("Aim Strafe Power", 1.0)/100.0;
       rotationVal = -s_Limelight.getTX(
         Math.atan(
           strafeSup.getAsDouble()/s_Limelight.getTZ()
         )
       )*Preferences.getDouble("Aim Rotation Power", 1.0)/100.0;
     } else {
-      strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband);
-      strafeVal = strafeVal * strafeVal * strafeVal;
       rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);
       rotationVal = rotationVal * rotationVal * rotationVal;
     }
