@@ -54,6 +54,33 @@ public class Hopper extends SubsystemBase {
             hopperController.setReference(volts, ControlType.kVoltage);
     }
 
+    public class HomingCommand extends Command {
+        public double lastPos;
+        public boolean firstCycle = true;
+        public void initialize() {
+            lastPos = 0;
+            hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
+        }
+        public void execute() {
+            if (lastPos != 0) firstCycle = false;
+            lastPos = hopperEncoder.getPosition();
+            hopperEncoder.setPosition(5);
+        }
+        public void end(boolean interrupted)    { hopperEncoder.setPosition(-6); }
+        public boolean isFinished() { return (lastPos >= 5) && !firstCycle; }
+        // public boolean isFinished() { return false; }
+    }
+
+    public Command homeCommand() {
+        Command result = new HomingCommand();
+        result.addRequirements(this);
+        return result;
+    }
+
+    public void setPosition(double position) {
+        hopperEncoder.setPosition(position);
+    }
+
     public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*Preferences.getDouble("FF Mult", 0.2); }
 
     @Override

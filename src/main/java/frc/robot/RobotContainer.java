@@ -93,6 +93,9 @@ public class RobotContainer {
   /** Operator - Left Button */
   private final JoystickButton interruptButton =
   new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  /** Operator - Back Button */
+  private final JoystickButton hopperHomingButton =
+  new JoystickButton(operator, XboxController.Button.kBack.value);
   
   private final int intakeTrigger = XboxController.Axis.kLeftTrigger.value;
   /** Operator - Left Trigger */
@@ -242,6 +245,8 @@ public class RobotContainer {
     shootButton.onFalse(new InstantCommand(() -> {s_shooter.windup(); s_floor.stop();}, s_shooter));
     windupButton.onTrue(new InstantCommand(() -> s_shooter.windup(), s_shooter));
     windupButton.onFalse(new InstantCommand(() -> s_shooter.stop(), s_shooter));
+
+    hopperHomingButton.onTrue(s_hopper.homeCommand());
 
     deployButton.onTrue(s_hopper.deploy());
     retractButton.onTrue(s_hopper.retract());
