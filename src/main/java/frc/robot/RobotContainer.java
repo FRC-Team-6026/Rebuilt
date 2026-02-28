@@ -66,8 +66,6 @@ public class RobotContainer {
   private final JoystickButton resetOdometry = 
   new JoystickButton(driver, XboxController.Button.kY.value);
   /** Driver - A (B on our controller) */
-  private final JoystickButton autoAimButton = 
-  new JoystickButton(driver, XboxController.Button.kA.value);
   /** Driver - Y (X on our controller) */
 
   private boolean robotCentric = false;
@@ -141,8 +139,11 @@ public class RobotContainer {
     /* Preferences initialization */
     
     // Preferences.removeAll();
-    if (!Preferences.containsKey("AutoAimStrength")) {
-      Preferences.initDouble("AutoAimStrength", 1.0);
+    if (!Preferences.containsKey("Aim Strafe Power")) {
+      Preferences.initDouble("Aim Strafe Power", 1.0);
+    }
+    if (!Preferences.containsKey("Aim Rotation Power")) {
+      Preferences.initDouble("Aim Rotation Power", 1.0);
     }
     if (!Preferences.containsKey("Intake Volts")) {
       Preferences.initDouble("Intake Volts", 0.5);
@@ -268,12 +269,8 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
-        // () -> (autoDrive.getAsBoolean() ? s_Limelight.getTZ() : -driver.getRawAxis(translationAxis)),
-        // () -> (autoDrive.getAsBoolean() ? s_Limelight.getTX() : -driver.getRawAxis(strafeAxis)),
-        // () -> -driver.getRawAxis(rotationAxis), // To enable the autoaim button again, comment this line and uncomment the line below
-        () -> autoAimButton.getAsBoolean(),
+        () -> windupButton.getAsBoolean(), // Activate limelight aiming functions
         () -> robotCentric));
-        // () -> (autoDrive.getAsBoolean() ? true : robotCentric)));
 
     s_hopper.setDefaultCommand(
       new HopperDefault(s_hopper, () -> operator.getRawAxis(hopperAxis))
