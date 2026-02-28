@@ -7,9 +7,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -98,14 +97,5 @@ public class Hopper extends SubsystemBase {
         return result;
     }
 
-    public void setPosition(double position) {
-        hopperEncoder.setPosition(position);
-    }
-
     public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*Preferences.getDouble("FF Mult", 0.2); }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Hopper Position", hopperEncoder.getPosition());
-    }
 }

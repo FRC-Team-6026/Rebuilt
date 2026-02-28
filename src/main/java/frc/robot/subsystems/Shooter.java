@@ -25,7 +25,10 @@ public class Shooter extends SubsystemBase {
         public SparkClosedLoopController controller;
 
         public ShooterMod(int id) throws InterruptedException {
-            this.spark = new SparkController(id, new SparkControllerInfo().shooter());
+            if (id == 20)  // TODO - explode this
+                this.spark = new SparkController(id, new SparkControllerInfo().shooterAlt());
+            else
+                this.spark = new SparkController(id, new SparkControllerInfo().shooter());
             if (this.spark.spark.getFaults().can) throw new InterruptedException();
 
             this.encoder = spark.sparkEncode;
