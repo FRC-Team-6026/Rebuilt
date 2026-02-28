@@ -114,6 +114,20 @@ public class SparkControllerInfo {
         rampRate = 0.35;
         return this;
     }
+    // TODO - also explode this
+    public SparkControllerInfo shooterAlt(){
+        canbusUse = Usages.shooterUsage;
+        currentLim = Electrical.shooterLim;
+        invert = Setup.shooterInvert;
+        alternateAbsolute = false;
+        idleMode = IdleModes.shooterIdle;
+        posConversion = 13.0/16.0 * 0.318;
+        velConversion = 13.0/16.0 * 0.318 / 60.0;
+        pidList = PID.shooterPID;
+        voltageComp = Electrical.voltageComp;
+        rampRate = 0.35;
+        return this;
+    }
 
     public SparkControllerInfo elevator(){
         canbusUse = Usages.elevatorUsage;

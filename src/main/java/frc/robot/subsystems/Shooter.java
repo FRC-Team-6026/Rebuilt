@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.DoubleSupplier;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
@@ -27,7 +25,10 @@ public class Shooter extends SubsystemBase {
         public SparkClosedLoopController controller;
 
         public ShooterMod(int id) throws InterruptedException {
-            this.spark = new SparkController(id, new SparkControllerInfo().shooter());
+            if (id == 20)  // TODO - explode this
+                this.spark = new SparkController(id, new SparkControllerInfo().shooterAlt());
+            else
+                this.spark = new SparkController(id, new SparkControllerInfo().shooter());
             if (this.spark.spark.getFaults().can) throw new InterruptedException();
 
             this.encoder = spark.sparkEncode;
@@ -122,7 +123,6 @@ public class Shooter extends SubsystemBase {
             }
         }
         if(atSpeed) {
-            // TODO - up that feeder voltage
             feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
         }
     }, this);}

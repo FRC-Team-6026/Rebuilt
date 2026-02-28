@@ -230,8 +230,6 @@ public class RobotContainer {
     resetOdometry.onTrue(new InstantCommand(() -> swerve.resetToAbsolute()));
     
     /* Operator Buttons */
-    testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
-
     intakeButton.onTrue(new InstantCommand(() -> {s_intake.start();}));
     intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop();}));
 

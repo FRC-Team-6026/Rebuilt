@@ -7,15 +7,12 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
-
-// TODO - possibly figure out a homing mechanism?
 
 public class Hopper extends SubsystemBase {
     private SparkController hopperSpark;
@@ -68,7 +65,6 @@ public class Hopper extends SubsystemBase {
         }
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-6); }
         public boolean isFinished() { return (lastPos >= 5) && !firstCycle; }
-        // public boolean isFinished() { return false; }
     }
 
     public Command homeCommand() {
@@ -77,14 +73,5 @@ public class Hopper extends SubsystemBase {
         return result;
     }
 
-    public void setPosition(double position) {
-        hopperEncoder.setPosition(position);
-    }
-
     public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*Preferences.getDouble("FF Mult", 0.2); }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Hopper Position", hopperEncoder.getPosition());
-    }
 }
