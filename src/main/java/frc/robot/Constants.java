@@ -56,7 +56,7 @@ public final class Constants {
 
         /* Drivetrain Calculation Constants */
         /* Input these units from center of swerve modules */
-        public static final double trackWidth = Units.inchesToMeters(26.0); // TODO - get new measurements
+        public static final double trackWidth = Units.inchesToMeters(26.0);
         public static final double trackLength = Units.inchesToMeters(28.0);
 
         /* Input Current Wheel Diameter, Can Change Due To Amount Of Wear */

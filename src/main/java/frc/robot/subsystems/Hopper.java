@@ -6,7 +6,9 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -14,8 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
-
-// TODO - possibly figure out a homing mechanism?
 
 public class Hopper extends SubsystemBase {
     private SparkController hopperSpark;
@@ -55,9 +55,21 @@ public class Hopper extends SubsystemBase {
     }
 
     public class HomingCommand extends Command {
+        public double current; // Amps from SparkMax; Spikes when colliding with something.
+        public double firstCurrent;
+        public Alert c_c;
+        public Alert c_fc;
+        public Alert c_triggered;
+
         public double lastPos;
         public boolean firstCycle = true;
         public void initialize() {
+            current = 0;
+            firstCurrent = 0;
+            c_c = new Alert("Current: X", AlertType.kInfo);
+            c_fc = new Alert("First Current: X", AlertType.kInfo);
+            c_triggered = new Alert("Limit Triggered", AlertType.kWarning);
+
             lastPos = 0;
             hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
         }
@@ -65,10 +77,19 @@ public class Hopper extends SubsystemBase {
             if (lastPos != 0) firstCycle = false;
             lastPos = hopperEncoder.getPosition();
             hopperEncoder.setPosition(5);
+
+            if (current != 0) { firstCycle = false; firstCurrent = current; }
+            current = hopperSpark.spark.getOutputCurrent();
+            hopperEncoder.setPosition(5);
+
+            c_c.setText("Current: " + current);
+            c_c.set(true);
+            c_fc.setText("First Current: " + firstCurrent);
+            c_fc.set(true);
+            c_triggered.set((current >= firstCurrent*1.5) && !firstCycle);
         }
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-6); }
         public boolean isFinished() { return (lastPos >= 5) && !firstCycle; }
-        // public boolean isFinished() { return false; }
     }
 
     public Command homeCommand() {

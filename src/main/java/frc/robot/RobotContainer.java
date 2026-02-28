@@ -13,10 +13,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,10 +47,8 @@ public class RobotContainer {
 
   /* Driver Buttons */
 
-  // private final JoystickButton testButton =
-  // new JoystickButton(driver, XboxController.Button.kDPadLeft.value);
-  private final Trigger testButton =
-  new Trigger(() -> (driver.getPOV() == 90));
+  // private final Trigger testButton =
+  // new Trigger(() -> (driver.getPOV() == 90));
   /** Driver - Back (Minus) */
   private final JoystickButton zeroGyro =
   new JoystickButton(driver, XboxController.Button.kBack.value);
@@ -75,7 +71,7 @@ public class RobotContainer {
 
   /* Operator Buttons */
   
-  private final int elevatorAxis = XboxController.Axis.kRightY.value;
+  // private final int elevatorAxis = XboxController.Axis.kRightY.value;
   private final int hopperAxis = XboxController.Axis.kLeftY.value;
 
   /** Operator - A (B on our controller) */
@@ -85,8 +81,7 @@ public class RobotContainer {
   private final JoystickButton deployButton =
   new JoystickButton(operator, XboxController.Button.kB.value);
   /** Operator - Left Button */
-  private final JoystickButton interruptButton =
-  new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  
   /** Operator - Back Button */
   private final JoystickButton hopperHomingButton =
   new JoystickButton(operator, XboxController.Button.kBack.value);
@@ -126,12 +121,15 @@ public class RobotContainer {
     /* Command Composition Definitions */
     
     /* PathPlanner named commands */
-    NamedCommands.registerCommand("Limelight - Init Rotation", new InstantCommand(() -> {s_Limelight.configRotation(swerve.getPose().getRotation().getDegrees() - swerve.getGyro().getYaw());}));
-    NamedCommands.registerCommand("Limelight - Config Rotation", new InstantCommand(() -> {angleConfigured = s_Limelight.configRotation(swerve);}).repeatedly().until(() -> angleConfigured));
-    NamedCommands.registerCommand("Limelight - Update Pose", new InstantCommand(() -> s_Limelight.updatePose(swerve, true)));
-    NamedCommands.registerCommand("Limelight - Update Pose MT1", new InstantCommand(() -> s_Limelight.updatePose(swerve, false)));
+    NamedCommands.registerCommand("Shooter - Windup", new InstantCommand(() -> s_shooter.windup(), s_shooter));
+    NamedCommands.registerCommand("Shooter - Begin Firing", new InstantCommand(() -> s_floor.start()).andThen(s_shooter.shootCommand()));
+    NamedCommands.registerCommand("Shooter - Stop", new InstantCommand(() -> {s_shooter.stop(); s_floor.stop();}, s_shooter));
+    
+    NamedCommands.registerCommand("Hopper - Home Position", new InstantCommand(() -> s_hopper.homeCommand()));
+    NamedCommands.registerCommand("Hopper - Deploy", new InstantCommand(() -> s_hopper.deploy()));
 
-    // TODO - add pathplanner named commands
+    NamedCommands.registerCommand("Intake - Start", new InstantCommand(() -> s_intake.start()));
+    NamedCommands.registerCommand("Intake - Stop", new InstantCommand(() -> s_intake.stop()));
 
     configureBindings();
 
@@ -230,8 +228,6 @@ public class RobotContainer {
     resetOdometry.onTrue(new InstantCommand(() -> swerve.resetToAbsolute()));
     
     /* Operator Buttons */
-    testButton.onChange(new InstantCommand(() -> SmartDashboard.putBoolean("DPad Pressed", testButton.getAsBoolean())));
-
     intakeButton.onTrue(new InstantCommand(() -> {s_intake.start();}));
     intakeButton.onFalse(new InstantCommand(() -> {s_intake.stop();}));
 
