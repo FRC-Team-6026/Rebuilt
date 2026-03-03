@@ -126,6 +126,7 @@ public class Shooter extends SubsystemBase {
             //     ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
             //     targetSpeed*Preferences.getDouble("FF Mult", 0.25)
             // );
+            // FF: Volts(vel) = 0.45*vel + 0.277?
 
             mod.controller.setReference(
                 Preferences.getDouble("Minimum Velocity (V)", 5.0), 
