@@ -26,10 +26,7 @@ public class Shooter extends SubsystemBase {
         public int id;
 
         public ShooterMod(int id) throws InterruptedException {
-            if (id == 20)  // TODO - explode this
-                this.spark = new SparkController(id, new SparkControllerInfo().shooterAlt());
-            else
-                this.spark = new SparkController(id, new SparkControllerInfo().shooter());
+            this.spark = new SparkController(id, new SparkControllerInfo().shooter());
             if (this.spark.spark.getFaults().can) throw new InterruptedException();
 
             this.id = id;
@@ -94,7 +91,7 @@ public class Shooter extends SubsystemBase {
         // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
         for(ShooterMod mod : s_mods) {
             mod.controller.setReference(
-                Preferences.getDouble("Minimum Velocity (V)", 5.0)/2, 
+                Preferences.getDouble("Minimum Velocity (V)", 5.0), 
                 ControlType.kVoltage
             );
         }
@@ -120,25 +117,20 @@ public class Shooter extends SubsystemBase {
 
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
-            // BUG - TESTING
-            // mod.controller.setReference(
-            //     targetSpeed, 
-            //     ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
-            //     targetSpeed*Preferences.getDouble("FF Mult", 0.25)
-            // );
-            // FF: Volts(vel) = 0.45*vel + 0.277?
-
+            // TESTING
             mod.controller.setReference(
-                Preferences.getDouble("Minimum Velocity (V)", 5.0), 
-                ControlType.kVoltage
+                targetSpeed, 
+                ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
+                targetSpeed*Preferences.getDouble("FF Mult", 0.25)
             );
+            // FF: Volts(vel) = 0.45*vel + 0.277?
             
             if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
                 atSpeed = false;
             }
         }
-        // if(atSpeed) {
+        if(atSpeed) {
             feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
-        // }
+        }
     }, this);}
 }

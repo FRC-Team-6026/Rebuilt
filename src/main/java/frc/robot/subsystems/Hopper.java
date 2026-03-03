@@ -84,7 +84,7 @@ public class Hopper extends SubsystemBase {
             c_fc.setText("First Current: " + firstCurrent);
             c_fc.set(true);
 
-            // XXX - Test different current limits
+            // [ ] - Test different current limits
             if ((current >= firstCurrent*Preferences.getDouble("Hopper Trigger (Amps)", 1.5)) && !firstCycle) {
                 c_triggered.set(true);
                 c_c.setText("Current: " + current);
