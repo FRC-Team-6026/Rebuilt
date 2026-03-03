@@ -96,7 +96,7 @@ public class SwerveModule {
         // controller which
         // REV and CTRE are not
 
-        // XXX - According to this page, our Kraken's should be able to do this? I
+        // NOTE - According to this page, our Kraken's should be able to do this? I
         // think it requires special configuration of the cancoders, however. Not sure.
         // See Continuous Mechanism Wrap towards bottom of page
         // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html

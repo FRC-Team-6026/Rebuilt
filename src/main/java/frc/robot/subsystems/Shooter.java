@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void windup() {
-        // TODO - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
+        // TESTING - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
         for(ShooterMod mod : s_mods) {
             mod.controller.setReference(
                 Preferences.getDouble("Minimum Velocity (V)", 5.0), 
@@ -121,7 +121,7 @@ public class Shooter extends SubsystemBase {
             mod.controller.setReference(
                 targetSpeed, 
                 ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
-                targetSpeed*Preferences.getDouble("FF Mult", 0.25)
+                targetSpeed*Preferences.getDouble("FF Mult", 0.45) + 0.27
             );
             // FF: Volts(vel) = 0.45*vel + 0.277?
             

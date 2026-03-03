@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
@@ -127,7 +128,9 @@ public class Swerve extends SubsystemBase {
             new SysIdRoutine.Config(
                     null,
                     Units.Volts.of(5),
-                    Units.Seconds.of(6.0)),
+                    Units.Seconds.of(6.0)
+                    // { SignalLogger.writeString("state", it.toString()); }
+                ),
             new SysIdRoutine.Mechanism(
                     (voltage) -> this.runVolts(voltage),
                     null, // No log consumer, since data is recorded by URCL
@@ -137,7 +140,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getAngle(), getPositions());
-        // report();
+        report();
 
         SmartDashboard.putNumber("Gyro X accel:", getGyro().getWorldLinearAccelX());
 

@@ -43,7 +43,7 @@ public class SparkControllerInfo {
         return this;
     }
 
-    // TODO - double check all susbsystem values, please
+    // XXX - double check all susbsystem values, please
 
     public SparkControllerInfo hopper(){
         canbusUse = Usages.hopperUsage;
@@ -115,7 +115,7 @@ public class SparkControllerInfo {
         return this;
     }
 
-    // TODO - Are we even going to have an elevator?
+    // XXX - Are we even going to have an elevator?
     // public SparkControllerInfo elevator(){
     //     canbusUse = Usages.elevatorUsage;
     //     currentLim = Electrical.elevatorLim;

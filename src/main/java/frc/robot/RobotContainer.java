@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -60,10 +61,14 @@ public class RobotContainer {
     private boolean robotCentric = false;
 
     // SysID buttons
-    private final JoystickButton swerve_quasiF = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton swerve_quasiR = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton swerve_dynF = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton swerve_dynR = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+
+    private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+
 
     /* Operator Buttons */
 
@@ -127,6 +132,7 @@ public class RobotContainer {
                 add("Hopper Trigger (Amps)");
                 add("Minimum Velocity (V)");
                 add("Feeder Voltage");
+                add("FF Mult");
             }
         };
 
@@ -256,6 +262,9 @@ public class RobotContainer {
         if (DriverStation.isFMSAttached()) {
             Elastic.selectTab(2);
         }
+
+        sysid_on.onTrue(new InstantCommand(() -> SignalLogger.start() ));
+        sysid_off.onTrue(new InstantCommand(() -> SignalLogger.stop() ));
 
         swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
         swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));

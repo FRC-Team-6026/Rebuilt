@@ -55,7 +55,6 @@ public class Hopper extends SubsystemBase {
 
     public class HomingCommand extends Command {
         public double current; // Amps from SparkMax; Spikes when colliding with something.
-        public double firstCurrent;
         public Alert c_c;
         public Alert c_fc;
         public Alert c_triggered;
@@ -64,7 +63,6 @@ public class Hopper extends SubsystemBase {
         public boolean firstCycle = true;
         public void initialize() {
             current = 0;
-            firstCurrent = 0;
             c_c = new Alert("Current: X", AlertType.kInfo);
             c_fc = new Alert("First Current: X", AlertType.kInfo);
             c_triggered = new Alert("Limit Triggered", AlertType.kWarning);
@@ -77,17 +75,17 @@ public class Hopper extends SubsystemBase {
             lastPos = hopperEncoder.getPosition();
             hopperEncoder.setPosition(5);
 
-            if (current != 0) { firstCycle = false; firstCurrent = current; }
+            if (current != 0) { firstCycle = false; }
             current = hopperSpark.spark.getOutputCurrent();
             hopperEncoder.setPosition(5);
 
-            c_fc.setText("First Current: " + firstCurrent);
+            c_fc.setText("Current: " + current);
             c_fc.set(true);
 
-            // [ ] - Test different current limits
-            if ((current >= firstCurrent*Preferences.getDouble("Hopper Trigger (Amps)", 1.5)) && !firstCycle) {
+            // IN PROGRESS - Test different current limits
+            if ((current >= Preferences.getDouble("Hopper Trigger (Amps)", 0.5)) && !firstCycle) {
                 c_triggered.set(true);
-                c_c.setText("Current: " + current);
+                c_c.setText("Final Current: " + current);
                 c_c.set(true);
             }
         }
