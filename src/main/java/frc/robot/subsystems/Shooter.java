@@ -99,8 +99,21 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command shootCommand() { return Commands.run(() -> {
-        // 4in diameter shooter wheels planned, so 4*pi circumference; 1 rev/s = 0.101*pi m/s (this is happening in conversion factors instead)
+        /* basic, constant voltage control only */
+        for (ShooterMod mod : s_mods)
+            mod.controller.setReference(8, ControlType.kVoltage);
         
+
+        /* voltage control with distance calc
+        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
+        double distance = toHub + limelight.getTZ();
+        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
+        for (ShooterMod mod : s_mods)
+            mod.controller.setReference(targetSpeed*Preferences.getDouble("FF Mult", 0.45) + 0.27, ControlType.kVoltage);
+         */
+
+         
+        /* distance calc, with feedback control
         // 0.5969 meters to hub center from limelight
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double distance = toHub + limelight.getTZ();
@@ -132,5 +145,6 @@ public class Shooter extends SubsystemBase {
         if(atSpeed) {
             feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
         }
+        */
     }, this);}
 }

@@ -68,6 +68,7 @@ public class Hopper extends SubsystemBase {
             c_triggered = new Alert("Limit Triggered", AlertType.kWarning);
 
             lastPos = 0;
+            hopperEncoder.setPosition(4.5);
             hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
         }
         public void execute() {
@@ -89,8 +90,8 @@ public class Hopper extends SubsystemBase {
                 c_c.set(true);
             }
         }
-        public void end(boolean interrupted)    { hopperEncoder.setPosition(-6); }
-        public boolean isFinished() { return (lastPos >= 5) && !firstCycle; }
+        public void end(boolean interrupted)    { hopperEncoder.setPosition(-5); }
+        public boolean isFinished() { return (lastPos >= 4.999) && !firstCycle; }
     }
 
     public Command homeCommand() {
