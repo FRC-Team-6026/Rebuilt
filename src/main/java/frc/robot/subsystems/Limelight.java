@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -72,6 +73,7 @@ public class Limelight extends SubsystemBase {
     public double getTX() {
         double tx = _table.getEntry("tx").getDouble(0);
         tx = limiter.calculate(tx);
+        MathUtil.applyDeadband(tx, 0.5);
         return tx;
     }
 
@@ -80,9 +82,9 @@ public class Limelight extends SubsystemBase {
     */
     public double getTX(double targetOffset) {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
+        tx += targetOffset;
         tx = limiter.calculate(tx);
         SmartDashboard.putNumber("tx", tx);
-        tx += targetOffset;
         return tx;
     }
 

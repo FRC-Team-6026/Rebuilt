@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkBase.ResetMode;
 
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.lib.util.CANSparkMaxUtil;
@@ -130,7 +129,7 @@ public class SparkController {
                 .closedLoopRampRate(rampRate);
         }
 
-        config.closedLoop.pidf(pidList[0], pidList[1], pidList[2], pidList[3])
+        config.closedLoop.pid(pidList[0], pidList[1], pidList[2])
                     .outputRange(min, max)
                     .iZone(2.0)
                     .iMaxAccum(0.2);
@@ -139,7 +138,7 @@ public class SparkController {
                     .forwardSoftLimitEnabled(fEnable)
                     .reverseSoftLimitEnabled(bEnable);
         
-        spark.configure(config, ResetMode.kResetSafeParameters, null);
+        spark.configure(config, com.revrobotics.ResetMode.kResetSafeParameters, null);
         spark.getEncoder().setPosition(0.0);
 
         /* 2024 -> 2025 import change. Configuration moved to a whole separate object.

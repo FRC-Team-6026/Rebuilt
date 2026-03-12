@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -82,36 +84,65 @@ public class Shooter extends SubsystemBase {
 
     public void stop() {
         for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(0.0, ControlType.kVoltage);
+            mod.controller.setSetpoint(0.0, ControlType.kVoltage);
         }
-        feederController.setReference(0.0, ControlType.kVoltage);
+        feederController.setSetpoint(0.0, ControlType.kVoltage);
     }
 
+    // Effectively deprecated
     public void windup() {
-        // TESTING - dial in minimum voltage. ideally this will be enough voltage for shooting at minimum distance
         for(ShooterMod mod : s_mods) {
-            mod.controller.setReference(
+            mod.controller.setSetpoint(
                 Preferences.getDouble("Minimum Velocity (V)", 5.0), 
                 ControlType.kVoltage
             );
         }
-        feederController.setReference(0.0, ControlType.kVoltage);
+        feederController.setSetpoint(0.0, ControlType.kVoltage);
     }
 
-    public Command shootCommand() { return Commands.run(() -> {
-        /* basic, constant voltage control only */
+    public Command simpleShootCommand() { return Commands.startRun(
+        () -> {
         for (ShooterMod mod : s_mods)
-            mod.controller.setReference(8, ControlType.kVoltage);
+            mod.controller.setSetpoint(8, ControlType.kVoltage);},
+        () -> {
+        if (s_mods[0].encoder.getVelocity() > 7.0)
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);},
+        this);
+    }
+
+    public Command shootCommand() {
+        return shootCommand(() -> 0);
+    }
+
+    public Command shootCommand(DoubleSupplier extraVoltage) { return Commands.run(() -> {
+        // double FFA = 0.45;
+        /* basic voltage control, with hacky distance and backup operator input */
+        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
+        double distance = toHub + limelight.getTZ();
+        for (ShooterMod mod : s_mods)
+            // mod.controller.setSetpoint(8+distance*Preferences.getDouble("Shooter Mult", 1.0), ControlType.kVoltage);
+            mod.controller.setSetpoint(6.8+extraVoltage.getAsDouble()+(distance*0.6), ControlType.kVoltage);
+        if (s_mods[0].encoder.getVelocity() > 7.0)
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         
 
-        /* voltage control with distance calc
+        /* voltage control with distance calc 
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double distance = toHub + limelight.getTZ();
         double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
-        for (ShooterMod mod : s_mods)
-            mod.controller.setReference(targetSpeed*Preferences.getDouble("FF Mult", 0.45) + 0.27, ControlType.kVoltage);
-         */
-
+        
+        boolean atSpeed = true;
+        for (ShooterMod mod : s_mods) {
+            mod.controller.setSetpoint(targetSpeed*FFA + 0.3, ControlType.kVoltage);
+            if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
+                atSpeed = false;
+            }
+        }
+        
+        if(atSpeed) {
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
+        }
+*/
          
         /* distance calc, with feedback control
         // 0.5969 meters to hub center from limelight
@@ -131,10 +162,10 @@ public class Shooter extends SubsystemBase {
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
             // TESTING
-            mod.controller.setReference(
+            mod.controller.setSetpoint(
                 targetSpeed, 
                 ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
-                targetSpeed*Preferences.getDouble("FF Mult", 0.45) + 0.27
+                targetSpeed*FFA + 0.3
             );
             // FF: Volts(vel) = 0.45*vel + 0.277?
             
@@ -143,7 +174,7 @@ public class Shooter extends SubsystemBase {
             }
         }
         if(atSpeed) {
-            feederController.setReference(Preferences.getDouble("Feeder Voltage", 0.5), ControlType.kVoltage);
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         }
         */
     }, this);}

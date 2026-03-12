@@ -67,7 +67,8 @@ public class TeleopSwerve extends Command {
         // joystick inputs need deadband/cube/slewrate calc, but limelight inputs should
         // only need slewrate
         if (autoaim.getAsBoolean()) {
-            rotationVal = -s_Limelight.getTX(Math.atan(strafeSup.getAsDouble() / s_Limelight.getTZ()))
+            // rotationVal = -s_Limelight.getTX(Math.atan(strafeSup.getAsDouble() / s_Limelight.getTZ()))
+            rotationVal = -s_Limelight.getTX(strafeSup.getAsDouble()*3.0)
                 * Preferences.getDouble("Aim Rotation Power", 1.0) / 100.0;
         } else {
             rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);

@@ -97,7 +97,7 @@ public final class Constants {
         );
 
         public static final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
-            new PIDConstants(2, 0, 0.2), // Translation constants (should be in volts/meter of error)
+            new PIDConstants(3, 0, 0.2), // Translation constants (should be in volts/meter of error)
             new PIDConstants(0.5, 0, 0) // Rotation constants
             // 2024 -> 2025 import change. Constructor simplified, deleted maxspeed, drive base radius, and replanning config
         );
@@ -154,9 +154,9 @@ public final class Constants {
         
         /* Subsystems */
         public static final int hopperLim = 20;
-        public static final int intakeLim = 20;
-        public static final int floorLim = 20;
-        public static final int feederLim = 20;
+        public static final int intakeLim = 40;
+        public static final int floorLim = 30;
+        public static final int feederLim = 40;
         public static final int shooterLim = 40;
         public static final int elevatorLim = 20;
     }
@@ -174,8 +174,8 @@ public final class Constants {
         public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
         /* Subsystems */
-        public static final double[] hopperPID = new double[] {0.022, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
-        public static final double[] intakePID = new double[] {0.03, 0.0, 0.0, 0.0};
+        public static final double[] hopperPID = new double[] {0.018, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
+        public static final double[] intakePID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] shooterPID = new double[] {0.12, 0.0, 0.0, 0.0};
@@ -186,7 +186,7 @@ public final class Constants {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
         // public static final double[] driveMotorsSVA = new double[] {0.3, 2.55, 0.27};    // 2023's SVA values. 
-        public static final double[] driveMotorsSVA = new double[] {0.24, 2.00, 0.2};   // TODO - SysID tuning.
+        public static final double[] driveMotorsSVA = new double[] {0.3, 2.6, 0.28};   // TODO - SysID tuning.
 
         // public static final double[] ElevSVA = new double[] {0.0, 0.2, 0.00};
         // public static final double[] WristSVA = new double[] {0.05, 0.03, 0.001};
@@ -265,6 +265,6 @@ public final class Constants {
     }
 
     public final static class Limelight {
-        public static final double maxRate = 20.0;  // slew rate, in degrees/s
+        public static final double maxRate = 40.0;  // slew rate, in degrees/s
     }
 }

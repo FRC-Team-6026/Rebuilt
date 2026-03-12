@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -15,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.units.Units;
+// import edu.wpi.first.units.measure.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -45,7 +47,7 @@ public class Swerve extends SubsystemBase {
             .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
 
     public Swerve() {
-        gyro = new AHRS();
+        gyro = new AHRS(NavXComType.kMXP_SPI);
         gyro.reset();
         zeroGyro();
         // gyro.setAngleAdjustment(Constants.Setup.gyroAngleOffset);
@@ -124,6 +126,7 @@ public class Swerve extends SubsystemBase {
 
         // SysId - the actual SysId routine. Configures settings and creates the
         // callable function
+        /*
         sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
                     null,
@@ -135,10 +138,12 @@ public class Swerve extends SubsystemBase {
                     (voltage) -> this.runVolts(voltage),
                     null, // No log consumer, since data is recorded by URCL
                     this));
+        */
     }
 
     @Override
     public void periodic() {
+        // TODO - investigate command loop overrun
         swerveOdometry.update(getAngle(), getPositions());
         report();
 

@@ -136,7 +136,7 @@ public class SwerveModule {
                     .withVelocity(desiredState.speedMetersPerSecond)
                     .withFeedForward(feedforward.calculate(desiredState.speedMetersPerSecond)));
         } else {
-            // driveController.setReference(
+            // driveController.setSetpoint(
             // desiredState.speedMetersPerSecond,
             // SparkMax.ControlType.kVelocity,
             // ClosedLoopSlot.kSlot0,
@@ -150,7 +150,7 @@ public class SwerveModule {
 
     // SysId - directly sets voltage value to motor
     public void setVoltage(Voltage voltage) {
-        // driveController.setReference(voltage.magnitude(), ControlType.kVoltage);
+        // driveController.setSetpoint(voltage.magnitude(), ControlType.kVoltage);
         driveMotor_talon.setControl(voltageControl.withOutput(voltage));
     }
 
@@ -160,7 +160,7 @@ public class SwerveModule {
                 ? lastAngle
                 : desiredState.angle;
 
-        // angleController.setReference(angle.getDegrees(),
+        // angleController.setSetpoint(angle.getDegrees(),
         // SparkMax.ControlType.kPosition);
         angleMotor_talon.setControl(positionControl.withPosition(angle.getRotations()));
 

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
@@ -20,6 +21,7 @@ public class Hopper extends SubsystemBase {
     private SparkController hopperSpark;
     private RelativeEncoder hopperEncoder;
     private SparkClosedLoopController hopperController;
+    private static double tiltDegrees = 15;
 
     public Hopper() {
         this.hopperSpark = new SparkController(Constants.Setup.hopperSpark, new SparkControllerInfo().hopper(),
@@ -31,14 +33,22 @@ public class Hopper extends SubsystemBase {
     }
 
     public Command deploy() {
-        // double target = Preferences.getDouble("Hopper Deploy Target", 50.0);
-        return new RunCommand(() -> hopperController.setReference(Preferences.getDouble("Hopper Deploy Target", 50.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
-        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 50.0)) < Constants.Hopper.tolerance);
+        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
+        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)) < Constants.Hopper.tolerance);
+    }
+
+    public Command tilt() {
+        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
+        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees) < Constants.Hopper.tolerance);
     }
 
     public Command retract() {
-        return new RunCommand(() -> hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
+        return new RunCommand(() -> hopperController.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
         .until(() -> Math.abs(hopperEncoder.getPosition()) < Constants.Hopper.tolerance);
+    }
+
+    public double getPosition() {
+        return hopperEncoder.getPosition();
     }
 
     public void setVoltage(double volts) {
@@ -48,9 +58,9 @@ public class Hopper extends SubsystemBase {
     public void setVoltage(double volts, boolean FFenable) {
         volts = MathUtil.clamp(volts, -Constants.Hopper.maxVoltage, Constants.Hopper.maxVoltage);
         if (FFenable)
-            hopperController.setReference(volts, ControlType.kVoltage, ClosedLoopSlot.kSlot0, getFF());
+            hopperController.setSetpoint(volts, ControlType.kVoltage, ClosedLoopSlot.kSlot0, getFF());
         else
-            hopperController.setReference(volts, ControlType.kVoltage);
+            hopperController.setSetpoint(volts, ControlType.kVoltage);
     }
 
     public class HomingCommand extends Command {
@@ -60,7 +70,7 @@ public class Hopper extends SubsystemBase {
         public Alert c_triggered;
 
         public double lastPos;
-        public boolean firstCycle = true;
+        public int cycles = 0;
         public void initialize() {
             current = 0;
             c_c = new Alert("Current: X", AlertType.kInfo);
@@ -69,29 +79,28 @@ public class Hopper extends SubsystemBase {
 
             lastPos = 0;
             hopperEncoder.setPosition(4.5);
-            hopperController.setReference(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
+            hopperController.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
         }
         public void execute() {
-            if (lastPos != 0) firstCycle = false;
+            cycles++;
             lastPos = hopperEncoder.getPosition();
             hopperEncoder.setPosition(5);
 
-            if (current != 0) { firstCycle = false; }
-            current = hopperSpark.spark.getOutputCurrent();
-            hopperEncoder.setPosition(5);
-
-            c_fc.setText("Current: " + current);
-            c_fc.set(true);
-
             // IN PROGRESS - Test different current limits
-            if ((current >= Preferences.getDouble("Hopper Trigger (Amps)", 0.5)) && !firstCycle) {
-                c_triggered.set(true);
-                c_c.setText("Final Current: " + current);
-                c_c.set(true);
-            }
+            // if (current != 0) { firstCycle = false; }
+            // current = hopperSpark.spark.getOutputCurrent();
+
+            // c_fc.setText("Current: " + current);
+            // c_fc.set(true);
+
+            // if ((current >= Preferences.getDouble("Hopper Trigger (Amps)", 0.5)) && !firstCycle) {
+            //     c_triggered.set(true);
+            //     c_c.setText("Final Current: " + current);
+            //     c_c.set(true);
+            // }
         }
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-5); }
-        public boolean isFinished() { return (lastPos >= 4.999) && !firstCycle; }
+        public boolean isFinished() { return (lastPos >= 4.999) && (cycles > 5); }
     }
 
     public Command homeCommand() {

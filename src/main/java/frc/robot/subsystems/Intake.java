@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
@@ -19,7 +21,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void start() {
-        setVoltage(Preferences.getDouble("Intake Volts", 1));
+        setVoltage(Preferences.getDouble("Intake Volts", 6));
     }
 
     public void stop() { 
@@ -27,6 +29,6 @@ public class Intake extends SubsystemBase {
     }
 
     public void setVoltage(double voltage) {
-        intakeController.setReference(voltage, SparkBase.ControlType.kVoltage);
+        intakeController.setSetpoint(voltage, SparkBase.ControlType.kVoltage);
     }
 }

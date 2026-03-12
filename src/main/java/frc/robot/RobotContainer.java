@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Floor;
@@ -56,18 +58,18 @@ public class RobotContainer {
     /** Driver - Y (X on our controller) */
     private final JoystickButton resetOdometry = new JoystickButton(driver, XboxController.Button.kY.value);
     /** Driver - A (B on our controller) */
-    /** Driver - Y (X on our controller) */
+    private final JoystickButton autoAimButton = new JoystickButton(driver, XboxController.Button.kA.value);
 
     private boolean robotCentric = false;
 
     // SysID buttons
-    private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+    // private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
+    // private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
 
-    private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
 
     /* Operator Buttons */
@@ -79,7 +81,12 @@ public class RobotContainer {
     private final JoystickButton retractButton = new JoystickButton(operator, XboxController.Button.kA.value);
     /** Operator - B (A on our controller) */
     private final JoystickButton deployButton = new JoystickButton(operator, XboxController.Button.kB.value);
-    /** Operator - Left Button */
+    /** Operator - Y (X on our controller) */
+    private final JoystickButton simpleShootButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    /** Operator - Left Bumper */
+    private final JoystickButton floorReverseButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    /** Operator - Right Bumper */
+    private final JoystickButton floorForwardButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
 
     /** Operator - Back Button */
     private final JoystickButton hopperHomingButton = new JoystickButton(operator, XboxController.Button.kBack.value);
@@ -89,10 +96,8 @@ public class RobotContainer {
     private final Trigger intakeButton = new Trigger(() -> operator.getRawAxis(intakeTrigger) > 0.2);
 
     private final int shootTrigger = XboxController.Axis.kRightTrigger.value;
-    /** Operator - Right Trigger, 20% */
-    private final Trigger windupButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.2);
-    /** Operator - Right Trigger, 80% */
-    private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.9);
+    /** Operator - Right Trigger */
+    private final Trigger shootButton = new Trigger(() -> operator.getRawAxis(shootTrigger) > 0.5);
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
@@ -108,10 +113,18 @@ public class RobotContainer {
 
     public RobotContainer() {
         /* Command Composition Definitions */
+        // Command complexAutoShoot = 
+        //     s_shooter.shootCommand(() -> 0.0)
+        //     .alongWith(new WaitCommand(1).andThen(
+        //     new ConditionalCommand(
+        //         s_hopper.tilt(),
+        //         Commands.none(),
+        //         () -> s_hopper.getPosition() > 50
+        //     )));
 
         /* PathPlanner named commands */
-        NamedCommands.registerCommand("Shooter - Windup", new InstantCommand(() -> s_shooter.windup(), s_shooter));
-        NamedCommands.registerCommand("Shooter - Begin Firing", new InstantCommand(() -> s_floor.start()).andThen(s_shooter.shootCommand()));
+        NamedCommands.registerCommand("Shooter - Begin Firing", new InstantCommand(() -> s_floor.forward()).andThen(s_shooter.shootCommand()));
+        // NamedCommands.registerCommand("Shooter - Begin Firing w Range", new InstantCommand(() -> s_floor.forward()).andThen(s_shooter.shootCommand()));
         NamedCommands.registerCommand("Shooter - Stop", new InstantCommand(() -> { s_shooter.stop(); s_floor.stop(); }, s_shooter));
 
         NamedCommands.registerCommand("Hopper - Home Position", new InstantCommand(() -> s_hopper.homeCommand()));
@@ -129,10 +142,10 @@ public class RobotContainer {
                 add("Hopper Volts");
                 add("Floor Volts");
                 add("Hopper Deploy Target");
-                add("Hopper Trigger (Amps)");
+                // add("Hopper Trigger (Amps)");
                 add("Minimum Velocity (V)");
-                add("Feeder Voltage");
-                add("FF Mult");
+                add("Feeder Volts");
+                add("Shooter Mult");
             }
         };
 
@@ -202,17 +215,41 @@ public class RobotContainer {
 
         /* Operator Buttons */
         intakeButton.onTrue(new InstantCommand(() -> { s_intake.start(); }));
-        intakeButton.onFalse(new InstantCommand(() -> {  s_intake.stop(); }));
+        intakeButton.onFalse(new InstantCommand(() -> { s_intake.stop(); }));
 
-        shootButton.onTrue(new InstantCommand(() -> s_floor.start()).andThen(s_shooter.shootCommand()));
-        shootButton.onFalse(new InstantCommand(() -> { s_shooter.windup(); s_floor.stop(); }, s_shooter));
-        windupButton.onTrue(new InstantCommand(() -> s_shooter.windup(), s_shooter));
-        windupButton.onFalse(new InstantCommand(() -> s_shooter.stop(), s_shooter));
+        // TODO - change shoot button behavior:
+        // run shooter
+        // turn on intake
+        // run agitator(floor) anti-jam pulse cycle and repeat:
+        //  - forward .5s, backwards .2s
+        //  - and only run floor while feeder runs
+        simpleShootButton.onTrue(s_shooter.simpleShootCommand());
+        simpleShootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter));
+        shootButton.onTrue(
+            s_shooter.shootCommand(() -> operator.getPOV()/180.0)
+            .alongWith(new WaitCommand(1).andThen(
+            new ConditionalCommand(
+                s_hopper.tilt(),
+                Commands.none(),
+                () -> (s_hopper.getPosition() > 50) && shootButton.getAsBoolean()
+            )))
+        );
+        shootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter)
+            .alongWith(new ConditionalCommand(
+                s_hopper.deploy(),
+                Commands.none(),
+                () -> s_hopper.getPosition() > 50
+            ))
+        );
 
         hopperHomingButton.onTrue(s_hopper.homeCommand());
 
         deployButton.onTrue(s_hopper.deploy());
         retractButton.onTrue(s_hopper.retract());
+        floorReverseButton.onTrue(new InstantCommand(() -> s_floor.reverse()));
+        floorReverseButton.onFalse(new InstantCommand(() -> s_floor.stop(false)));
+        floorForwardButton.onTrue(new InstantCommand(() -> s_floor.forward()));
+        floorForwardButton.onFalse(new InstantCommand(() -> s_floor.stop(true)));
     }
 
     public Command getAutonomousCommand() {
@@ -233,7 +270,7 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(translationAxis),
                 () -> -driver.getRawAxis(strafeAxis),
                 () -> -driver.getRawAxis(rotationAxis),
-                () -> windupButton.getAsBoolean(), // Activate limelight aiming functions
+                () -> autoAimButton.getAsBoolean(), // Activate limelight aiming functions
                 () -> robotCentric
             )
         );
@@ -263,13 +300,13 @@ public class RobotContainer {
             Elastic.selectTab(2);
         }
 
-        sysid_on.onTrue(new InstantCommand(() -> SignalLogger.start() ));
-        sysid_off.onTrue(new InstantCommand(() -> SignalLogger.stop() ));
+        // sysid_on.onTrue(new InstantCommand(() -> SignalLogger.start() ));
+        // sysid_off.onTrue(new InstantCommand(() -> SignalLogger.stop() ));
 
-        swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
-        swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
-        swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
-        swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
+        // swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
+        // swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
+        // swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
+        // swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
     }
 
     public void testExit() {
