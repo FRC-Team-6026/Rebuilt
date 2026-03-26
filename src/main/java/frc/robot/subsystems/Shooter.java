@@ -116,7 +116,7 @@ public class Shooter extends SubsystemBase {
 
     public Command shootCommand(DoubleSupplier extraVoltage) { return Commands.run(() -> {
         // double FFA = 0.45;
-        /* basic voltage control, with hacky distance and backup operator input */
+        /* basic voltage control, with hacky distance and backup operator input 
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double distance = toHub + limelight.getTZ();
         for (ShooterMod mod : s_mods)
@@ -124,6 +124,28 @@ public class Shooter extends SubsystemBase {
             mod.controller.setSetpoint(6.8+extraVoltage.getAsDouble()+(distance*0.6), ControlType.kVoltage);
         if (s_mods[0].encoder.getVelocity() > 7.0)
             feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
+        
+        /* NEW distance calc velocity control */
+        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
+        double distance = toHub + limelight.getTZ();
+        double targetSpeed = -0.21*(distance-16.733)*(3.3+distance);
+        
+        boolean atSpeed = true;
+        for (ShooterMod mod : s_mods) {
+            // TESTING
+            mod.controller.setSetpoint(
+                targetSpeed,
+                ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0,
+                targetSpeed*0.51 + 1.5   // this matches what i read of data ok, but a flat 1.7 seems too high
+                // targetSpeed*0.45 + 0.25
+            );
+            if (mod.encoder.getVelocity() < 0.9 * targetSpeed)
+                atSpeed = false;
+        }
+        if(atSpeed) {
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
+        }
         
 
         /* voltage control with distance calc 

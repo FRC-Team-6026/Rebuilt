@@ -178,7 +178,7 @@ public final class Constants {
         public static final double[] intakePID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
-        public static final double[] shooterPID = new double[] {0.12, 0.0, 0.0, 0.0};
+        public static final double[] shooterPID = new double[] {0.04, 0.0, 0.0, 0.0};
         public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 

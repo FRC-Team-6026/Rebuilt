@@ -281,6 +281,10 @@ public class RobotContainer {
     public void teleopExit() {
         swerve.removeDefaultCommand();
         s_hopper.removeDefaultCommand();
+
+        s_shooter.stop();
+        s_intake.stop();
+        s_floor.stop();
     }
 
     public void autoInit() {
@@ -289,6 +293,12 @@ public class RobotContainer {
         if (DriverStation.isFMSAttached()) {
             Elastic.selectTab("Auto");
         }
+    }
+
+    public void autoExit() {
+        s_shooter.stop();
+        s_intake.stop();
+        s_floor.stop();
     }
 
     public void testInit() {
