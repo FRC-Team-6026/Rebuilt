@@ -89,17 +89,6 @@ public class Shooter extends SubsystemBase {
         feederController.setSetpoint(0.0, ControlType.kVoltage);
     }
 
-    // Effectively deprecated
-    public void windup() {
-        for(ShooterMod mod : s_mods) {
-            mod.controller.setSetpoint(
-                Preferences.getDouble("Minimum Velocity (V)", 5.0), 
-                ControlType.kVoltage
-            );
-        }
-        feederController.setSetpoint(0.0, ControlType.kVoltage);
-    }
-
     public Command simpleShootCommand() { return Commands.startRun(
         () -> {
         for (ShooterMod mod : s_mods)
@@ -115,81 +104,27 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command shootCommand(DoubleSupplier extraVoltage) { return Commands.run(() -> {
-        // double FFA = 0.45;
-        /* basic voltage control, with hacky distance and backup operator input 
-        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
-        double distance = toHub + limelight.getTZ();
-        for (ShooterMod mod : s_mods)
-            // mod.controller.setSetpoint(8+distance*Preferences.getDouble("Shooter Mult", 1.0), ControlType.kVoltage);
-            mod.controller.setSetpoint(6.8+extraVoltage.getAsDouble()+(distance*0.6), ControlType.kVoltage);
-        if (s_mods[0].encoder.getVelocity() > 7.0)
-            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
-        
-        /* NEW distance calc velocity control */
-        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
-        double distance = toHub + limelight.getTZ();
-        double targetSpeed = -0.21*(distance-16.733)*(3.3+distance);
-        
-        boolean atSpeed = true;
-        for (ShooterMod mod : s_mods) {
-            // TESTING
-            mod.controller.setSetpoint(
-                targetSpeed,
-                ControlType.kVelocity,
-                ClosedLoopSlot.kSlot0,
-                targetSpeed*0.51 + 1.5   // this matches what i read of data ok, but a flat 1.7 seems too high
-                // targetSpeed*0.45 + 0.25
-            );
-            if (mod.encoder.getVelocity() < 0.9 * targetSpeed)
-                atSpeed = false;
-        }
-        if(atSpeed) {
-            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
-        }
-        
-
-        /* voltage control with distance calc 
-        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
-        double distance = toHub + limelight.getTZ();
-        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
-        
-        boolean atSpeed = true;
-        for (ShooterMod mod : s_mods) {
-            mod.controller.setSetpoint(targetSpeed*FFA + 0.3, ControlType.kVoltage);
-            if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
-                atSpeed = false;
-            }
-        }
-        
-        if(atSpeed) {
-            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
-        }
-*/
-         
-        /* distance calc, with feedback control
+        /* velocity controlled */
         // 0.5969 meters to hub center from limelight
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double distance = toHub + limelight.getTZ();
         
-        if (distance == 0) {
-            limelightWarning.set(true);
-            return;
-        } else {
-            limelightWarning.set(false);
-        }
+        if (distance == 0) { limelightWarning.set(true); return; } 
+        else                 limelightWarning.set(false);
         
         // x2 for shooter wheel:fuel ratio
+        double a = Preferences.getDouble("target test mult", 0.0);
+        double b = Preferences.getDouble("target test add", 0.0);
         double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
 
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
-            // TESTING
             mod.controller.setSetpoint(
-                targetSpeed, 
-                ControlType.kVelocity, ClosedLoopSlot.kSlot0, 
-                targetSpeed*FFA + 0.3
+                targetSpeed*a + b, 
+                ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0,
+                targetSpeed*a + b
             );
-            // FF: Volts(vel) = 0.45*vel + 0.277?
             
             if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
                 atSpeed = false;
@@ -198,6 +133,5 @@ public class Shooter extends SubsystemBase {
         if(atSpeed) {
             feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         }
-        */
     }, this);}
 }

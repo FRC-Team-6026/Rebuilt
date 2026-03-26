@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
@@ -29,6 +34,23 @@ public class Floor extends SubsystemBase {
     public void reverse() {
         setVoltage(-Preferences.getDouble("Floor Volts", 1));
         reverse_requested = true;
+    }
+    
+    public Command activate(BooleanSupplier end) {
+        // Pause
+        // Loop
+        //    - Forward 0.5s
+        //    - Reverse 0.2s
+
+        Command result = 
+            new InstantCommand(() -> forward()).andThen(
+            new WaitCommand(0.5).andThen(
+            new InstantCommand(() -> reverse()).andThen(
+            new WaitCommand(0.2)
+        ))).repeatedly().until(end);
+
+        result.addRequirements(this);
+        return result;
     }
 
     public void stop() {

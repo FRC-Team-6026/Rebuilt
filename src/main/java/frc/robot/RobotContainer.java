@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -146,6 +145,8 @@ public class RobotContainer {
                 add("Minimum Velocity (V)");
                 add("Feeder Volts");
                 add("Shooter Mult");
+                add("target test mult");
+                add("target test add");
             }
         };
 
@@ -225,6 +226,7 @@ public class RobotContainer {
         //  - and only run floor while feeder runs
         simpleShootButton.onTrue(s_shooter.simpleShootCommand());
         simpleShootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter));
+
         shootButton.onTrue(
             s_shooter.shootCommand(() -> operator.getPOV()/180.0)
             .alongWith(new WaitCommand(1).andThen(
