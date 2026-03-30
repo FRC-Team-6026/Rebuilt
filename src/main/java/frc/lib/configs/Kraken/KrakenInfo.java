@@ -1,6 +1,8 @@
 package frc.lib.configs.Kraken;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants.ConversionFactors;
 import frc.robot.Constants.Electrical;
@@ -49,6 +51,19 @@ public class KrakenInfo {
         voltageComp = Electrical.voltageComp;
         continuousWrap = false; // flip back to true if we can figure out cancoder fusing, i think
         rampRate = 0.1; // seconds to reach max speed.
+        return this;
+    }
+
+    public KrakenInfo intake(){
+        canbusUse = Usages.intakeUsage;
+        currentLim = Electrical.intakeLim;
+        idleMode = IdleModes.intakeIdle;
+        RotorToSensorRatio = ConversionFactors.defaultConversionPositionFactor;
+        SensorToMechanismRatio = ConversionFactors.defaultConversionPositionFactor; // TODO - maybe add actual ratio. right now, it shouldnt care
+        pidList = PID.intakePID;
+        voltageComp = Electrical.voltageComp;
+        continuousWrap = false;
+        rampRate = 0.2; // seconds to reach max speed.
         return this;
     }
 }

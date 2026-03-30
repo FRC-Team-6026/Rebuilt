@@ -78,6 +78,7 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
         for(ShooterMod mod : s_mods) {
+            // TODO - probably disable for competition
             SmartDashboard.putNumber("Encoder test " + mod.id, mod.encoder.getVelocity());
         }
     }
@@ -104,34 +105,56 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command shootCommand(DoubleSupplier extraVoltage) { return Commands.run(() -> {
-        /* velocity controlled */
-        // 0.5969 meters to hub center from limelight
+        // double FFA = 0.45;
+        /* basic voltage control, with hacky distance and backup operator input 
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double distance = toHub + limelight.getTZ();
+        for (ShooterMod mod : s_mods)
+            // mod.controller.setSetpoint(8+distance*Preferences.getDouble("Shooter Mult", 1.0), ControlType.kVoltage);
+            mod.controller.setSetpoint(6.8+extraVoltage.getAsDouble()+(distance*0.6), ControlType.kVoltage);
+        if (s_mods[0].encoder.getVelocity() > 7.0)
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         
-        if (distance == 0) { limelightWarning.set(true); return; } 
-        else                 limelightWarning.set(false);
-        
-        // x2 for shooter wheel:fuel ratio
-        double a = Preferences.getDouble("target test mult", 0.0);
-        double b = Preferences.getDouble("target test add", 0.0);
-        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
+        /* NEW distance calc velocity control */
+        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
+        double tz = limelight.getTZ();
+        double distance = (tz == 0 ? 2.8 : toHub + tz);
+        double targetSpeed = -0.235*(distance-16.3)*(3.0+distance);
+        // double targetSpeed = -0.195*(distance-18.9)*(2.95+distance);
 
         boolean atSpeed = true;
         for (ShooterMod mod : s_mods) {
+            // TESTING
             mod.controller.setSetpoint(
-                targetSpeed*a + b, 
+                targetSpeed,
                 ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0,
-                targetSpeed*a + b
+                targetSpeed*Preferences.getDouble("target test mult", 0.5) + Preferences.getDouble("target test add", 0.0)
             );
-            
-            if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
+            if (mod.encoder.getVelocity() < 0.92 * targetSpeed)
                 atSpeed = false;
-            }
         }
         if(atSpeed) {
             feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         }
+        
+
+        /* voltage control with distance calc 
+        double toHub = Math.cos(limelight.getYaw()) * 0.5969;
+        double distance = toHub + limelight.getTZ();
+        double targetSpeed = 2 * ((distance-6.0)*(21.0-distance)/22.2 + 9.8);
+        
+        boolean atSpeed = true;
+        for (ShooterMod mod : s_mods) {
+            mod.controller.setSetpoint(targetSpeed*FFA + 0.3, ControlType.kVoltage);
+            if (mod.encoder.getVelocity() < 0.9 * targetSpeed) {
+                atSpeed = false;
+            }
+        }
+        
+        if(atSpeed) {
+            feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
+        }
+*/
     }, this);}
 }

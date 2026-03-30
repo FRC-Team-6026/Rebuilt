@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
-// import com.kauailabs.navx.frc.AHRS;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volt;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -16,7 +19,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-// import edu.wpi.first.units.measure.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -46,7 +48,7 @@ public class Swerve extends SubsystemBase {
             .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
 
     public Swerve() {
-        gyro = new AHRS(NavXComType.kMXP_SPI);
+        gyro = new AHRS(NavXComType.kMXP_SPI, 66);
         gyro.reset();
         zeroGyro();
         // gyro.setAngleAdjustment(Constants.Setup.gyroAngleOffset);
@@ -125,28 +127,27 @@ public class Swerve extends SubsystemBase {
 
         // SysId - the actual SysId routine. Configures settings and creates the
         // callable function
-        /*
+        
         sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
                     null,
-                    Units.Volts.of(5),
-                    Units.Seconds.of(6.0)
+                    Volts.of(5.0),
+                    Seconds.of(6.0)
                     // { SignalLogger.writeString("state", it.toString()); }
                 ),
             new SysIdRoutine.Mechanism(
                     (voltage) -> this.runVolts(voltage),
                     null, // No log consumer, since data is recorded by URCL
                     this));
-        */
     }
 
     @Override
     public void periodic() {
-        // TODO - investigate command loop overrun
+        // TODO - investigate command loop overrun. Probably disable report at start of competition?
         swerveOdometry.update(getAngle(), getPositions());
         report();
 
-        SmartDashboard.putNumber("Gyro X accel:", getGyro().getWorldLinearAccelX());
+        // SmartDashboard.putNumber("Gyro X accel:", getGyro().getWorldLinearAccelX());
 
         pub.set(getStates());
     }
@@ -260,6 +261,7 @@ public class Swerve extends SubsystemBase {
     // SysId - function for setting voltage to motor.
     // This function just passes voltage value to each module.
     public void runVolts(Voltage voltage) {
+        SmartDashboard.putNumber("Voltage", voltage.magnitude());
         for (SwerveModule mod : mSwerveMods) {
             mod.setVoltage(voltage);
         }

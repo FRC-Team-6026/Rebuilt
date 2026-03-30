@@ -36,7 +36,7 @@ public class KrakenController {
             .withContinuousWrap(Info.continuousWrap)
         ).withClosedLoopRamps(new ClosedLoopRampsConfigs()
             .withDutyCycleClosedLoopRampPeriod(Info.rampRate)
-            .withVoltageClosedLoopRampPeriod(Info.rampRate)     // TODO - change for SysID, when we do that
+            .withVoltageClosedLoopRampPeriod(Info.rampRate)
         ).withCurrentLimits(new CurrentLimitsConfigs()
             .withSupplyCurrentLimit(Info.currentLim)
             .withSupplyCurrentLimitEnable(true)

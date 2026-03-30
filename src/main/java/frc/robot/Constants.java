@@ -111,7 +111,7 @@ public final class Constants {
 
         /* Min/Max Heights */
         public static final double minAngle = 0.0;       // Should be in degrees. Starting point will be 0
-        public static final double maxAngle = 110.0;      // Approx 90deg? Is deployed the positive direction?
+        public static final double maxAngle = 105.0;     // TODO - change to 105 after intake redesign bumps it out
         
         /* setElevator height seeking tolerance */
         public static final double tolerance = 1.0;
@@ -174,11 +174,11 @@ public final class Constants {
         public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
         /* Subsystems */
-        public static final double[] hopperPID = new double[] {0.018, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
+        public static final double[] hopperPID = new double[] {0.017, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
         public static final double[] intakePID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
-        public static final double[] shooterPID = new double[] {0.04, 0.0, 0.0, 0.0};
+        public static final double[] shooterPID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 
@@ -186,7 +186,7 @@ public final class Constants {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
         // public static final double[] driveMotorsSVA = new double[] {0.3, 2.55, 0.27};    // 2023's SVA values. 
-        public static final double[] driveMotorsSVA = new double[] {0.3, 2.6, 0.28};   // TODO - SysID tuning.
+        public static final double[] driveMotorsSVA = new double[] {0.29, 2.59, 0.29};   // TODO - SysID tuning.
 
         // public static final double[] ElevSVA = new double[] {0.0, 0.2, 0.00};
         // public static final double[] WristSVA = new double[] {0.05, 0.03, 0.001};
@@ -237,8 +237,9 @@ public final class Constants {
         public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
         public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Brake;
 
+        public static final NeutralModeValue intakeIdle = NeutralModeValue.Brake;
+
         public static final IdleMode hopperIdle = IdleMode.kBrake;
-        public static final IdleMode intakeIdle = IdleMode.kBrake;
         public static final IdleMode floorIdle = IdleMode.kCoast;
         public static final IdleMode feederIdle = IdleMode.kCoast;
         public static final IdleMode shooterIdle = IdleMode.kCoast;

@@ -62,10 +62,10 @@ public class RobotContainer {
     private boolean robotCentric = false;
 
     // SysID buttons
-    // private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
-    // private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
-    // private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
-    // private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
 
     // private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     // private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -111,23 +111,33 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+        /* stops clogging our RIO's hard drive with talon logs */
+        // SignalLogger.enableAutoLogging(false);
+
         /* Command Composition Definitions */
-        // Command complexAutoShoot = 
-        //     s_shooter.shootCommand(() -> 0.0)
-        //     .alongWith(new WaitCommand(1).andThen(
-        //     new ConditionalCommand(
-        //         s_hopper.tilt(),
-        //         Commands.none(),
-        //         () -> s_hopper.getPosition() > 50
-        //     )));
+        Command complexAutoShoot = 
+            s_shooter.shootCommand(() -> 0.0)
+            .alongWith(new WaitCommand(1).andThen(
+            new InstantCommand(() -> s_floor.forward()).andThen(
+            new ConditionalCommand(
+                s_hopper.tilt(),
+                Commands.none(),
+                () -> s_hopper.getPosition() > 60
+            )))).finallyDo(() -> {
+                s_shooter.stop();
+                s_floor.stop(true);
+                if (s_hopper.getPosition() > 60)
+                    s_hopper.deploy().schedule();
+                else
+                    Commands.none();
+            });
 
         /* PathPlanner named commands */
         NamedCommands.registerCommand("Shooter - Begin Firing", new InstantCommand(() -> s_floor.forward()).andThen(s_shooter.shootCommand()));
-        // NamedCommands.registerCommand("Shooter - Begin Firing w Range", new InstantCommand(() -> s_floor.forward()).andThen(s_shooter.shootCommand()));
         NamedCommands.registerCommand("Shooter - Stop", new InstantCommand(() -> { s_shooter.stop(); s_floor.stop(); }, s_shooter));
 
-        NamedCommands.registerCommand("Hopper - Home Position", new InstantCommand(() -> s_hopper.homeCommand()));
-        NamedCommands.registerCommand("Hopper - Deploy", new InstantCommand(() -> s_hopper.deploy()));
+        NamedCommands.registerCommand("Hopper - Home Position", s_hopper.homeCommand());
+        NamedCommands.registerCommand("Hopper - Deploy", s_hopper.deploy());
 
         NamedCommands.registerCommand("Intake - Start", new InstantCommand(() -> s_intake.start()));
         NamedCommands.registerCommand("Intake - Stop", new InstantCommand(() -> s_intake.stop()));
@@ -218,7 +228,7 @@ public class RobotContainer {
         intakeButton.onTrue(new InstantCommand(() -> { s_intake.start(); }));
         intakeButton.onFalse(new InstantCommand(() -> { s_intake.stop(); }));
 
-        // TODO - change shoot button behavior:
+        // TODO - change shoot button behavior (actually, we might not need the reverse pulsing...):
         // run shooter
         // turn on intake
         // run agitator(floor) anti-jam pulse cycle and repeat:
@@ -230,18 +240,20 @@ public class RobotContainer {
         shootButton.onTrue(
             s_shooter.shootCommand(() -> operator.getPOV()/180.0)
             .alongWith(new WaitCommand(1).andThen(
+            new InstantCommand(() -> s_floor.forward()).andThen(
             new ConditionalCommand(
                 s_hopper.tilt(),
                 Commands.none(),
-                () -> (s_hopper.getPosition() > 50) && shootButton.getAsBoolean()
-            )))
+                () -> (s_hopper.getPosition() > 60) && shootButton.getAsBoolean()
+            ))))
         );
         shootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter)
-            .alongWith(new ConditionalCommand(
+            .alongWith(new InstantCommand(() -> s_floor.stop(true)).andThen(
+            new ConditionalCommand(
                 s_hopper.deploy(),
                 Commands.none(),
-                () -> s_hopper.getPosition() > 50
-            ))
+                () -> s_hopper.getPosition() > 60
+            )))
         );
 
         hopperHomingButton.onTrue(s_hopper.homeCommand());
@@ -284,6 +296,7 @@ public class RobotContainer {
         swerve.removeDefaultCommand();
         s_hopper.removeDefaultCommand();
 
+        // robot code crashed on teleop exit... commenting these out to see if they did it
         s_shooter.stop();
         s_intake.stop();
         s_floor.stop();
@@ -315,10 +328,10 @@ public class RobotContainer {
         // sysid_on.onTrue(new InstantCommand(() -> SignalLogger.start() ));
         // sysid_off.onTrue(new InstantCommand(() -> SignalLogger.stop() ));
 
-        // swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
-        // swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
-        // swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
-        // swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
+        swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
+        swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
+        swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
+        swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
     }
 
     public void testExit() {

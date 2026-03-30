@@ -58,7 +58,7 @@ public class SparkControllerInfo {
         rampRate = 0.35;
         return this;
     }
-
+/*
     public SparkControllerInfo intake(){
         canbusUse = Usages.intakeUsage;
         currentLim = Electrical.intakeLim;
@@ -72,7 +72,7 @@ public class SparkControllerInfo {
         rampRate = 0.2;
         return this;
     }
-
+    */
     public SparkControllerInfo floor(){
         canbusUse = Usages.floorUsage;
         currentLim = Electrical.floorLim;

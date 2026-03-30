@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -20,7 +21,7 @@ public class Hopper extends SubsystemBase {
     private SparkController hopperSpark;
     private RelativeEncoder hopperEncoder;
     private SparkClosedLoopController hopperController;
-    private static double tiltDegrees = 15;
+    private static double tiltDegrees = 18;
 
     public Hopper() {
         this.hopperSpark = new SparkController(Constants.Setup.hopperSpark, new SparkControllerInfo().hopper(),
@@ -31,6 +32,11 @@ public class Hopper extends SubsystemBase {
         this.hopperController = hopperSpark.sparkControl;
     }
 
+    public void periodic() {
+        SmartDashboard.putNumber("Hopper Position", hopperEncoder.getPosition());
+    }
+
+    // TODO - change hopper deploy target by -5 deg after hopper redesign bumps the angle out by 5
     public Command deploy() {
         return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
         .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)) < Constants.Hopper.tolerance);
@@ -99,7 +105,7 @@ public class Hopper extends SubsystemBase {
             // }
         }
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-5); }
-        public boolean isFinished() { return (lastPos >= 4.999) && (cycles > 5); }
+        public boolean isFinished() { return (lastPos >= 5) && (cycles > 10); }
     }
 
     public Command homeCommand() {
@@ -108,5 +114,5 @@ public class Hopper extends SubsystemBase {
         return result;
     }
 
-    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-20.0) *Math.PI/360)*0.2; }
+    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-15.0) *Math.PI/360)*0.2; }
 }
