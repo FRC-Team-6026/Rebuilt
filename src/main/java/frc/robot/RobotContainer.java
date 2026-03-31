@@ -155,8 +155,6 @@ public class RobotContainer {
                 add("Minimum Velocity (V)");
                 add("Feeder Volts");
                 add("Shooter Mult");
-                add("target test mult");
-                add("target test add");
             }
         };
 

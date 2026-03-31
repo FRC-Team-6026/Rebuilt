@@ -117,6 +117,10 @@ public final class Constants {
         public static final double tolerance = 1.0;
     }
 
+    public static final class Shooter {
+        public static final double voltFactor = 0.51;
+    }
+
     public static final class Elevator {
         /* Min/Max Speeds */
         public static final double maxVoltage = 3.0;
