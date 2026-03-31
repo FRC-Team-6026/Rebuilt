@@ -84,8 +84,8 @@ public class Limelight extends SubsystemBase {
     */
     public double getTX(double targetOffset) {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
-        double ta = _table.getEntry("tv").getDouble(0);
-        SmartDashboard.putNumber("Limelight ta", ta);
+        double ta = _table.getEntry("ta").getDouble(0);
+        SmartDashboard.putNumber("Limelight tv", ta);
         tx += targetOffset; // TODO - multiply by .ta(), size of the target, as a method of scaling for closeness?
         tx = limiter.calculate(tx);
         SmartDashboard.putNumber("tx", tx);

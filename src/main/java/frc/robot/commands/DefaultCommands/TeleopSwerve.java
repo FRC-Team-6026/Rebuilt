@@ -69,7 +69,8 @@ public class TeleopSwerve extends Command {
         if (autoaim.getAsBoolean()) {
             // rotationVal = -s_Limelight.getTX(Math.atan(strafeSup.getAsDouble() / s_Limelight.getTZ()))
             rotationVal = -s_Limelight.getTX(strafeSup.getAsDouble()*3.0)
-                * Preferences.getDouble("Aim Rotation Power", 1.0) / 100.0;
+                * Preferences.getDouble("Aim Rotation Power", 1.0) / 1000.0;
+            rotationVal = Math.abs(rotationVal) * rotationVal;
         } else {
             rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);
             rotationVal = rotationVal * rotationVal * rotationVal;

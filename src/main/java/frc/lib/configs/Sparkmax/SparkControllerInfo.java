@@ -43,8 +43,6 @@ public class SparkControllerInfo {
         return this;
     }
 
-    // XXX - double check all susbsystem values, please
-
     public SparkControllerInfo hopper(){
         canbusUse = Usages.hopperUsage;
         currentLim = Electrical.hopperLim;

@@ -111,7 +111,7 @@ public final class Constants {
 
         /* Min/Max Heights */
         public static final double minAngle = 0.0;       // Should be in degrees. Starting point will be 0
-        public static final double maxAngle = 105.0;     // TODO - change to 105 after intake redesign bumps it out
+        public static final double maxAngle = 103.0;
         
         /* setElevator height seeking tolerance */
         public static final double tolerance = 1.0;

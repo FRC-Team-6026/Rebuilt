@@ -36,7 +36,6 @@ public class Hopper extends SubsystemBase {
         SmartDashboard.putNumber("Hopper Position", hopperEncoder.getPosition());
     }
 
-    // TODO - change hopper deploy target by -5 deg after hopper redesign bumps the angle out by 5
     public Command deploy() {
         return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
         .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)) < Constants.Hopper.tolerance);

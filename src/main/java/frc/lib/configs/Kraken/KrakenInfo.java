@@ -2,7 +2,6 @@ package frc.lib.configs.Kraken;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants.ConversionFactors;
 import frc.robot.Constants.Electrical;
