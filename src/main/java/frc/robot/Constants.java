@@ -28,18 +28,15 @@ public final class Constants {
 
         public static final int[] shooterSpark = new int[] {18, 19, 20};
 
-        public static final int elevatorSpark = 21;
-
         /* Motor Inverts */
         public static final boolean driveInvert = true;
         public static final boolean angleInvert = true;
 
         public static final boolean hopperInvert = false;
         public static final boolean intakeInvert = true;
-        public static final boolean floorInvert = true; // guessed, double check
+        public static final boolean floorInvert = true;
         public static final boolean feederInvert = false;
         public static final boolean shooterInvert = true;
-        public static final boolean elevatorInvert = false;
     }
 
     /* Autonomous config
@@ -113,33 +110,12 @@ public final class Constants {
         public static final double minAngle = 0.0;       // Should be in degrees. Starting point will be 0
         public static final double maxAngle = 103.0;
         
-        /* setElevator height seeking tolerance */
+        /* Tolerance */
         public static final double tolerance = 1.0;
     }
 
     public static final class Shooter {
         public static final double voltFactor = 0.51;
-    }
-
-    public static final class Elevator {
-        /* Min/Max Speeds */
-        public static final double maxVoltage = 3.0;
-        public static final double minVoltage = -1.8;
-        public static final double maxPercent = 0.55;    // | Power limits for PID control
-        public static final double minPercent = -0.40;   // |
-
-        /* Min/Max Heights */
-        public static final double minHeight = 0.0;       // Now in inches!
-        public static final double maxHeight = 59.0;
-        
-        /* setElevator height seeking tolerance */
-        public static final double tolerance = 0.4; // Rename this pls
-
-        public static final double selfDestructAngle = 61;
-
-        // public static final double gravityConstant = 0.1;
-
-        public static final double softHeightMinimum = 1;
     }
 
     public static final class AutoConstants {
@@ -162,7 +138,6 @@ public final class Constants {
         public static final int floorLim = 30;
         public static final int feederLim = 40;
         public static final int shooterLim = 40;
-        public static final int elevatorLim = 20;
     }
     
     public final static class PID {
@@ -172,8 +147,6 @@ public final class Constants {
         */
 
         /* Swerve PIDs */
-        // public static final double[] drivePID = new double[] {0.3, 0.0, 0.0, 0.0};   Sparkmax Swerve PIDs
-        // public static final double[] anglePID = new double[] {0.01, 0.0, 0.0, 0.0};
         public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
         
@@ -183,30 +156,18 @@ public final class Constants {
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] shooterPID = new double[] {0.05, 0.0, 0.0, 0.0};
-        public static final double[] elevatorPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 
     public final static class SVA {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
-        // public static final double[] driveMotorsSVA = new double[] {0.3, 2.55, 0.27};    // 2023's SVA values. 
-        public static final double[] driveMotorsSVA = new double[] {0.29, 2.59, 0.29};   // TODO - SysID tuning.
-
-        // public static final double[] ElevSVA = new double[] {0.0, 0.2, 0.00};
-        // public static final double[] WristSVA = new double[] {0.05, 0.03, 0.001};
+        public static final double[] driveMotorsSVA = new double[] {0.29, 2.59, 0.29};   // IN PROGRESS - SysID tuning.
     }
 
     public final static class ConversionFactors {
         /* All numbers in 1 output to required input, or one wheel spin to motor spin */
 
         /* Swerve Drive Conversions */
-        public static final double driveConversionPositionFactor = Swerve.wheelCircumference / Swerve.driveGearRatio;
-        public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0 ; //rpm to rps
-        
-        public static final double angleConversionPositionFactor = 360.0 / Swerve.angleGearRatio;
-        public static final double angleConversionVelocityFactor = angleConversionPositionFactor / 60.0 ; //rpm to rps
-
-        //Kraken constants
         public static final double driveKrakenRotorToSensorRatio = 1.0;
         public static final double driveKrakenSensorToMechanismRatio = Swerve.driveGearRatio / Swerve.wheelCircumference;   // switched around for krakens
         
@@ -215,13 +176,6 @@ public final class Constants {
         public static final double angleKrakenSensorToMechanismRatio = Swerve.angleGearRatio;
         
         /* Other Subsystem Conversions */
-        // public static final double elevatorConversionPositionFactor = 1/6.4;   // 10 tooth small : 64 tooth large
-        public static final double elevatorConversionPositionFactor = 1.406;   // 10 tooth small : 64 tooth large, 1 rot : 3.25 in of chain (18 tooth sprocket), 1 inch of 1st stage : 2 inch of 2nd stage
-        public static final double elevatorConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
-        
-        public static final double wristConversionPositionFactor = 1.0/96.0 * 360.0;   // 96:1 total gear reduction, 1:360 degree conversion
-        public static final double wristConversionVelocityFactor = elevatorConversionPositionFactor / 60.0; //rpm to rps
-
         public static final double hopperConversionPositionFactor = 1.0/115.0 * 360.0;    // 1:115 gear reduction, 1:360 degree conversion
         public static final double hopperConversionVelocityFactor = hopperConversionPositionFactor / 60.0; //rpm to rps
         
@@ -236,10 +190,8 @@ public final class Constants {
 
     public final static class IdleModes {
         /* Swerve Idles */
-        public static final IdleMode driveIdle = IdleMode.kBrake;
-        public static final IdleMode angleIdle = IdleMode.kBrake;
-        public static final NeutralModeValue krakenDriveIdle = NeutralModeValue.Brake;
-        public static final NeutralModeValue krakenAngleIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue driveIdle = NeutralModeValue.Brake;
+        public static final NeutralModeValue angleIdle = NeutralModeValue.Brake;
 
         public static final NeutralModeValue intakeIdle = NeutralModeValue.Brake;
 
@@ -247,7 +199,6 @@ public final class Constants {
         public static final IdleMode floorIdle = IdleMode.kCoast;
         public static final IdleMode feederIdle = IdleMode.kCoast;
         public static final IdleMode shooterIdle = IdleMode.kCoast;
-        public static final IdleMode elevatorIdle = IdleMode.kBrake;
     }
 
     public final static class Usages {
@@ -266,7 +217,6 @@ public final class Constants {
         public static final Usage floorUsage = Usage.kMinimal;
         public static final Usage feederUsage = Usage.kMinimal;
         public static final Usage shooterUsage = Usage.kVelocityOnly;
-        public static final Usage elevatorUsage = Usage.kPositionOnly;
     }
 
     public final static class Limelight {

@@ -39,6 +39,7 @@ public class Shooter extends SubsystemBase {
 
     private ShooterMod[] s_mods;
     private Limelight limelight;
+    private double distance;
     
     private SparkController feederSpark;
     private SparkClosedLoopController feederController;
@@ -78,7 +79,6 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
         for(ShooterMod mod : s_mods) {
-            // BUG - probably disable for competition
             SmartDashboard.putNumber("Encoder test " + mod.id, mod.encoder.getVelocity());
         }
     }
@@ -108,11 +108,10 @@ public class Shooter extends SubsystemBase {
         /* NEW distance calc velocity control */
         double toHub = Math.cos(limelight.getYaw()) * 0.5969;
         double tz = limelight.getTZ();
-        double distance;
 
         if (tz == 0) { 
-            limelightWarning.set(true);
             distance = 2.8;
+            limelightWarning.set(true);
         } 
         else { 
             distance = toHub + tz;

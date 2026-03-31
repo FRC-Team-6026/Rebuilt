@@ -30,7 +30,7 @@ public class KrakenInfo {
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
         invert = Setup.driveInvert;
-        idleMode = IdleModes.krakenDriveIdle;
+        idleMode = IdleModes.driveIdle;
         RotorToSensorRatio = ConversionFactors.driveKrakenRotorToSensorRatio;
         SensorToMechanismRatio = ConversionFactors.driveKrakenSensorToMechanismRatio;
         pidList = PID.drivePID;
@@ -43,7 +43,7 @@ public class KrakenInfo {
     public KrakenInfo angle() {
         canbusUse = Usages.angleUsage;
         currentLim = Electrical.angleCurrentLim;
-        idleMode = IdleModes.krakenAngleIdle;
+        idleMode = IdleModes.angleIdle;
         RotorToSensorRatio = ConversionFactors.angleKrakenRotorToSensorRatio;
         SensorToMechanismRatio = ConversionFactors.angleKrakenSensorToMechanismRatio;
         pidList = PID.anglePID;
@@ -58,7 +58,7 @@ public class KrakenInfo {
         currentLim = Electrical.intakeLim;
         idleMode = IdleModes.intakeIdle;
         RotorToSensorRatio = ConversionFactors.defaultConversionPositionFactor;
-        SensorToMechanismRatio = ConversionFactors.defaultConversionPositionFactor; // TODO - maybe add actual ratio. right now, it shouldnt care
+        SensorToMechanismRatio = ConversionFactors.defaultConversionPositionFactor;
         pidList = PID.intakePID;
         voltageComp = Electrical.voltageComp;
         continuousWrap = false;

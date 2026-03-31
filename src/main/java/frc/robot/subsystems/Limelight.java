@@ -54,11 +54,6 @@ public class Limelight extends SubsystemBase {
         if (periodicRotationUpdate) {
             SetRobotOrientation("limelight", swerve.getGyro().getYaw() + fieldRot, 0, 0, 0, 0, 0);
         }
-        
-        // TODO - probably disable for competition?
-        getTX();
-        getTZ();
-        getYaw();
 
         double toHub = Math.cos(getYaw() * 0.01745329) * 0.5969;
         double distance = toHub + getTZ();
@@ -86,7 +81,7 @@ public class Limelight extends SubsystemBase {
         double tx = _table.getEntry("tx").getDouble(0) * -1.0;
         double ta = _table.getEntry("ta").getDouble(0);
         SmartDashboard.putNumber("Limelight tv", ta);
-        tx += targetOffset; // TODO - multiply by .ta(), size of the target, as a method of scaling for closeness?
+        tx += targetOffset;
         tx = limiter.calculate(tx);
         SmartDashboard.putNumber("tx", tx);
         return tx;
@@ -101,7 +96,7 @@ public class Limelight extends SubsystemBase {
         return tz;
     }
 
-    // TODO - it looks like getYaw got co-opted for a different purpose. DO NOT USE MEGATAG until we fix this!!!
+    // NOTE - it looks like getYaw got co-opted for a different purpose. DO NOT USE MEGATAG until we fix this!!!
 
     /** Gets robot Yaw
      * @return the yaw component, in degrees, to the center of the target from the camera lens

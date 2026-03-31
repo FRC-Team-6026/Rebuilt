@@ -142,12 +142,9 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // TODO - investigate command loop overrun. Probably disable report at start of competition?
+        // BUG - investigate command loop overrun. Probably disable report at start of competition?
         swerveOdometry.update(getAngle(), getPositions());
         report();
-
-        // SmartDashboard.putNumber("Gyro X accel:", getGyro().getWorldLinearAccelX());
-
         pub.set(getStates());
     }
 

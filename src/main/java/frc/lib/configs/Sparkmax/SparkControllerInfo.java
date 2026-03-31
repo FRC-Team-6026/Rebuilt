@@ -22,7 +22,6 @@ public class SparkControllerInfo {
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
         invert = Setup.driveInvert;
-        idleMode = IdleModes.driveIdle;
         posConversion = ConversionFactors.driveConversionPositionFactor;
         velConversion = ConversionFactors.driveConversionVelocityFactor;
         pidList = PID.drivePID;
@@ -35,7 +34,6 @@ public class SparkControllerInfo {
         currentLim = Electrical.angleCurrentLim;
         invert = Setup.angleInvert;
         alternateAbsolute = false;
-        idleMode = IdleModes.angleIdle;
         posConversion = ConversionFactors.angleConversionPositionFactor;
         velConversion = ConversionFactors.angleConversionVelocityFactor;
         pidList = PID.anglePID;
@@ -112,19 +110,4 @@ public class SparkControllerInfo {
         rampRate = 0.35;
         return this;
     }
-
-    // XXX - Are we even going to have an elevator?
-    // public SparkControllerInfo elevator(){
-    //     canbusUse = Usages.elevatorUsage;
-    //     currentLim = Electrical.elevatorLim;
-    //     invert = Setup.elevatorInvert;
-    //     alternateAbsolute = false;
-    //     idleMode = IdleModes.elevatorIdle;
-    //     posConversion = ConversionFactors.defaultConversionPositionFactor;
-    //     velConversion = ConversionFactors.defaultConversionVelocityFactor;
-    //     pidList = PID.elevatorPID;
-    //     voltageComp = Electrical.voltageComp;
-    //     rampRate = 0.35;
-    //     return this;
-    // }
 } 

@@ -226,12 +226,6 @@ public class RobotContainer {
         intakeButton.onTrue(new InstantCommand(() -> { s_intake.start(); }));
         intakeButton.onFalse(new InstantCommand(() -> { s_intake.stop(); }));
 
-        // TODO - change shoot button behavior (actually, we might not need the reverse pulsing...):
-        // run shooter
-        // turn on intake
-        // run agitator(floor) anti-jam pulse cycle and repeat:
-        //  - forward .5s, backwards .2s
-        //  - and only run floor while feeder runs
         simpleShootButton.onTrue(s_shooter.simpleShootCommand());
         simpleShootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter));
 
