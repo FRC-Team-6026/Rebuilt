@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -7,6 +10,7 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -14,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.Items.SparkMax.SparkController;
 import frc.lib.configs.Sparkmax.SparkControllerInfo;
 import frc.robot.Constants;
@@ -47,6 +52,9 @@ public class Shooter extends SubsystemBase {
     private Alert sparkFail;
     private Alert limelightWarning;
 
+    SysIdRoutine shooterSysID;
+    SysIdRoutine feederSysID;
+
     public Shooter(Limelight limelight) {
         
         int count = 0;
@@ -75,6 +83,20 @@ public class Shooter extends SubsystemBase {
         this.feederSpark = new SparkController(Constants.Setup.feederSpark, new SparkControllerInfo().feeder());
         this.feederController = feederSpark.sparkControl;
         this.limelightWarning = new Alert("Limelight can't determine distance to target", AlertType.kWarning);
+        
+        // SysId - the actual SysId routine. Configures settings and creates the
+        // callable function
+        
+        shooterSysID = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(6.0),
+                    Seconds.of(6.0)
+                ),
+            new SysIdRoutine.Mechanism(
+                    (voltage) -> this.runShooterVolts(voltage),
+                    null, // No log consumer, we're just slurping the data off NetworkTables
+                    this));
     }
 
     public void periodic() {
@@ -126,7 +148,7 @@ public class Shooter extends SubsystemBase {
                 targetSpeed,
                 ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0,
-                targetSpeed * Constants.Shooter.voltFactor
+                targetSpeed * Constants.Shooter.voltFactor + Constants.Shooter.flatVolts
             );
 
             if (mod.encoder.getVelocity() < 0.92 * targetSpeed) atSpeed = false;
@@ -135,4 +157,22 @@ public class Shooter extends SubsystemBase {
         if(atSpeed) feederController.setSetpoint(Preferences.getDouble("Feeder Volts", 0.5), ControlType.kVoltage);
         else        feederController.setSetpoint(0.0, ControlType.kVoltage);
     }, this);}
+    
+    // SysId - function for setting voltage to motor.
+    // This function passes voltage value to each module, and throws data on the network table to be picked up
+    public void runShooterVolts(Voltage voltage) {
+        s_mods[0].controller.setSetpoint(voltage.magnitude(), ControlType.kVoltage);
+        SmartDashboard.putNumber("Voltage", voltage.magnitude());
+        SmartDashboard.putNumber("Shooter1 Velocity", s_mods[0].encoder.getVelocity());
+    }
+    public void runFeederVolts(Voltage voltage) {
+        feederController.setSetpoint(voltage.magnitude(), ControlType.kVoltage);
+        SmartDashboard.putNumber("Voltage", voltage.magnitude());
+        SmartDashboard.putNumber("Shooter1 Velocity", feederSpark.sparkEncode.getVelocity());
+    }
+
+    public Command ShooterQuasiF()    { return shooterSysID.quasistatic(SysIdRoutine.Direction.kForward); }
+    public Command ShooterQuasiR()    { return shooterSysID.quasistatic(SysIdRoutine.Direction.kReverse); }
+    public Command FeederQuasiF()    { return feederSysID.quasistatic(SysIdRoutine.Direction.kForward); }
+    public Command FeederQuasiR()    { return feederSysID.quasistatic(SysIdRoutine.Direction.kReverse); }
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
@@ -67,14 +68,14 @@ public class TeleopSwerve extends Command {
         // joystick inputs need deadband/cube/slewrate calc, but limelight inputs should
         // only need slewrate
         if (autoaim.getAsBoolean()) {
-            // rotationVal = -s_Limelight.getTX(Math.atan(strafeSup.getAsDouble() / s_Limelight.getTZ()))
-            rotationVal = -s_Limelight.getTX(strafeSup.getAsDouble()*3.0)
-                * Preferences.getDouble("Aim Rotation Power", 1.0) / 1000.0;
-            rotationVal = Math.abs(rotationVal) * rotationVal;
+            rotationVal = -s_Limelight.getTX(0.0)
+                * Preferences.getDouble("Aim Rotation Power", 1.0) / 100.0;
         } else {
             rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);
             rotationVal = rotationVal * rotationVal * rotationVal;
         }
+
+        SmartDashboard.putNumber("rotationVal", rotationVal);
 
         // limit change per input to avoid slamming the motors
         translationVal = translationLimiter.calculate(translationVal);

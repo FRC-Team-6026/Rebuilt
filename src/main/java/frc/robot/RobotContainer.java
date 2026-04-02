@@ -66,6 +66,10 @@ public class RobotContainer {
     private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final Trigger shooter_quasiF = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final Trigger shooter_quasiR = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final Trigger feeder_quasiF = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final Trigger feeder_quasiR = new JoystickButton(operator, XboxController.Button.kY.value);
 
     // private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     // private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -233,11 +237,12 @@ public class RobotContainer {
             s_shooter.shootCommand(() -> operator.getPOV()/180.0)
             .alongWith(new WaitCommand(1).andThen(
             new InstantCommand(() -> s_floor.forward()).andThen(
+            new WaitCommand(1).andThen(
             new ConditionalCommand(
                 s_hopper.tilt(),
                 Commands.none(),
                 () -> (s_hopper.getPosition() > 60) && shootButton.getAsBoolean()
-            ))))
+            )))))
         );
         shootButton.onFalse(new InstantCommand(() ->  s_shooter.stop(), s_shooter)
             .alongWith(new InstantCommand(() -> s_floor.stop(true)).andThen(
@@ -317,13 +322,15 @@ public class RobotContainer {
             Elastic.selectTab(2);
         }
 
-        // sysid_on.onTrue(new InstantCommand(() -> SignalLogger.start() ));
-        // sysid_off.onTrue(new InstantCommand(() -> SignalLogger.stop() ));
-
         swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
         swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
         swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
         swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
+
+        shooter_quasiF.onTrue(s_shooter.ShooterQuasiF().until(shooter_quasiF.negate()));
+        shooter_quasiR.onTrue(s_shooter.ShooterQuasiR().until(shooter_quasiR.negate()));
+        feeder_quasiF.onTrue(s_shooter.FeederQuasiF().until(swerve_quasiF.negate()));
+        feeder_quasiR.onTrue(s_shooter.FeederQuasiR().until(swerve_quasiR.negate()));
     }
 
     public void testExit() {

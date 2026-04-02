@@ -18,6 +18,7 @@ public class SparkControllerInfo {
     public double velConversionFactor = 1.0/60.0;
     // public double maxmotionVel = 0, maxmotionAcc = 0;
 
+    /*
     public SparkControllerInfo drive(){
         canbusUse = Usages.driveUsage;
         currentLim = Electrical.driveCurrentLim;
@@ -40,6 +41,7 @@ public class SparkControllerInfo {
         voltageComp = Electrical.voltageComp;
         return this;
     }
+    */
 
     public SparkControllerInfo hopper(){
         canbusUse = Usages.hopperUsage;

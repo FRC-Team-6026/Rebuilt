@@ -115,7 +115,8 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final double voltFactor = 0.51;
+        public static final double voltFactor = 0.50;
+        public static final double flatVolts = 0.25;
     }
 
     public static final class AutoConstants {
@@ -161,7 +162,7 @@ public final class Constants {
     public final static class SVA {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
-        public static final double[] driveMotorsSVA = new double[] {0.29, 2.59, 0.29};   // IN PROGRESS - SysID tuning.
+        public static final double[] driveMotorsSVA = new double[] {0.24, 2.4, 0.2};   // IN PROGRESS - SysID tuning.
     }
 
     public final static class ConversionFactors {
