@@ -69,23 +69,23 @@ public class Limelight extends SubsystemBase {
     */
     public double getTX() {
         double tx = _table.getEntry("tx").getDouble(0);
-        tx = limiter.calculate(tx);
-        MathUtil.applyDeadband(tx, 0.5);
+        // tx = limiter.calculate(tx);
+        // MathUtil.applyDeadband(tx, 0.5);
         return tx;
     }
 
     /** Gets L/R movement for robot to align with an apriltag 
      * @param targetOffset the point to target, relative to the center of the image (or offset target)
     */
-    public double getTX(double targetOffset) {
-        double tx = _table.getEntry("tx").getDouble(0);
-        // double ta = _table.getEntry("ta").getDouble(0);
-        // SmartDashboard.putNumber("ta", ta);
-        // tx += targetOffset; // TODO - multiply by .ta(), size of the target, as a method of scaling for closeness?
-        // tx = limiter.calculate(tx);
-        // SmartDashboard.putNumber("tx", tx);
-        return tx;
-    }
+    // public double getTX(double targetOffset) {
+    //     double tx = _table.getEntry("tx").getDouble(0);
+    //     // double ta = _table.getEntry("ta").getDouble(0);
+    //     // SmartDashboard.putNumber("ta", ta);
+    //     tx += targetOffset; // TODO - multiply by .ta(), size of the target, as a method of scaling for closeness?
+    //     // tx = limiter.calculate(tx);
+    //     // SmartDashboard.putNumber("tx", tx);
+    //     return tx;
+    // }
 
     /** Gets distance from an apriltag target
      * @return the z distance component, in meters, to the center of the target from the camera lens

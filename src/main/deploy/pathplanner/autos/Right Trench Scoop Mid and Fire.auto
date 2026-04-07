@@ -5,18 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Hopper - Deploy"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake - Start"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Right Trench to Midfield"
@@ -25,7 +13,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.25
           }
         },
         {
@@ -37,7 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Midfield to Right Trench"
+            "pathName": "Midfield to Firing (Right)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight - Aim at Hub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter - Firing Sequence"
           }
         }
       ]

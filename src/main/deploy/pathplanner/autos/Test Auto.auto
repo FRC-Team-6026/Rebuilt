@@ -9,6 +9,18 @@
           "data": {
             "pathName": "Test - Drive Forward"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Hopper - Deploy"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter - Firing Sequence"
+          }
         }
       ]
     }

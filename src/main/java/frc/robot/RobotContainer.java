@@ -32,6 +32,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.lib.util.Elastic;
+import frc.robot.commands.AutoAim;
 import frc.robot.commands.DefaultCommands.HopperDefault;
 import frc.robot.commands.DefaultCommands.TeleopSwerve;
 
@@ -62,14 +63,14 @@ public class RobotContainer {
     private boolean robotCentric = false;
 
     // SysID buttons
-    private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final Trigger shooter_quasiF = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final Trigger shooter_quasiR = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final Trigger feeder_quasiF = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final Trigger feeder_quasiR = new JoystickButton(operator, XboxController.Button.kY.value);
+    // private final JoystickButton swerve_quasiF = new JoystickButton(driver, XboxController.Button.kA.value);
+    // private final JoystickButton swerve_quasiR = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton swerve_dynF = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton swerve_dynR = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton shooter_quasiF = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton shooter_quasiR = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton feeder_quasiF = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton feeder_quasiR = new JoystickButton(operator, XboxController.Button.kY.value);
 
     // private final JoystickButton sysid_on = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     // private final JoystickButton sysid_off = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -123,20 +124,24 @@ public class RobotContainer {
             s_shooter.shootCommand(() -> 0.0)
             .alongWith(new WaitCommand(1).andThen(
             new InstantCommand(() -> s_floor.forward()).andThen(
+            new WaitCommand(0.8).andThen(
             new ConditionalCommand(
                 s_hopper.tilt(),
                 Commands.none(),
                 () -> s_hopper.getPosition() > 60
-            )))).finallyDo(() -> {
+            )))).andThen(
+            new InstantCommand(() -> s_floor.reverse())).andThen(new WaitCommand(0.75)).andThen(new InstantCommand(() -> s_floor.forward())))
+            .finallyDo(() -> {
                 s_shooter.stop();
-                s_floor.stop(true);
+                s_floor.stop();
                 if (s_hopper.getPosition() > 60)
                     s_hopper.deploy().schedule();
                 else
                     Commands.none();
-            });
+            }).withTimeout(4.5);
 
         /* PathPlanner named commands */
+        NamedCommands.registerCommand("Shooter - Firing Sequence", complexAutoShoot);
         NamedCommands.registerCommand("Shooter - Begin Firing", new InstantCommand(() -> s_floor.forward()).andThen(s_shooter.shootCommand()));
         NamedCommands.registerCommand("Shooter - Stop", new InstantCommand(() -> { s_shooter.stop(); s_floor.stop(); }, s_shooter));
 
@@ -145,6 +150,8 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Intake - Start", new InstantCommand(() -> s_intake.start()));
         NamedCommands.registerCommand("Intake - Stop", new InstantCommand(() -> s_intake.stop()));
+
+        NamedCommands.registerCommand("Limelight - Aim at Hub", new AutoAim(swerve, s_Limelight));
 
         /* Preferences initialization */
         Collection<String> oldPrefs = Preferences.getKeys();
@@ -253,7 +260,8 @@ public class RobotContainer {
             )))
         );
 
-        hopperHomingButton.onTrue(s_hopper.homeCommand());
+        // hopperHomingButton.onTrue(s_hopper.homeCommand());
+        hopperHomingButton.onTrue(s_hopper.homeCommand().until(hopperHomingButton.negate()));
 
         deployButton.onTrue(s_hopper.deploy());
         retractButton.onTrue(s_hopper.retract());
@@ -270,9 +278,9 @@ public class RobotContainer {
     public void teleopInit() {
         swerve.resetToAbsolute();
 
-        if (DriverStation.isFMSAttached()) {
-            Elastic.selectTab("Teleop");
-        }
+        // if (DriverStation.isFMSAttached()) {
+        //     Elastic.selectTab(3);
+        // }
 
         swerve.setDefaultCommand(
             new TeleopSwerve(
@@ -302,9 +310,9 @@ public class RobotContainer {
     public void autoInit() {
         swerve.resetToAbsolute();
 
-        if (DriverStation.isFMSAttached()) {
-            Elastic.selectTab("Auto");
-        }
+        // if (DriverStation.isFMSAttached()) {
+            // Elastic.selectTab("Auto");
+        // }
     }
 
     public void autoExit() {
@@ -314,23 +322,20 @@ public class RobotContainer {
     }
 
     public void testInit() {
+        CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
         // Swerve SysID testing. Sets wheels forward and assigns each test to a button.
-        swerve.resetToAbsolute();
-        swerve.testInit().schedule();
-
-        if (DriverStation.isFMSAttached()) {
-            Elastic.selectTab(2);
-        }
-
-        swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
-        swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
-        swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
-        swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
+        // swerve.resetToAbsolute();
+        // swerve.testInit().schedule();
+        // swerve_quasiF.onTrue(swerve.SysIDQuasiF().until(swerve_quasiF.negate()));
+        // swerve_quasiR.onTrue(swerve.SysIDQuasiR().until(swerve_quasiR.negate()));
+        // swerve_dynF.onTrue(swerve.SysIDDynF().until(swerve_dynF.negate()));
+        // swerve_dynR.onTrue(swerve.SysIDDynR().until(swerve_dynR.negate()));
 
         shooter_quasiF.onTrue(s_shooter.ShooterQuasiF().until(shooter_quasiF.negate()));
         shooter_quasiR.onTrue(s_shooter.ShooterQuasiR().until(shooter_quasiR.negate()));
-        feeder_quasiF.onTrue(s_shooter.FeederQuasiF().until(swerve_quasiF.negate()));
-        feeder_quasiR.onTrue(s_shooter.FeederQuasiR().until(swerve_quasiR.negate()));
+        feeder_quasiF.onTrue(s_shooter.FeederQuasiF().until(feeder_quasiF.negate()));
+        feeder_quasiR.onTrue(s_shooter.FeederQuasiR().until(feeder_quasiR.negate()));
     }
 
     public void testExit() {

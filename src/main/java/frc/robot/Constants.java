@@ -17,7 +17,7 @@ public final class Constants {
         public static final int[] driveMotors = new int[] {1, 3, 5, 7};
         public static final int[] angleMotors = new int[] {2, 4, 6, 8};
         public static final int[] moduleCancoders = new int[] {9, 10, 11, 12};
-        public static final double[] angleOffsets = new double[] {-152.0, 23.0, 2.0, 121.5};
+        public static final double[] angleOffsets = new double[] {-151.5, 24.0, 1.0, 122.5};
         public static final double gyroAngleOffset = 0.0; // If gyro is mounted at an angle, this should tell the robot which way is forward
 
         /* Subsystem IDs */
@@ -115,8 +115,10 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final double voltFactor = 0.50;
+        public static final double delay = 0.7;
+        public static final double voltFactor = 0.492;
         public static final double flatVolts = 0.25;
+        public static final int lostFramesTolerance = 15;
     }
 
     public static final class AutoConstants {
@@ -149,20 +151,20 @@ public final class Constants {
 
         /* Swerve PIDs */
         public static final double[] drivePID = new double[] {0.05, 0.0, 0.0, 0.0};
-        public static final double[] anglePID = new double[] {10.0, 0.6, 0.4, 0.0};
+        public static final double[] anglePID = new double[] {10.0, 1.1, 0.2, 0.0};
         
         /* Subsystems */
-        public static final double[] hopperPID = new double[] {0.017, 0.0, 0.0, 0.0};   // was 0.025, probably put this back
+        public static final double[] hopperPID = new double[] {0.017, 0.0, 0.0, 0.0};   // TODO - potentially add a little I or D? Not sure yet, will want testing
         public static final double[] intakePID = new double[] {0.05, 0.0, 0.0, 0.0};
         public static final double[] floorPID = new double[] {0.03, 0.0, 0.0, 0.0};
         public static final double[] feederPID = new double[] {0.03, 0.0, 0.0, 0.0};
-        public static final double[] shooterPID = new double[] {0.05, 0.0, 0.0, 0.0};
+        public static final double[] shooterPID = new double[] {0.03, 0.0, 0.0, 0.0};
     }
 
     public final static class SVA {
         /* {Static, Velocity, Acceleration} */    /* format: Ks, Kv, Ka */
         /* Swerve */
-        public static final double[] driveMotorsSVA = new double[] {0.24, 2.4, 0.2};   // IN PROGRESS - SysID tuning.
+        public static final double[] driveMotorsSVA = new double[] {0.24, 2.4, 0.18};   // IN PROGRESS - SysID tuning.
     }
 
     public final static class ConversionFactors {

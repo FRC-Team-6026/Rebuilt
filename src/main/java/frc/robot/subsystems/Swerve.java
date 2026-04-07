@@ -3,8 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import frc.robot.NavX.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -47,9 +46,10 @@ public class Swerve extends SubsystemBase {
             .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
 
     public Swerve() {
-        gyro = new AHRS(NavXComType.kMXP_SPI, 66);
+        gyro = new AHRS();
         gyro.reset();
         zeroGyro();
+        // gyro.enableLogging(true);
         // gyro.setAngleAdjustment(Constants.Setup.gyroAngleOffset);
 
         mSwerveMods = new SwerveModule[4];

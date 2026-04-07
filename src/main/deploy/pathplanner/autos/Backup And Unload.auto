@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Limelight - Aim at Hub"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [

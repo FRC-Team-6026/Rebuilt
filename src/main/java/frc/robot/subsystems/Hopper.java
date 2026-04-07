@@ -21,7 +21,7 @@ public class Hopper extends SubsystemBase {
     private SparkController hopperSpark;
     private RelativeEncoder hopperEncoder;
     private SparkClosedLoopController hopperController;
-    private static double tiltDegrees = 18;
+    private static double tiltDegrees = 21;
 
     public Hopper() {
         this.hopperSpark = new SparkController(Constants.Setup.hopperSpark, new SparkControllerInfo().hopper(),
@@ -37,18 +37,21 @@ public class Hopper extends SubsystemBase {
     }
 
     public Command deploy() {
-        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
-        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)) < Constants.Hopper.tolerance);
+        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0), ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()), this)
+        // .finallyDo(() -> hopperController.setSetpoint(0, ControlType.kVoltage))
+        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)) < Constants.Hopper.tolerance)
+        .withTimeout(1);
     }
 
     public Command tilt() {
-        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
-        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees) < Constants.Hopper.tolerance);
+        return new RunCommand(() -> hopperController.setSetpoint(Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()), this)
+        .until(() -> Math.abs(hopperEncoder.getPosition()-Preferences.getDouble("Hopper Deploy Target", 100.0)-tiltDegrees) < Constants.Hopper.tolerance)
+        .withTimeout(1);
     }
 
     public Command retract() {
-        return new RunCommand(() -> hopperController.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()))
-        .until(() -> Math.abs(hopperEncoder.getPosition()) < Constants.Hopper.tolerance);
+        return new RunCommand(() -> hopperController.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, getFF()), this)
+        .until(() -> Math.abs(hopperEncoder.getPosition()) < Constants.Hopper.tolerance).withTimeout(1);
     }
 
     public double getPosition() {
@@ -106,12 +109,26 @@ public class Hopper extends SubsystemBase {
         public void end(boolean interrupted)    { hopperEncoder.setPosition(-5); }
         public boolean isFinished() { return (lastPos >= 5) && (cycles > 10); }
     }
+    public class ManualHomingCommand extends Command {
+        public double lastPos;
+        public int cycles = 0;
+        public void initialize() {
+            hopperEncoder.setPosition(4.5);
+            hopperController.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, -0.12);
+        }
+        public void execute() {
+            lastPos = hopperEncoder.getPosition();
+            hopperEncoder.setPosition(5);
+        }
+        public void end(boolean interrupted)    { hopperEncoder.setPosition(-3); }
+    }
 
     public Command homeCommand() {
-        Command result = new HomingCommand();
+        // Command result = new HomingCommand();
+        Command result = new ManualHomingCommand();
         result.addRequirements(this);
         return result;
     }
 
-    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-15.0) *Math.PI/360)*0.2; }
+    public double getFF() { return -Math.sin( (hopperEncoder.getPosition()-15.0) *Math.PI/360)*0.15; }
 }
